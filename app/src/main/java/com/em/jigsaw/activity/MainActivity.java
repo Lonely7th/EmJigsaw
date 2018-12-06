@@ -1,7 +1,9 @@
-package com.em.jigsaw;
+package com.em.jigsaw.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.em.jigsaw.R;
 
 public class MainActivity extends AppCompatActivity {
 
