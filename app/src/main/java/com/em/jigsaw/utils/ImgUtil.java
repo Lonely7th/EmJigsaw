@@ -1,11 +1,10 @@
 package com.em.jigsaw.utils;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
+import android.provider.MediaStore;
 
 import com.em.jigsaw.bean.JigsawImgBean;
 
@@ -13,7 +12,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -34,29 +32,41 @@ public class ImgUtil {
         File dir = new File(ImgDirPath);
         if (!dir.exists()) {
             dir.mkdirs();
+        }else {
+            File[] files = dir.listFiles();
+            for(File file : files){
+                file.delete();
+            }
+        }
+    }
+
+    public Bitmap getBitmap(Uri uri){
+        try {
+            // 读取uri所在的图片
+            return MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), uri);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
     /**
      * 拆分图片
      */
-    public ArrayList<JigsawImgBean> getImgArray(int format){
+    public ArrayList<JigsawImgBean> getImgArray(Bitmap bm, int[] format){
         ArrayList<JigsawImgBean> list = new ArrayList<>();
 
-        AssetManager manager = mContext.getResources().getAssets();
         try {
-            InputStream inputStream = manager.open("test.png");
-            Bitmap bm = BitmapFactory.decodeStream(inputStream);
-            inputStream.close();
-            int mHeight = bm.getHeight() / format;
-            int mWidth = bm.getWidth() / format;
-
             int x,y = 0,index = 0;
-            for(int i = 0;i < format;i++){
+            int mHeight = bm.getHeight() / format[0];
+            int mWidth = bm.getWidth() / format[1];
+
+            for(int i = 0;i < format[0];i++){
                 x = 0;
-                for(int k = 0;k < format;k++){
+                for(int k = 0;k < format[1];k++){
                     Bitmap bm1 = ImgSplit(bm,x,y,mWidth,mHeight);
-                    String filePath = ImgSave(bm1,"pic" + i + k + ".png");
+                    String filePath = ImgSave(bm1,"" + System.currentTimeMillis() + i + k + ".png");
 
                     JigsawImgBean jigsawImgBean = new JigsawImgBean();
                     jigsawImgBean.setImgPath(filePath);
@@ -69,7 +79,7 @@ public class ImgUtil {
                 }
                 y+=mHeight;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return list;

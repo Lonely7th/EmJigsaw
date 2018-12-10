@@ -6,6 +6,7 @@
     <ImageView
         android:id="@+id/iv_content"
         android:layout_width="match_parent"
-        android:layout_height="120dp" />
+        android:layout_height="120dp"
+        android:layout_margin="2dp"/>
 
 </RelativeLayout>

@@ -25,7 +25,6 @@ public class ToastUtil {
 
     /**
      * 在主线程执行Runnable
-     * Created by fengshzh on 28/02/2017.
      */
     static class MainThreadDelivery {
         private final Handler handler = new Handler(Looper.getMainLooper());
