@@ -48,9 +48,9 @@ public class JigsawAdapter extends YBaseAdapter<JigsawImgBean> {
 
         @Override
         public void bindData(final int position) {
-//            Glide.with(mContext)
-//                    .load(mLists.get(position).getImgPath())
-//                    .into(ivContent);
+            Glide.with(mContext)
+                    .load(mLists.get(position).getImgPath())
+                    .into(ivContent);
         }
     }
 }

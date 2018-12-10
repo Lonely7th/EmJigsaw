@@ -5,7 +5,6 @@
 
     <ImageView
         android:id="@+id/iv_content"
-        android:background="@drawable/test"
         android:layout_width="match_parent"
         android:layout_height="120dp" />
 
