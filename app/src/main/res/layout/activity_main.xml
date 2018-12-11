@@ -9,6 +9,7 @@
     <com.em.jigsaw.view.JigsawView
         android:id="@+id/view_jigsaw"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+        android:layout_width="match_parent"
+        android:background="#000000"/>
 
 </RelativeLayout>

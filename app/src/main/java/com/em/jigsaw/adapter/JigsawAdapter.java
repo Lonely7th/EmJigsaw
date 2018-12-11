@@ -1,11 +1,8 @@
 package com.em.jigsaw.adapter;
 
 import android.content.Context;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.em.jigsaw.R;
@@ -41,7 +38,7 @@ public class JigsawAdapter extends YBaseAdapter<JigsawImgBean> {
 
         @Override
         public View getInflateView(Context mContext) {
-            View view = View.inflate(mContext, R.layout.item_jigsaw, null);
+            View view = View.inflate(mContext, R.layout.item_jigsaw_view, null);
             ivContent = view.findViewById(R.id.iv_content);
             return view;
         }

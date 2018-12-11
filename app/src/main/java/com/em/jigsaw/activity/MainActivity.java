@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ImgUtil imgUtil;
     private JigsawAdapter jigsawAdapter;
-    private List<JigsawImgBean> list = new ArrayList<>();
+    private ArrayList<JigsawImgBean> list = new ArrayList<>();
 
     private ImagePicker imagePicker;
 
@@ -63,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initData() {
         jigsawAdapter = new JigsawAdapter(list, MainActivity.this);
-        viewJigsaw.setNumColumns(3);
-        viewJigsaw.setAdapter(jigsawAdapter);
         startImagePicker(ContentKey.SelectPic_Gallery);
     }
 
@@ -80,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateJigsawList(Bitmap bitmap){
         list.clear();
         list.addAll(imgUtil.getImgArray(bitmap,ContentKey.Format_4_3));
-        jigsawAdapter.notifyDataSetChanged();
+        viewJigsaw.setLabels(list,ContentKey.Format_4_3);
     }
 
     /**

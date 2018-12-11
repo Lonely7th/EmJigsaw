@@ -12,6 +12,8 @@ public class JigsawImgBean {
     private int CurIndex;
     //正确索引
     private int RealIndex;
+    //图片展示位置
+    private int[] indexArray;
 
     public String getImgPath() {
         return ImgPath;
@@ -35,5 +37,13 @@ public class JigsawImgBean {
 
     public void setRealIndex(int realIndex) {
         RealIndex = realIndex;
+    }
+
+    public int[] getIndexArray() {
+        return indexArray;
+    }
+
+    public void setIndexArray(int[] indexArray) {
+        this.indexArray = indexArray;
     }
 }

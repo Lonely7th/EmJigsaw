@@ -72,6 +72,8 @@ public class ImgUtil {
                     jigsawImgBean.setImgPath(filePath);
                     jigsawImgBean.setCurIndex(index);
                     jigsawImgBean.setRealIndex(index);
+                    int[] index_array = {i,k};
+                    jigsawImgBean.setIndexArray(index_array);
                     list.add(jigsawImgBean);
 
                     x += mWidth;
