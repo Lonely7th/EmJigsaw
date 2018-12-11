@@ -14,6 +14,8 @@ public class JigsawImgBean {
     private int RealIndex;
     //图片展示位置
     private int[] indexArray;
+    //图片尺寸
+    private int[] ImgFormat;
 
     public String getImgPath() {
         return ImgPath;
@@ -45,5 +47,13 @@ public class JigsawImgBean {
 
     public void setIndexArray(int[] indexArray) {
         this.indexArray = indexArray;
+    }
+
+    public int[] getImgFormat() {
+        return ImgFormat;
+    }
+
+    public void setImgFormat(int[] imgFormat) {
+        ImgFormat = imgFormat;
     }
 }

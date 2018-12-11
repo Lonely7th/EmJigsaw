@@ -26,6 +26,7 @@
             android:name="com.linchaolong.android.imagepicker.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".activity.JigsawListActivity" />
+        <activity android:name=".activity.HomeActivity" />
     </application>
 
 </manifest>

@@ -7,6 +7,11 @@ package com.em.jigsaw.base;
  */
 public class ContentKey {
     /**
+     * 图片尺寸
+     */
+    public static final int[] ImgFormat_9_16 = {9,16,540,960};// 宽9高16
+
+    /**
      * 图片裁剪格式
      */
     public static final int[] Format_3_3 = {3,3};

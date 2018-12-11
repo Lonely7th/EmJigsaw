@@ -1,16 +1,12 @@
 package com.em.jigsaw.view;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.em.jigsaw.R;
@@ -156,10 +152,12 @@ public class JigsawView extends ViewGroup{
         final View view = View.inflate(mContext, R.layout.item_jigsaw_view, null);
         final ImageView ivContent = view.findViewById(R.id.iv_content);
 
-//        RelativeLayout.LayoutParams linearParams =(RelativeLayout.LayoutParams) ivContent.getLayoutParams();
-//        linearParams.height = 600;
-//        linearParams.width = 400;
-//        ivContent.setLayoutParams(linearParams);
+        Log.d(TAG,"getMeasuredWidth() = " + getMeasuredWidth());
+        Log.d(TAG,"getMeasuredHeight() = " + getMeasuredHeight());
+        RelativeLayout.LayoutParams linearParams =(RelativeLayout.LayoutParams) ivContent.getLayoutParams();
+        linearParams.height = getMeasuredHeight() / 4;
+        linearParams.width = getMeasuredWidth() / 3;
+        ivContent.setLayoutParams(linearParams);
 
         Glide.with(mContext).load(bean.getImgPath()).into(ivContent);
 

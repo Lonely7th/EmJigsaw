@@ -19,7 +19,6 @@ import com.linchaolong.android.imagepicker.cropper.CropImage;
 import com.linchaolong.android.imagepicker.cropper.CropImageView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initData() {
         jigsawAdapter = new JigsawAdapter(list, MainActivity.this);
-        startImagePicker(ContentKey.SelectPic_Gallery);
+        startImagePicker(ContentKey.SelectPic_Gallery,ContentKey.ImgFormat_9_16);
     }
 
     /**
@@ -77,14 +76,14 @@ public class MainActivity extends AppCompatActivity {
      */
     private void updateJigsawList(Bitmap bitmap){
         list.clear();
-        list.addAll(imgUtil.getImgArray(bitmap,ContentKey.Format_4_3));
+        list.addAll(imgUtil.getImgArray(bitmap,ContentKey.Format_4_3,ContentKey.ImgFormat_9_16));
         viewJigsaw.setLabels(list,ContentKey.Format_4_3);
     }
 
     /**
      * 开始选择图片
      */
-    private void startImagePicker(int type){
+    private void startImagePicker(int type,final int[] format){
         switch (type){
             case ContentKey.SelectPic_Camera:
                 imagePicker.startCamera(MainActivity.this, new ImagePicker.Callback() {
@@ -106,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
                         builder.setMultiTouchEnabled(false)// 是否启动多点触摸
                                 .setGuidelines(CropImageView.Guidelines.OFF)// 设置网格显示模式
                                 .setCropShape(CropImageView.CropShape.RECTANGLE)// 圆形/矩形
-                                .setRequestedSize(540, 960)// 调整裁剪后的图片最终大小
-                                .setAspectRatio(9, 16);// 宽高比
+                                .setRequestedSize(format[2], format[3])// 调整裁剪后的图片最终大小
+                                .setAspectRatio(format[0], format[1]);// 宽高比
                     }
 
                     // 用户拒绝授权回调
@@ -136,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
                         builder.setMultiTouchEnabled(false)// 是否启动多点触摸
                                 .setGuidelines(CropImageView.Guidelines.OFF)// 设置网格显示模式
                                 .setCropShape(CropImageView.CropShape.RECTANGLE)// 圆形/矩形
-                                .setRequestedSize(540, 960)// 调整裁剪后的图片最终大小
-                                .setAspectRatio(9, 16);// 宽高比
+                                .setRequestedSize(format[2], format[3])// 调整裁剪后的图片最终大小
+                                .setAspectRatio(format[0], format[1]);// 宽高比
                     }
 
                     // 用户拒绝授权回调

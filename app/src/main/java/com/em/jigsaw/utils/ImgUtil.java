@@ -53,18 +53,22 @@ public class ImgUtil {
 
     /**
      * 拆分图片
+     * @param bm 图片内容
+     * @param cropFormat 裁剪图片的格式
+     * @param ImgFormat 原图的格式
+     * @return 裁剪获得图片的列表
      */
-    public ArrayList<JigsawImgBean> getImgArray(Bitmap bm, int[] format){
+    public ArrayList<JigsawImgBean> getImgArray(Bitmap bm, int[] cropFormat, int[] ImgFormat){
         ArrayList<JigsawImgBean> list = new ArrayList<>();
 
         try {
             int x,y = 0,index = 0;
-            int mHeight = bm.getHeight() / format[0];
-            int mWidth = bm.getWidth() / format[1];
+            int mHeight = bm.getHeight() / cropFormat[0];
+            int mWidth = bm.getWidth() / cropFormat[1];
 
-            for(int i = 0;i < format[0];i++){
+            for(int i = 0;i < cropFormat[0];i++){
                 x = 0;
-                for(int k = 0;k < format[1];k++){
+                for(int k = 0;k < cropFormat[1];k++){
                     Bitmap bm1 = ImgSplit(bm,x,y,mWidth,mHeight);
                     String filePath = ImgSave(bm1,"" + System.currentTimeMillis() + i + k + ".png");
 
@@ -72,6 +76,7 @@ public class ImgUtil {
                     jigsawImgBean.setImgPath(filePath);
                     jigsawImgBean.setCurIndex(index);
                     jigsawImgBean.setRealIndex(index);
+                    jigsawImgBean.setImgFormat(ImgFormat);
                     int[] index_array = {i,k};
                     jigsawImgBean.setIndexArray(index_array);
                     list.add(jigsawImgBean);
