@@ -39,6 +39,7 @@ public class JigsawView extends ViewGroup {
     private ArrayList<JigsawImgBean> mLabels = new ArrayList<>();
 
     private View dragView = null;
+    private ImageView dragImageView = null;
 
     public JigsawView(Context context) {
         super(context);
@@ -119,7 +120,7 @@ public class JigsawView extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        int count = getChildCount();
+        int count = getChildCount() - 1;
         for (int i = 0; i < count; i++) {
             View view = getChildAt(i);
 
@@ -163,7 +164,15 @@ public class JigsawView extends ViewGroup {
         final int groupViewTop = location[1];
         Log.d(TAG,"groupViewLeft = " + groupViewLeft);
         Log.d(TAG,"groupViewTop = " + groupViewTop);
-        dragView = getChildAt(8);
+
+        dragView = View.inflate(mContext, R.layout.item_jigsaw_view, null);
+        dragImageView = dragView.findViewById(R.id.iv_content);
+        RelativeLayout.LayoutParams linearParams =(RelativeLayout.LayoutParams) dragImageView.getLayoutParams();
+        linearParams.height = itemHeight;
+        linearParams.width = itemWidth;
+        dragImageView.setLayoutParams(linearParams);
+        dragView.setTag(-1);
+        addView(dragView);
 
         setOnTouchListener(new OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
@@ -176,6 +185,8 @@ public class JigsawView extends ViewGroup {
                         //获取当前按下的坐标
                         startX = (int) event.getRawX();
                         startY = (int) event.getRawY();
+
+                        Glide.with(mContext).load(mLabels.get(0).getImgPath()).into(dragImageView);
                         Log.d(TAG,"startX = " + startX);
                         Log.d(TAG,"startY = " + startY);
                         break;
@@ -183,8 +194,8 @@ public class JigsawView extends ViewGroup {
                         //获取移动后的坐标
                         int left = (int) event.getRawX() - groupViewLeft - (itemWidth / 2);
                         int top = (int) event.getRawY() - groupViewTop - (itemHeight / 2);
-                        int right = left + dragView.getMeasuredWidth();
-                        int bottom = top + dragView.getMeasuredHeight();
+                        int right = left + dragImageView.getMeasuredWidth();
+                        int bottom = top + dragImageView.getMeasuredHeight();
                         dragView.layout(left, top, right, bottom);
                         break;
                     case MotionEvent.ACTION_UP:
@@ -198,12 +209,6 @@ public class JigsawView extends ViewGroup {
                 return true;
             }
         });
-    }
-
-    /**
-     * 刷新UI
-     */
-    public void updateLabels(ArrayList<JigsawImgBean> labels){
     }
 
     private void addLabel(final JigsawImgBean bean,final int position){
