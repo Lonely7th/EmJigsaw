@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.em.jigsaw.R;
 import com.em.jigsaw.bean.JigsawImgBean;
+import com.em.jigsaw.callback.OnJigsawChangedListener;
 
 import java.util.ArrayList;
 
@@ -40,6 +41,9 @@ public class JigsawView extends ViewGroup {
 
     private View dragView = null;
     private ImageView dragImageView = null;
+    boolean validClick = false;// 有效点击
+
+    private OnJigsawChangedListener onJigsawChangedListener;
 
     public JigsawView(Context context) {
         super(context);
@@ -127,6 +131,10 @@ public class JigsawView extends ViewGroup {
             int x = mLabels.get(i).getIndexArray()[1] * view.getMeasuredWidth();
             int y = mLabels.get(i).getIndexArray()[0] * view.getMeasuredHeight();
 
+            // 记录当前View在父控件的位置
+            int[] arrayImgPosition = {initialLeft + x, initialTop + y, initialLeft + x + view.getMeasuredWidth(), initialTop + y + view.getMeasuredHeight()};
+            mLabels.get(i).setImgPosition(arrayImgPosition);
+
             view.layout(initialLeft + x, initialTop + y, initialLeft + x + view.getMeasuredWidth(), initialTop + y + view.getMeasuredHeight());
         }
     }
@@ -162,8 +170,6 @@ public class JigsawView extends ViewGroup {
         getLocationOnScreen(location);
         final int groupViewLeft = location[0];
         final int groupViewTop = location[1];
-        Log.d(TAG,"groupViewLeft = " + groupViewLeft);
-        Log.d(TAG,"groupViewTop = " + groupViewTop);
 
         dragView = View.inflate(mContext, R.layout.item_jigsaw_view, null);
         dragImageView = dragView.findViewById(R.id.iv_content);
@@ -179,31 +185,47 @@ public class JigsawView extends ViewGroup {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 int startY,startX,endX,endY;
+                int startIndex,endIndex;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         Log.d(TAG, "ACTION_DOWN");
                         //获取当前按下的坐标
-                        startX = (int) event.getRawX();
-                        startY = (int) event.getRawY();
-
-                        Glide.with(mContext).load(mLabels.get(0).getImgPath()).into(dragImageView);
+                        startX = (int) event.getRawX() - groupViewLeft;
+                        startY = (int) event.getRawY() - groupViewTop;
                         Log.d(TAG,"startX = " + startX);
                         Log.d(TAG,"startY = " + startY);
+
+                        startIndex = getTouchView(startX, startY);
+                        Log.d(TAG,"startIndex = " + startIndex);
+
+                        if(startIndex != -1){
+                            validClick = true;
+                            Glide.with(mContext).load(mLabels.get(startIndex).getImgPath()).into(dragImageView);
+                        }else{
+                            validClick = false;
+                        }
                         break;
                     case MotionEvent.ACTION_MOVE:
                         //获取移动后的坐标
-                        int left = (int) event.getRawX() - groupViewLeft - (itemWidth / 2);
-                        int top = (int) event.getRawY() - groupViewTop - (itemHeight / 2);
-                        int right = left + dragImageView.getMeasuredWidth();
-                        int bottom = top + dragImageView.getMeasuredHeight();
-                        dragView.layout(left, top, right, bottom);
+                        if(validClick){
+                            int left = (int) event.getRawX() - groupViewLeft - (itemWidth / 2);
+                            int top = (int) event.getRawY() - groupViewTop - (itemHeight / 2);
+                            int right = left + dragImageView.getMeasuredWidth();
+                            int bottom = top + dragImageView.getMeasuredHeight();
+                            dragView.layout(left, top, right, bottom);
+                        }
                         break;
                     case MotionEvent.ACTION_UP:
                         Log.d(TAG, "ACTION_UP");
-                        endX = (int) event.getRawX();
-                        endY = (int) event.getRawY();
+                        endX = (int) event.getRawX() - groupViewLeft;
+                        endY = (int) event.getRawY() - groupViewTop;
                         Log.d(TAG,"endX = " + endX);
                         Log.d(TAG,"endY = " + endY);
+                        validClick = false;
+
+                        if(onJigsawChangedListener != null){
+                            onJigsawChangedListener.onChanged(mLabels);
+                        }
                         break;
                 }
                 return true;
@@ -211,7 +233,7 @@ public class JigsawView extends ViewGroup {
         });
     }
 
-    private void addLabel(final JigsawImgBean bean,final int position){
+    private void addLabel(JigsawImgBean bean,int position){
         final View view = View.inflate(mContext, R.layout.item_jigsaw_view, null);
         final ImageView ivContent = view.findViewById(R.id.iv_content);
 
@@ -240,5 +262,19 @@ public class JigsawView extends ViewGroup {
         //label通过tag保存自己的位置(position)
         view.setTag(position);
         addView(view);
+    }
+
+    /**
+     * 获取被选择的View
+     */
+    private int getTouchView(int x, int y){
+        for(int i = 0;i < mLabels.size();i++){
+            JigsawImgBean bean = mLabels.get(i);
+            int[] array = bean.getImgPosition();
+            if(array[0] < x && x < array[2] && array[1] < y && y < array[3]){
+                return i;
+            }
+        }
+        return -1;
     }
 }
