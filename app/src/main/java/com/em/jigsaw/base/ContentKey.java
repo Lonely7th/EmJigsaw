@@ -17,6 +17,7 @@ public class ContentKey {
     public static final int[] Format_3_3 = {3,3};
     public static final int[] Format_4_3 = {4,3};// 4行3列
     public static final int[] Format_4_4 = {4,4};
+    public static final int[] Format_6_4 = {6,4};
 
     /**
      * 选择图片的方式

@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.em.jigsaw.R;
 import com.em.jigsaw.bean.JigsawImgBean;
 import com.em.jigsaw.callback.OnJigsawChangedListener;
+import com.em.jigsaw.utils.ImgUtil;
 
 import java.util.ArrayList;
 
@@ -26,7 +27,7 @@ public class JigsawView extends ViewGroup {
     private static final String TAG = "JigsawView";
 
     private Context mContext;
-    private int[] format = null;
+    private ImgUtil imgUtil;
     private int[] location = new int[2];// 记录JigsawView在父控件的位置
 
     private int contentHeight = 0;// 记录内容的高度
@@ -34,30 +35,39 @@ public class JigsawView extends ViewGroup {
     private int maxLineWidth = 0;// 记录最宽的行宽
     private int maxItemHeight = 0;// 记录一行中item高度最大的高度
 
-    private int initialLeft,initialTop;// 初始偏移量
-    private int itemHeight,itemWidth;// 每个View的尺寸
+    private double initialLeft,initialTop;// 初始偏移量
+    private double itemHeight,itemWidth;// 每个View的尺寸
 
     private ArrayList<JigsawImgBean> mLabels = new ArrayList<>();
 
     private View dragView = null;
     private ImageView dragImageView = null;
-    boolean validClick = false;// 有效点击
+    private boolean validClick = false;// 有效点击
+    private int startY,startX,endX,endY;
+    private int startIndex = -1,endIndex = -1,curIndex = -1;
+
+    private int groupViewLeft,groupViewTop;// 当前ViewGroup的左边距和上边距
 
     private OnJigsawChangedListener onJigsawChangedListener;
 
     public JigsawView(Context context) {
         super(context);
-        this.mContext = context;
+        init(context);
     }
 
     public JigsawView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.mContext = context;
+        init(context);
     }
 
     public JigsawView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(context);
+    }
+
+    private void init(Context context){
         this.mContext = context;
+        imgUtil = new ImgUtil(context);
     }
 
     @Override
@@ -132,21 +142,17 @@ public class JigsawView extends ViewGroup {
             int y = mLabels.get(i).getIndexArray()[0] * view.getMeasuredHeight();
 
             // 记录当前View在父控件的位置
-            int[] arrayImgPosition = {initialLeft + x, initialTop + y, initialLeft + x + view.getMeasuredWidth(), initialTop + y + view.getMeasuredHeight()};
+            double[] arrayImgPosition = {initialLeft + x, initialTop + y, initialLeft + x + view.getMeasuredWidth(), initialTop + y + view.getMeasuredHeight()};
             mLabels.get(i).setImgPosition(arrayImgPosition);
 
-            view.layout(initialLeft + x, initialTop + y, initialLeft + x + view.getMeasuredWidth(), initialTop + y + view.getMeasuredHeight());
+            view.layout((int)arrayImgPosition[0], (int)arrayImgPosition[1], (int)arrayImgPosition[2], (int)arrayImgPosition[3]);
         }
     }
 
     /**
      * 设置标签内容
      */
-    public void setLabels(ArrayList<JigsawImgBean> labels,int[] format) {
-        this.format = format;
-        if(format == null)
-            throw new NullPointerException("");
-
+    public void setLabels(ArrayList<JigsawImgBean> labels) {
         // 清空Labels
         removeAllViews();
         mLabels.clear();
@@ -163,32 +169,52 @@ public class JigsawView extends ViewGroup {
         initDragView();
     }
 
+    public void updateLabels(){
+        // 清空Labels
+        removeAllViews();
+        for (int i = 0; i < mLabels.size(); i++) {
+            addLabel(mLabels.get(i), i);
+        }
+        addDragView();
+    }
+
+    /**
+     * 刷新Label选中状态
+     */
+    public void updateLabelsTouchStatus(){
+        int count = getChildCount() - 1;
+        for (int i = 0; i < count; i++) {
+            View view = getChildAt(i);
+            if(curIndex == i){
+                view.setAlpha(0.7f);
+            }else{
+                view.setAlpha(1.0f);
+            }
+        }
+    }
+
+    /**
+     * 设置View变化事件监听
+     */
+    public void setOnChangedListener(OnJigsawChangedListener onJigsawChangedListener){
+        this.onJigsawChangedListener = onJigsawChangedListener;
+    }
+
     /**
      * 初始化拖动控件
      */
     private void initDragView(){
         getLocationOnScreen(location);
-        final int groupViewLeft = location[0];
-        final int groupViewTop = location[1];
+        groupViewLeft = location[0];
+        groupViewTop = location[1];
 
-        dragView = View.inflate(mContext, R.layout.item_jigsaw_view, null);
-        dragImageView = dragView.findViewById(R.id.iv_content);
-        RelativeLayout.LayoutParams linearParams =(RelativeLayout.LayoutParams) dragImageView.getLayoutParams();
-        linearParams.height = itemHeight;
-        linearParams.width = itemWidth;
-        dragImageView.setLayoutParams(linearParams);
-        dragView.setTag(-1);
-        addView(dragView);
-
+        addDragView();
         setOnTouchListener(new OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                int startY,startX,endX,endY;
-                int startIndex,endIndex;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        Log.d(TAG, "ACTION_DOWN");
                         //获取当前按下的坐标
                         startX = (int) event.getRawX() - groupViewLeft;
                         startY = (int) event.getRawY() - groupViewTop;
@@ -208,20 +234,35 @@ public class JigsawView extends ViewGroup {
                     case MotionEvent.ACTION_MOVE:
                         //获取移动后的坐标
                         if(validClick){
-                            int left = (int) event.getRawX() - groupViewLeft - (itemWidth / 2);
-                            int top = (int) event.getRawY() - groupViewTop - (itemHeight / 2);
-                            int right = left + dragImageView.getMeasuredWidth();
-                            int bottom = top + dragImageView.getMeasuredHeight();
-                            dragView.layout(left, top, right, bottom);
+                            int moveIndex = getTouchView((int) event.getRawX() - groupViewLeft, (int) event.getRawY() - groupViewTop);
+                            if(moveIndex != curIndex){
+                                curIndex = moveIndex;
+                                updateLabelsTouchStatus();
+                            }
+
+                            double left = event.getRawX() - groupViewLeft - (itemWidth / 2);
+                            double top = event.getRawY() - groupViewTop - (itemHeight / 2);
+                            double right = left + dragImageView.getMeasuredWidth();
+                            double bottom = top + dragImageView.getMeasuredHeight();
+                            dragView.layout((int)left, (int)top, (int)right, (int)bottom);
                         }
                         break;
                     case MotionEvent.ACTION_UP:
-                        Log.d(TAG, "ACTION_UP");
                         endX = (int) event.getRawX() - groupViewLeft;
                         endY = (int) event.getRawY() - groupViewTop;
                         Log.d(TAG,"endX = " + endX);
                         Log.d(TAG,"endY = " + endY);
+
+                        endIndex = getTouchView(endX, endY);
+                        Log.d(TAG,"endIndex = " + endIndex);
+
                         validClick = false;
+                        if(startIndex != -1 && endIndex != -1){
+                            ArrayList<JigsawImgBean> newLabels = imgUtil.swapImgArray(mLabels,startIndex,endIndex);
+                            mLabels.clear();
+                            mLabels.addAll(newLabels);
+                        }
+                        updateLabels();
 
                         if(onJigsawChangedListener != null){
                             onJigsawChangedListener.onChanged(mLabels);
@@ -231,6 +272,20 @@ public class JigsawView extends ViewGroup {
                 return true;
             }
         });
+    }
+
+    /**
+     * 添加拖动控件
+     */
+    private void addDragView(){
+        dragView = View.inflate(mContext, R.layout.item_jigsaw_view, null);
+        dragImageView = dragView.findViewById(R.id.iv_content);
+        RelativeLayout.LayoutParams linearParams =(RelativeLayout.LayoutParams) dragImageView.getLayoutParams();
+        linearParams.height = (int) itemHeight;
+        linearParams.width = (int) itemWidth;
+        dragImageView.setLayoutParams(linearParams);
+        dragView.setTag(-1);
+        addView(dragView);
     }
 
     private void addLabel(JigsawImgBean bean,int position){
@@ -243,19 +298,19 @@ public class JigsawView extends ViewGroup {
         //计算每个View的尺寸
         RelativeLayout.LayoutParams linearParams =(RelativeLayout.LayoutParams) ivContent.getLayoutParams();
         if(screenRate > picRate){
-            itemHeight = getMeasuredHeight() / format[0];
-            itemWidth = itemHeight * (bean.getImgFormat()[0] / format[1]) / (bean.getImgFormat()[1] / format[0]);
+            itemHeight = (double) getMeasuredHeight() / (double) bean.getCropFormat()[0];
+            itemWidth = itemHeight * ((double)bean.getImgFormat()[0] / (double)bean.getCropFormat()[1]) / ((double)bean.getImgFormat()[1] / (double)bean.getCropFormat()[0]);
         }else{
-            itemWidth = getMeasuredWidth() / format[1];
-            itemHeight = itemWidth * (bean.getImgFormat()[1] / format[0]) / (bean.getImgFormat()[0] / format[1]);
+            itemWidth = (double) getMeasuredWidth() / (double) bean.getCropFormat()[1];
+            itemHeight = itemWidth * ((double)bean.getImgFormat()[1] / (double)bean.getCropFormat()[0]) / ((double)bean.getImgFormat()[0] / (double)bean.getCropFormat()[1]);
         }
-        linearParams.height = itemHeight;
-        linearParams.width = itemWidth;
+        linearParams.height = (int) itemHeight;
+        linearParams.width = (int) itemWidth;
         ivContent.setLayoutParams(linearParams);
 
         //计算初始的偏移量，用于设置内容居中显示
-        initialLeft = (getMeasuredWidth() - itemWidth*format[1]) / 2;
-        initialTop = (getMeasuredHeight() - itemHeight*format[0]) / 2;
+        initialLeft = (getMeasuredWidth() - itemWidth*bean.getCropFormat()[1]) / 2;
+        initialTop = (getMeasuredHeight() - itemHeight*bean.getCropFormat()[0]) / 2;
 
         Glide.with(mContext).load(bean.getImgPath()).into(ivContent);
 
@@ -270,7 +325,7 @@ public class JigsawView extends ViewGroup {
     private int getTouchView(int x, int y){
         for(int i = 0;i < mLabels.size();i++){
             JigsawImgBean bean = mLabels.get(i);
-            int[] array = bean.getImgPosition();
+            double[] array = bean.getImgPosition();
             if(array[0] < x && x < array[2] && array[1] < y && y < array[3]){
                 return i;
             }

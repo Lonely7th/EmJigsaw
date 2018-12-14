@@ -77,8 +77,7 @@ public class ImgUtil {
                     jigsawImgBean.setCurIndex(index);
                     jigsawImgBean.setRealIndex(index);
                     jigsawImgBean.setImgFormat(ImgFormat);
-                    int[] index_array = {i,k};
-                    jigsawImgBean.setIndexArray(index_array);
+                    jigsawImgBean.setCropFormat(cropFormat);
                     list.add(jigsawImgBean);
 
                     x += mWidth;
@@ -107,11 +106,12 @@ public class ImgUtil {
     /**
      * 交换图片位置
      */
-    public void swapImgArray(ArrayList<JigsawImgBean> list,int i1,int i2){
+    public ArrayList<JigsawImgBean> swapImgArray(ArrayList<JigsawImgBean> list,int i1,int i2){
         Collections.swap(list,i1,i2);
         for(int i = 0;i < list.size();i++){
             list.get(i).setCurIndex(i);
         }
+        return new ArrayList<>(list);
     }
 
     /**

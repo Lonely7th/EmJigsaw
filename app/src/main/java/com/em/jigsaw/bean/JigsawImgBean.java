@@ -12,12 +12,12 @@ public class JigsawImgBean {
     private int CurIndex;
     // 正确索引
     private int RealIndex;
-    // 图片展示位置
-    private int[] indexArray;
     // 图片尺寸
     private int[] ImgFormat;
     // 图片在父控件中的位置
-    private int[] ImgPosition;// {startX,startY,endX,endY}
+    private double[] ImgPosition;// {startX,startY,endX,endY}
+    //裁剪格式
+    private int[] cropFormat;
 
     public String getImgPath() {
         return ImgPath;
@@ -43,12 +43,20 @@ public class JigsawImgBean {
         RealIndex = realIndex;
     }
 
+    //获取图片索引
     public int[] getIndexArray() {
+        int index = 0;
+        int[] indexArray = new int[2];
+        for(int x = 0;x < cropFormat[0];x++){
+            for(int y = 0;y < cropFormat[1];y++){
+                if(CurIndex == index){
+                    indexArray[0] = x;
+                    indexArray[1] = y;
+                }
+                index++;
+            }
+        }
         return indexArray;
-    }
-
-    public void setIndexArray(int[] indexArray) {
-        this.indexArray = indexArray;
     }
 
     public int[] getImgFormat() {
@@ -59,11 +67,19 @@ public class JigsawImgBean {
         ImgFormat = imgFormat;
     }
 
-    public int[] getImgPosition() {
+    public double[] getImgPosition() {
         return ImgPosition;
     }
 
-    public void setImgPosition(int[] imgPosition) {
+    public void setImgPosition(double[] imgPosition) {
         ImgPosition = imgPosition;
+    }
+
+    public int[] getCropFormat() {
+        return cropFormat;
+    }
+
+    public void setCropFormat(int[] cropFormat) {
+        this.cropFormat = cropFormat;
     }
 }
