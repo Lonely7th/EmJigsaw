@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
-    //private static final String TAG = "MainActivity";
+public class JigsawViewActivity extends AppCompatActivity {
+    //private static final String TAG = "JigsawViewActivity";
 
     @BindView(R.id.view_jigsaw)
     JigsawView viewJigsaw;
@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_jigsaw_view);
         ButterKnife.bind(this);
-        imgUtil = new ImgUtil(MainActivity.this);
+        imgUtil = new ImgUtil(JigsawViewActivity.this);
         imagePicker = new ImagePicker();
         initUI();
         initData();
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(ArrayList<JigsawImgBean> arrayList) {
                 if(imgUtil.jigsawSuccess(arrayList)){
-                    ToastUtil.show(MainActivity.this,"成功");
+                    ToastUtil.show(JigsawViewActivity.this,"成功");
                     ivContent.setVisibility(View.VISIBLE);
                     viewJigsaw.setVisibility(View.GONE);
                 }
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     private void startImagePicker(int type) {
         switch (type) {
             case ContentKey.SelectPic_Camera:
-                imagePicker.startCamera(MainActivity.this, new ImagePicker.Callback() {
+                imagePicker.startCamera(JigsawViewActivity.this, new ImagePicker.Callback() {
                     // 选择图片回调
                     @Override
                     public void onPickImage(Uri imageUri) {
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 break;
             case ContentKey.SelectPic_Gallery:
-                imagePicker.startGallery(MainActivity.this, new ImagePicker.Callback() {
+                imagePicker.startGallery(JigsawViewActivity.this, new ImagePicker.Callback() {
                     // 选择图片回调
                     @Override
                     public void onPickImage(Uri imageUri) {

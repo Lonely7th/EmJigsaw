@@ -4,10 +4,10 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="colorMain">#0586EE</color><!--app主颜色-->
+    <color name="colorMain">#2c2c2c</color><!--app主颜色-->
     <color name="colorPageBg">#F0F1F5</color><!--页面背景色-->
     <color name="colorWhite">#ffffff</color>
-    <color name="colorBlack">#000000</color>
+    <color name="colorBlack">#2c2c2c</color>
     <color name="colorHint">#999999</color>
     <color name="colorBg">#F0F1F5</color>
 

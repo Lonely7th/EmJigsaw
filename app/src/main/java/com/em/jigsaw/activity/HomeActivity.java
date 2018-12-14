@@ -18,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+//https://www.iconfont.cn/collections/detail?spm=a313x.7781069.1998910419.d9df05512&cid=13520
 public class HomeActivity extends AppCompatActivity {
 
     @BindView(R.id.tab1_Iv)
@@ -28,8 +29,6 @@ public class HomeActivity extends AppCompatActivity {
     RelativeLayout rlTab1;
     @BindView(R.id.tab2_Iv)
     ImageView tab2Iv;
-    @BindView(R.id.tab2_tv)
-    TextView tab2Tv;
     @BindView(R.id.rl_tab2)
     RelativeLayout rlTab2;
     @BindView(R.id.tab3_Iv)
@@ -85,11 +84,9 @@ public class HomeActivity extends AppCompatActivity {
      */
     private void clearBottomIcon() {
         tab1Tv.setTextColor(getResources().getColor(R.color.colorGary));
-        tab1Iv.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_background));
-        tab2Tv.setTextColor(getResources().getColor(R.color.colorGary));
-        tab2Iv.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_background));
+        tab1Iv.setImageDrawable(getResources().getDrawable(R.mipmap.icon_dashboard_n));
         tab3Tv.setTextColor(getResources().getColor(R.color.colorGary));
-        tab3Iv.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_background));
+        tab3Iv.setImageDrawable(getResources().getDrawable(R.mipmap.icon_explore_n));
     }
 
     /**
@@ -100,15 +97,13 @@ public class HomeActivity extends AppCompatActivity {
         switch (currentTabIndex){
             case 0:
                 tab1Tv.setTextColor(getResources().getColor(R.color.colorBlack));
-                tab1Iv.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_background));
+                tab1Iv.setImageDrawable(getResources().getDrawable(R.mipmap.icon_dashboard_s));
                 break;
             case 1:
-                tab2Tv.setTextColor(getResources().getColor(R.color.colorBlack));
-                tab2Iv.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_background));
                 break;
             case 2:
                 tab3Tv.setTextColor(getResources().getColor(R.color.colorBlack));
-                tab3Iv.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_background));
+                tab3Iv.setImageDrawable(getResources().getDrawable(R.mipmap.icon_explore_s));
                 break;
 
         }
