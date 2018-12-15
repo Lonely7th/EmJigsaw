@@ -12,4 +12,5 @@
     <color name="colorBg">#F0F1F5</color>
 
     <color name="colorGary">#888888</color>
+    <color name="colorDivider">#cdcdcd</color>
 </resources>

@@ -25,8 +25,11 @@
         <activity
             android:name="com.linchaolong.android.imagepicker.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".activity.JigsawListActivity" />
         <activity android:name=".activity.JigsawViewActivity" />
+        <activity android:name=".activity.AddJigsawViewActivity" />
+        <activity android:name=".activity.PersonalActivity" />
+        <activity android:name=".activity.ReleaseListActivity" />
+        <activity android:name=".activity.StarListActivity"></activity>
     </application>
 
 </manifest>

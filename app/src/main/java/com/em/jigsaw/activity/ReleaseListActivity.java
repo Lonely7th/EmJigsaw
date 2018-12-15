@@ -5,11 +5,11 @@ import android.os.Bundle;
 
 import com.em.jigsaw.R;
 
-public class JigsawListActivity extends AppCompatActivity {
+public class ReleaseListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_jigsaw_list);
+        setContentView(R.layout.activity_release_list);
     }
 }

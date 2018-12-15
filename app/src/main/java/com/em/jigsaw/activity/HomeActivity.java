@@ -3,6 +3,7 @@ package com.em.jigsaw.activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -118,7 +119,7 @@ public class HomeActivity extends AppCompatActivity {
                 switchFragment(mainFragment);
                 break;
             case R.id.rl_tab2:
-                //TODO 发布
+                startActivity(new Intent(HomeActivity.this,AddJigsawViewActivity.class));
                 break;
             case R.id.rl_tab3:
                 currentTabIndex = 2;
