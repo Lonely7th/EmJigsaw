@@ -12,5 +12,8 @@
     <color name="colorBg">#F0F1F5</color>
 
     <color name="colorGary">#888888</color>
+    <color name="colorRed">#d81e06</color>
     <color name="colorDivider">#cdcdcd</color>
+    <color name="colorDivider_n">#dbdbdb</color>
+    <color name="colorBlue">#1296db</color>
 </resources>

@@ -7,11 +7,24 @@
 
     <include layout="@layout/view_common_bar"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/topbar_view"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:divider="@color/colorDivider"
+        android:dividerHeight="0.5dp"
+        android:background="@color/colorWhite"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorDivider"/>
+
     <ListView
         android:id="@+id/main_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/colorDivider"
+        android:divider="@color/colorDivider_n"
         android:dividerHeight="0.5dp"/>
 
 </LinearLayout>

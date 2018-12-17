@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBg"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_common_bar"/>
+
+    <!--个人信息-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorWhite"
+        android:layout_marginTop="20dp">
+        <EditText
+            android:id="@+id/edt_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="请输入修改后的用户名"
+            android:textSize="14sp"
+            android:paddingRight="12dp"
+            android:paddingLeft="12dp"
+            android:background="@null"/>
+    </RelativeLayout>
+
+</LinearLayout>

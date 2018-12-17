@@ -27,15 +27,15 @@ public class JigsawListAdapter extends YBaseAdapter<JigsawListBean> {
 
     @Override
     public YBaseHolder initHolder() {
-        return new ArticleHolder(mContext, mList);
+        return new MyHolder(mContext, mList);
     }
 
-    private class ArticleHolder extends YBaseHolder<JigsawListBean> {
+    private class MyHolder extends YBaseHolder<JigsawListBean> {
 
         ImageView ivJigsaw,ivHead;
         TextView tvUserName,tvCreatTime,tvContent;
 
-        public ArticleHolder(Context mContext, List<JigsawListBean> mLists) {
+        public MyHolder(Context mContext, List<JigsawListBean> mLists) {
             super(mContext, mLists);
         }
 

@@ -8,12 +8,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="88dp"
         android:layout_weight="1">
         <ImageView
             android:id="@+id/iv_head"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@mipmap/icon_account_circle"/>
         <TextView
             android:id="@+id/tv_user_name"
@@ -27,23 +27,23 @@
             android:layout_marginTop="4dp"
             android:text="user_name"/>
         <TextView
-            android:id="@+id/tv_creat_time"
+            android:id="@+id/tv_zan_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/iv_head"
             android:layout_below="@+id/tv_user_name"
-            android:textColor="@color/colorHint"
+            android:textColor="@color/colorBlue"
             android:textSize="12sp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:text="2018-12-15 17:50"/>
+            android:layout_marginTop="4dp"
+            android:text="725人挑战/125人成功"/>
         <TextView
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/iv_head"
             android:layout_below="@+id/iv_head"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/colorGary"
             android:textSize="14sp"
             android:lines="2"
             android:layout_marginLeft="8dp"
@@ -54,10 +54,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2">
+        <TextView
+            android:id="@+id/tv_creat_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/colorDivider"
+            android:textSize="10sp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:text="2018-12-15 17:50"/>
         <ImageView
             android:id="@+id/iv_jigsaw"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scaleType="fitEnd"
+            android:src="@mipmap/icon_photo"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/tv_creat_time"
             android:padding="8dp"/>
     </RelativeLayout>
 

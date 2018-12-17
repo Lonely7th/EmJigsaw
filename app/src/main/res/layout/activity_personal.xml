@@ -9,44 +9,29 @@
 
     <!--个人信息-->
     <RelativeLayout
-        android:id="@+id/btn_user_info"
         android:layout_width="match_parent"
-        android:layout_height="88dp"
+        android:layout_height="80dp"
         android:background="@color/colorWhite"
         android:padding="8dp"
         android:layout_marginTop="20dp">
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textSize="14sp"
+            android:layout_marginLeft="8dp"
+            android:layout_centerVertical="true"
+            android:text="头像"/>
         <ImageView
             android:id="@+id/iv_head"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/iv_rigth_0"
             android:background="@mipmap/icon_account_circle"/>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:orientation="vertical"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@+id/iv_head">
-            <TextView
-                android:id="@+id/tv_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorBlack"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="user_name"/>
-            <TextView
-                android:id="@+id/tv_user_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_user_name"
-                android:textColor="@color/colorHint"
-                android:textSize="12sp"
-                android:layout_marginTop="4dp"
-                android:text="user_iduser_iduser_id"/>
-        </LinearLayout>
         <ImageView
+            android:id="@+id/iv_rigth_0"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerVertical="true"
@@ -54,32 +39,68 @@
             android:background="@mipmap/icon_chevron_right"/>
     </RelativeLayout>
 
-    <!--我的发布-->
+    <!--用户id-->
     <RelativeLayout
-        android:id="@+id/btn_release"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorWhite"
         android:padding="8dp"
         android:layout_marginTop="20dp">
-        <ImageView
-            android:id="@+id/iv_release_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
-            android:background="@mipmap/icon_assignment"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
-            android:layout_centerVertical="true"
-            android:orientation="vertical"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@+id/iv_release_icon"
             android:textSize="14sp"
-            android:text="我的发布"/>
+            android:layout_marginLeft="8dp"
+            android:layout_centerVertical="true"
+            android:text="用户 ID"/>
+        <TextView
+            android:id="@+id/tv_user_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGary"
+            android:textSize="14sp"
+            android:layout_toLeftOf="@+id/iv_rigth_1"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:text="user_id"/>
         <ImageView
+            android:id="@+id/iv_rigth_1"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:visibility="invisible"
+            android:background="@mipmap/icon_chevron_right"/>
+    </RelativeLayout>
+
+    <!--用户名-->
+    <RelativeLayout
+        android:id="@+id/btn_user_name"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorWhite"
+        android:padding="8dp"
+        android:layout_marginTop="1dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textSize="14sp"
+            android:layout_marginLeft="8dp"
+            android:layout_centerVertical="true"
+            android:text="用户昵称"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGary"
+            android:textSize="14sp"
+            android:layout_toLeftOf="@+id/iv_rigth_2"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:text="user_name"/>
+        <ImageView
+            android:id="@+id/iv_rigth_2"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerVertical="true"
@@ -87,70 +108,22 @@
             android:background="@mipmap/icon_chevron_right"/>
     </RelativeLayout>
 
-    <!--我的收藏-->
+    <!--注销登录-->
     <RelativeLayout
-        android:id="@+id/btn_star"
+        android:id="@+id/btn_logout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorWhite"
         android:padding="8dp"
-        android:layout_marginTop="20dp">
-        <ImageView
-            android:id="@+id/iv_star_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
-            android:background="@mipmap/icon_star_half"/>
+        android:layout_marginTop="28dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack"
-            android:layout_centerVertical="true"
-            android:orientation="vertical"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@+id/iv_star_icon"
+            android:textColor="@color/colorRed"
             android:textSize="14sp"
-            android:text="我的收藏"/>
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:background="@mipmap/icon_chevron_right"/>
-    </RelativeLayout>
-
-    <!--分享给好友-->
-    <RelativeLayout
-        android:id="@+id/btn_share"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/colorWhite"
-        android:padding="8dp"
-        android:layout_marginTop="0.5dp">
-        <ImageView
-            android:id="@+id/iv_share_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
-            android:background="@mipmap/icon_share"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack"
-            android:layout_centerVertical="true"
-            android:orientation="vertical"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@+id/iv_share_icon"
-            android:textSize="14sp"
-            android:text="分享给好友"/>
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:background="@mipmap/icon_chevron_right"/>
+            android:layout_centerInParent="true"
+            android:layout_marginRight="12dp"
+            android:text="注销登录"/>
     </RelativeLayout>
 
 </LinearLayout>

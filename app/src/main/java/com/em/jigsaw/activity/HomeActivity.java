@@ -119,7 +119,7 @@ public class HomeActivity extends AppCompatActivity {
                 switchFragment(mainFragment);
                 break;
             case R.id.rl_tab2:
-                startActivity(new Intent(HomeActivity.this,AddJigsawViewActivity.class));
+                startActivity(new Intent(HomeActivity.this,AddJigsawActivity.class));
                 break;
             case R.id.rl_tab3:
                 currentTabIndex = 2;

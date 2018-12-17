@@ -5,11 +5,11 @@ import android.os.Bundle;
 
 import com.em.jigsaw.R;
 
-public class AddJigsawViewActivity extends AppCompatActivity {
+public class MyStarListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_jigsaw_view);
+        setContentView(R.layout.activity_my_star_list);
     }
 }

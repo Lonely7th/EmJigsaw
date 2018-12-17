@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_user_name"
                 android:textColor="@color/colorHint"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:layout_marginTop="4dp"
                 android:text="user_iduser_iduser_id"/>
         </LinearLayout>
@@ -67,7 +67,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="8dp"
             android:background="@mipmap/icon_assignment"/>
         <TextView
             android:layout_width="wrap_content"
@@ -100,7 +100,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="8dp"
             android:background="@mipmap/icon_star_half"/>
         <TextView
             android:layout_width="wrap_content"
@@ -133,7 +133,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="8dp"
             android:background="@mipmap/icon_share"/>
         <TextView
             android:layout_width="wrap_content"
