@@ -36,8 +36,6 @@ public class JigsawViewActivity extends AppCompatActivity {
     private ImgUtil imgUtil;
     private ArrayList<JigsawImgBean> list = new ArrayList<>();
 
-    private ImagePicker imagePicker;
-
     private int[] ImgFormat = ContentKey.ImgFormat_9_16;
     private int[] CropFormat = ContentKey.Format_6_4;
 
@@ -47,27 +45,14 @@ public class JigsawViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_jigsaw_view);
         ButterKnife.bind(this);
         imgUtil = new ImgUtil(JigsawViewActivity.this);
-        imagePicker = new ImagePicker();
         initUI();
         initData();
-        initImagePicker();
-    }
-
-    /**
-     * 初始化图片选择器
-     */
-    private void initImagePicker() {
-        // 设置标题
-        imagePicker.setTitle("选择图片");
-        // 设置是否裁剪图片
-        imagePicker.setCropImage(true);
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
-        startImagePicker(ContentKey.SelectPic_Gallery);
     }
 
     /**
@@ -93,87 +78,5 @@ public class JigsawViewActivity extends AppCompatActivity {
         list.clear();
         list.addAll(imgUtil.sortImgArray(imgUtil.getImgArray(bitmap, CropFormat, ImgFormat)));
         viewJigsaw.setLabels(list);
-    }
-
-    /**
-     * 开始选择图片
-     */
-    private void startImagePicker(int type) {
-        switch (type) {
-            case ContentKey.SelectPic_Camera:
-                imagePicker.startCamera(JigsawViewActivity.this, new ImagePicker.Callback() {
-                    // 选择图片回调
-                    @Override
-                    public void onPickImage(Uri imageUri) {
-
-                    }
-
-                    // 裁剪图片回调
-                    @Override
-                    public void onCropImage(Uri imageUri) {
-                        ivContent.setImageURI(imageUri);
-                        updateJigsawList(imgUtil.getBitmap(imageUri));
-                    }
-
-                    // 自定义裁剪配置
-                    @Override
-                    public void cropConfig(CropImage.ActivityBuilder builder) {
-                        builder.setMultiTouchEnabled(false)// 是否启动多点触摸
-                                .setGuidelines(CropImageView.Guidelines.OFF)// 设置网格显示模式
-                                .setCropShape(CropImageView.CropShape.RECTANGLE)// 圆形/矩形
-                                .setRequestedSize(ImgFormat[2], ImgFormat[3])// 调整裁剪后的图片最终大小
-                                .setAspectRatio(ImgFormat[0], ImgFormat[1]);// 宽高比
-                    }
-
-                    // 用户拒绝授权回调
-                    @Override
-                    public void onPermissionDenied(int requestCode, String[] permissions, int[] grantResults) {
-                    }
-                });
-                break;
-            case ContentKey.SelectPic_Gallery:
-                imagePicker.startGallery(JigsawViewActivity.this, new ImagePicker.Callback() {
-                    // 选择图片回调
-                    @Override
-                    public void onPickImage(Uri imageUri) {
-
-                    }
-
-                    // 裁剪图片回调
-                    @Override
-                    public void onCropImage(Uri imageUri) {
-                        ivContent.setImageURI(imageUri);
-                        updateJigsawList(imgUtil.getBitmap(imageUri));
-                    }
-
-                    // 自定义裁剪配置
-                    @Override
-                    public void cropConfig(CropImage.ActivityBuilder builder) {
-                        builder.setMultiTouchEnabled(false)// 是否启动多点触摸
-                                .setGuidelines(CropImageView.Guidelines.OFF)// 设置网格显示模式
-                                .setCropShape(CropImageView.CropShape.RECTANGLE)// 圆形/矩形
-                                .setRequestedSize(ImgFormat[2], ImgFormat[3])// 调整裁剪后的图片最终大小
-                                .setAspectRatio(ImgFormat[0], ImgFormat[1]);// 宽高比
-                    }
-
-                    // 用户拒绝授权回调
-                    @Override
-                    public void onPermissionDenied(int requestCode, String[] permissions, int[] grantResults) {
-                    }
-                });
-                break;
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        imagePicker.onActivityResult(this, requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        imagePicker.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 }

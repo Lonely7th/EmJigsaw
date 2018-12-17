@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.AddJigsawActivity">
+    tools:context=".activity.JigsawViewActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <include layout="@layout/view_common_bar"/>
+
+    <com.em.jigsaw.view.JigsawView
+        android:id="@+id/view_jigsaw"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:background="#000000"/>
+
+    <ImageView
+        android:id="@+id/iv_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:background="#000000"
+        android:visibility="gone"/>
+
+</RelativeLayout>

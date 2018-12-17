@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.em.jigsaw.R;
@@ -20,12 +19,12 @@ import java.util.ArrayList;
  * Author ： JN Zhang .
  * Description ： .
  */
-public class MainTopBarAdapter extends RecyclerView.Adapter<MainTopBarAdapter.MyViewHoler> implements View.OnClickListener {
+public class TopBarAdapter extends RecyclerView.Adapter<TopBarAdapter.MyViewHoler> implements View.OnClickListener {
     private Context mContext;
     private ArrayList<MainTopBarBean> list;
     private OnRecycleViewItemClickListener mOnItemClickListener;
 
-    public MainTopBarAdapter(Context context, ArrayList<MainTopBarBean> data) {
+    public TopBarAdapter(Context context, ArrayList<MainTopBarBean> data) {
         mContext = context;
         list = data;
     }

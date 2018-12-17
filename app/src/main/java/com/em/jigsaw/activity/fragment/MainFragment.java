@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import android.widget.TextView;
 import com.em.jigsaw.R;
 import com.em.jigsaw.activity.JigsawViewActivity;
 import com.em.jigsaw.adapter.JigsawListAdapter;
-import com.em.jigsaw.adapter.MainTopBarAdapter;
+import com.em.jigsaw.adapter.TopBarAdapter;
 import com.em.jigsaw.bean.JigsawListBean;
 import com.em.jigsaw.bean.MainTopBarBean;
 
@@ -48,7 +47,7 @@ public class MainFragment extends Fragment {
     private List<JigsawListBean> list = new ArrayList<>();
     private JigsawListAdapter jigsawListAdapter;
     private ArrayList<MainTopBarBean> topBarBeanList = new ArrayList<>();
-    private MainTopBarAdapter mainTopBarAdapter;
+    private TopBarAdapter topBarAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,10 +80,10 @@ public class MainFragment extends Fragment {
         LinearLayoutManager mLayoutManage=new LinearLayoutManager(getActivity());
         mLayoutManage.setOrientation(OrientationHelper.HORIZONTAL);//设置滚动方向，横向滚动
         topbarView.setLayoutManager(mLayoutManage);
-        mainTopBarAdapter = new MainTopBarAdapter(getActivity(),topBarBeanList);
-        topbarView.setAdapter(mainTopBarAdapter);
+        topBarAdapter = new TopBarAdapter(getActivity(),topBarBeanList);
+        topbarView.setAdapter(topBarAdapter);
 
-        mainTopBarAdapter.setOnItemClickListener(new MainTopBarAdapter.OnRecycleViewItemClickListener() {
+        topBarAdapter.setOnItemClickListener(new TopBarAdapter.OnRecycleViewItemClickListener() {
             @Override
             public void OnItemClick(View view, int position) {
                 for(int i = 0;i < topBarBeanList.size();i++){
@@ -94,7 +93,7 @@ public class MainFragment extends Fragment {
                         topBarBeanList.get(i).setSelect(false);
                     }
                 }
-                mainTopBarAdapter.notifyDataSetChanged();
+                topBarAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -111,7 +110,7 @@ public class MainFragment extends Fragment {
             topBarBeanList.add(barBean);
         }
         jigsawListAdapter.notifyDataSetChanged();
-//        mainTopBarAdapter.notifyDataSetChanged();
+        topBarAdapter.notifyDataSetChanged();
     }
 
     @Override
