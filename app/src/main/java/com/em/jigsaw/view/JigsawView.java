@@ -299,10 +299,10 @@ public class JigsawView extends ViewGroup {
         RelativeLayout.LayoutParams linearParams =(RelativeLayout.LayoutParams) ivContent.getLayoutParams();
         if(screenRate > picRate){
             itemHeight = (double) getMeasuredHeight() / (double) bean.getCropFormat()[0];
-            itemWidth = itemHeight * ((double)bean.getImgFormat()[0] / (double)bean.getCropFormat()[1]) / ((double)bean.getImgFormat()[1] / (double)bean.getCropFormat()[0]);
+            itemWidth = (double) getMeasuredHeight() / bean.getImgFormat()[1] * bean.getImgFormat()[0] / bean.getCropFormat()[1];
         }else{
             itemWidth = (double) getMeasuredWidth() / (double) bean.getCropFormat()[1];
-            itemHeight = itemWidth * ((double)bean.getImgFormat()[1] / (double)bean.getCropFormat()[0]) / ((double)bean.getImgFormat()[0] / (double)bean.getCropFormat()[1]);
+            itemHeight = (double) getMeasuredWidth() / bean.getImgFormat()[0] * bean.getImgFormat()[1] / bean.getCropFormat()[0];
         }
         linearParams.height = (int) itemHeight;
         linearParams.width = (int) itemWidth;

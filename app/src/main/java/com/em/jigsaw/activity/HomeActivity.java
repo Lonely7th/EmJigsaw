@@ -194,8 +194,9 @@ public class HomeActivity extends AppCompatActivity {
                     // 裁剪图片回调
                     @Override
                     public void onCropImage(Uri imageUri) {
-                        startActivity(new Intent(HomeActivity.this,
-                                AddJigsawActivity.class).putExtra("imageUri",imageUri.toString()));
+                        startActivity(new Intent(HomeActivity.this, AddJigsawActivity.class)
+                                .putExtra("ImageUri",imageUri.toString())
+                                .putExtra("ImgFormat",ImgFormat));
                     }
 
                     // 自定义裁剪配置
@@ -225,8 +226,9 @@ public class HomeActivity extends AppCompatActivity {
                     // 裁剪图片回调
                     @Override
                     public void onCropImage(Uri imageUri) {
-                        startActivity(new Intent(HomeActivity.this,
-                                AddJigsawActivity.class).putExtra("imageUri",imageUri.toString()));
+                        startActivity(new Intent(HomeActivity.this, AddJigsawActivity.class)
+                                .putExtra("ImageUri",imageUri.toString())
+                                .putExtra("ImgFormat",ImgFormat));
                     }
 
                     // 自定义裁剪配置

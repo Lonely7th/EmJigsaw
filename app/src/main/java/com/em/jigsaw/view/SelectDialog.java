@@ -33,7 +33,6 @@ public class SelectDialog extends Dialog {
     private OnSelectListener onSelectListener = null;
 
     private List<String> mlist = new ArrayList<>();
-    private SelectDialogAdapter selectDialogAdapter;
 
     public SelectDialog(Context context) {
         super(context);
@@ -52,7 +51,7 @@ public class SelectDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_select);
         listView = findViewById(R.id.list_view);
-        selectDialogAdapter = new SelectDialogAdapter(mlist,context);
+        SelectDialogAdapter selectDialogAdapter = new SelectDialogAdapter(mlist, context);
         listView.setAdapter(selectDialogAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -69,6 +68,7 @@ public class SelectDialog extends Dialog {
                 dismiss();
             }
         });
+
         setCanceledOnTouchOutside(false);
         getWindow().setGravity(Gravity.BOTTOM);
 

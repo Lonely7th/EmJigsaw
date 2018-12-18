@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorBlack"
     tools:context=".activity.JigsawViewActivity">
 
     <include layout="@layout/view_common_bar"/>
+
+    <GridView
+        android:id="@+id/gv_format_select"
+        android:verticalSpacing="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:numColumns="auto_fit">
+    </GridView>
 
     <com.em.jigsaw.view.JigsawView
         android:id="@+id/view_jigsaw"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:background="#000000"/>
+        android:background="@color/colorBlack"
+        android:layout_marginBottom="8dp"/>
 
-    <ImageView
-        android:id="@+id/iv_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitCenter"
-        android:background="#000000"
-        android:visibility="gone"/>
-
-</RelativeLayout>
+</LinearLayout>

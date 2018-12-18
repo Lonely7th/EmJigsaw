@@ -51,6 +51,7 @@
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:visibility="gone"
+                android:paddingRight="4dp"
                 android:layout_centerVertical="true" />
         </RelativeLayout>
 

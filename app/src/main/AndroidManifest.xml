@@ -32,7 +32,8 @@
         <activity android:name=".activity.StarListActivity" />
         <activity android:name=".activity.ChangeUserInfoActivity" />
         <activity android:name=".activity.MyStarListActivity" />
-        <activity android:name=".activity.MyReleaseListActivity"></activity>
+        <activity android:name=".activity.MyReleaseListActivity" />
+        <activity android:name=".activity.SelectJStatusActivity"></activity>
     </application>
 
 </manifest>
