@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.em.jigsaw.R;
 import com.em.jigsaw.base.ContentKey;
+import com.em.jigsaw.view.LoadingDialog;
 import com.em.jigsaw.view.SelectDialog;
 
 import java.util.ArrayList;
@@ -18,7 +19,11 @@ import java.util.Arrays;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
+/**
+ * Time ： 2018/12/11 0011 .
+ * Author ： JN Zhang .
+ * Description ：设置高级选项 页面 .
+ */
 public class SelectJStatusActivity extends AppCompatActivity {
 
     @BindView(R.id.back_btn)
@@ -60,6 +65,8 @@ public class SelectJStatusActivity extends AppCompatActivity {
     int curSelectCount = 0;
     ArrayList<String> selectCountList = new ArrayList<>();
 
+    LoadingDialog loadingDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +97,8 @@ public class SelectJStatusActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.right_btn:
+                loadingDialog = new LoadingDialog(SelectJStatusActivity.this);
+                loadingDialog.show();
                 break;
             case R.id.btn_crop_format:
                 finish();

@@ -3,17 +3,22 @@ package com.em.jigsaw.view;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.em.jigsaw.R;
+import com.em.jigsaw.adapter.SelectDialogAdapter;
 
 /**
  * Time ： 2018/12/18 .
@@ -22,26 +27,30 @@ import com.em.jigsaw.R;
  */
 public class LoadingDialog extends Dialog {
 
-    ImageView spaceshipImage;
-    Context context;
+    private ImageView spaceshipImage;
+    private Context context;
 
     public LoadingDialog(@NonNull Context context) {
         super(context);
         this.context = context;
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View v = inflater.inflate(R.layout.dialog_loading, null);// 得到加载view
-        LinearLayout layout = v.findViewById(R.id.dialog_view);// 加载布局
-        spaceshipImage = v.findViewById(R.id.img_loading);
-        TextView tipTextView = v.findViewById(R.id.tv_loading);// 提示文字
-        tipTextView.setText("加载中...");// 设置加载信息
+    }
 
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){      //解决7.0dialog的问题
-            getWindow().setType(WindowManager.LayoutParams.TYPE_TOAST);
-        }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.dialog_loading);
 
-        setCancelable(true);
+        spaceshipImage = findViewById(R.id.img_loading);
+
         setCanceledOnTouchOutside(false);
-        setContentView(layout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+        getWindow().setGravity(Gravity.CENTER);
+
+//        WindowManager windowManager = (WindowManager) context
+//                .getSystemService(Context.WINDOW_SERVICE);
+//        display = windowManager.getDefaultDisplay();
+//        findViewById(R.id.bg_dialog_select).setLayoutParams(new FrameLayout.LayoutParams((int) (display
+//                .getWidth() * 1.0), LinearLayout.LayoutParams.WRAP_CONTENT));
+
     }
 
     @Override
