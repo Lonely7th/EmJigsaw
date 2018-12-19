@@ -106,10 +106,10 @@ public class SelectJStatusActivity extends AppCompatActivity {
             case R.id.btn_hide_name:
                 isHideName = !isHideName;
                 if (isHideName) {
-                    ivHideName.setBackgroundResource(R.mipmap.icon_radio_button_checked);
+                    ivHideName.setBackgroundResource(R.mipmap.icon_visibility_off_s);
                     tvHideName.setText("匿名");
                 } else {
-                    ivHideName.setBackgroundResource(R.mipmap.icon_radio_button_uncheck);
+                    ivHideName.setBackgroundResource(R.mipmap.icon_visibility_off_n);
                     tvHideName.setText("不匿名");
                 }
                 break;

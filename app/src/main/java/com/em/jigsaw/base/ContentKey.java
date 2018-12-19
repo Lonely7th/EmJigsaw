@@ -33,4 +33,11 @@ public class ContentKey {
     public static final String[] Limit_Type_Array = {"无限制","次数限制","时间限制"};
     public static final String[] Limit_Time_Array = {"30","45","60","90","120","300"};
     public static final String[] Limit_Count_Array = {"20","40","60","75","100","200"};
+
+    /**
+     * 页面限制模式
+     */
+    public static final int Limit_Type_None = 0;
+    public static final int Limit_Type_Count = 1;
+    public static final int Limit_Type_Timer = 2;
 }

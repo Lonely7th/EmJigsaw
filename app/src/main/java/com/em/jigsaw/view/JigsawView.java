@@ -41,6 +41,7 @@ public class JigsawView extends ViewGroup {
     private ArrayList<JigsawImgBean> mLabels = new ArrayList<>();
 
     private View dragView = null;
+    private boolean viewTouched = true;
     private ImageView dragImageView = null;
     private boolean validClick = false;// 有效点击
     private int startY,startX,endX,endY;
@@ -201,6 +202,13 @@ public class JigsawView extends ViewGroup {
     }
 
     /**
+     * 设置View是否可以滑动
+     */
+    public void setViewTouched(boolean viewTouched){
+        this.viewTouched = viewTouched;
+    }
+
+    /**
      * 初始化拖动控件
      */
     private void initDragView(){
@@ -213,6 +221,9 @@ public class JigsawView extends ViewGroup {
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View view, MotionEvent event) {
+                if(!viewTouched){
+                    return true;
+                }
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         //获取当前按下的坐标
@@ -265,7 +276,8 @@ public class JigsawView extends ViewGroup {
                         updateLabels();
 
                         if(onJigsawChangedListener != null){
-                            onJigsawChangedListener.onChanged(mLabels);
+                            if(startIndex != -1 && endIndex != -1 && startIndex != endIndex)
+                                onJigsawChangedListener.onChanged(mLabels);
                         }
                         break;
                 }

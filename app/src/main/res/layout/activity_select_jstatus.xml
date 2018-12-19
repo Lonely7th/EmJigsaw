@@ -82,7 +82,7 @@
             android:layout_height="24dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:background="@mipmap/icon_radio_button_uncheck"/>
+            android:background="@mipmap/icon_visibility_off_n"/>
     </RelativeLayout>
 
     <!--限制-->

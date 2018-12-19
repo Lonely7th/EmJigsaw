@@ -24,7 +24,6 @@
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="4dp"
             android:text="user_name"/>
         <TextView
             android:id="@+id/tv_zan_status"
@@ -44,7 +43,7 @@
             android:layout_toRightOf="@+id/iv_head"
             android:layout_below="@+id/iv_head"
             android:textColor="@color/colorGary"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:lines="2"
             android:layout_marginLeft="8dp"
             android:text="contentcontentcontentcontentcontent"/>
@@ -62,7 +61,6 @@
             android:textColor="@color/colorDivider"
             android:textSize="10sp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="4dp"
             android:text="2018-12-15 17:50"/>
         <ImageView
             android:id="@+id/iv_jigsaw"
