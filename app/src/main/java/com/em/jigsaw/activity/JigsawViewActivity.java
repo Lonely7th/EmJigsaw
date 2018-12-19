@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,9 +15,11 @@ import android.widget.TextView;
 import com.em.jigsaw.R;
 import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.bean.JigsawImgBean;
+import com.em.jigsaw.callback.OnAlterDialogListener;
 import com.em.jigsaw.callback.OnJigsawChangedListener;
 import com.em.jigsaw.utils.ImgUtil;
 import com.em.jigsaw.utils.ToastUtil;
+import com.em.jigsaw.view.AlertDialog;
 import com.em.jigsaw.view.JigsawView;
 
 import java.util.ArrayList;
@@ -45,7 +48,7 @@ public class JigsawViewActivity extends AppCompatActivity {
     @BindView(R.id.iv_content)
     ImageView ivContent;
 
-
+    private boolean initWindow = true;
     private ImgUtil imgUtil;
     private Uri imageUri;
     private ArrayList<JigsawImgBean> list = new ArrayList<>();
@@ -61,6 +64,8 @@ public class JigsawViewActivity extends AppCompatActivity {
     private Timer timer = new Timer();
     private boolean fristTouch = true;//是否首次滑动
     private boolean JigsawSuccess = false;//是否拼图成功
+
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +84,10 @@ public class JigsawViewActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        updateJigsawList(imgUtil.getBitmap(imageUri));
+        if(initWindow){
+            initWindow = false;
+            updateJigsawList(imgUtil.getBitmap(imageUri));
+        }
     }
 
     /**
@@ -192,13 +200,36 @@ public class JigsawViewActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_replay:
-                updateLimitStatus();
-                updateJigsawList(imgUtil.getBitmap(imageUri));
+                showDialog("重新开始？");
                 break;
             case R.id.btn_close:
-                finish();
+                showDialog("退出当前页面？");
                 break;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            showDialog("退出当前页面？");
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void showDialog(String content){
+        alertDialog = new AlertDialog(JigsawViewActivity.this, content,
+                "确定", new OnAlterDialogListener() {
+            @Override
+            public void onRightClick() {
+                finish();
+            }
+
+            @Override
+            public void onLeftClick() {
+            }
+        });
+        alertDialog.show();
     }
 
     @Override

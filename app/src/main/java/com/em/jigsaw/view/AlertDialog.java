@@ -3,18 +3,22 @@ package com.em.jigsaw.view;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.em.jigsaw.R;
 import com.em.jigsaw.adapter.SelectDialogAdapter;
+import com.em.jigsaw.callback.OnAlterDialogListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,59 +30,53 @@ import java.util.List;
  */
 public class AlertDialog extends Dialog {
     private Context context;
-    private ListView listView;
-    private Display display;
-    private SelectDialog.OnSelectListener onSelectListener = null;
+    private TextView tvContent;
+    private Button btnRight,btnLeft;
+    private OnAlterDialogListener onAlterDialogListener = null;
 
-    private List<String> mlist = new ArrayList<>();
+    private String strContent,strButton;
 
     public AlertDialog(Context context) {
         super(context);
         this.context = context;
     }
 
-    public AlertDialog(Context context, List<String> mlist, final SelectDialog.OnSelectListener onSelectListener) {
+    public AlertDialog(Context context, String strContent,String strButton,@NonNull final OnAlterDialogListener onAlterDialogListener) {
         super(context, R.style.AlertDialogStyle);
         this.context = context;
-        this.mlist.addAll(mlist);
-        this.onSelectListener = onSelectListener;
+        this.strContent = strContent;
+        this.strButton = strButton;
+        this.onAlterDialogListener = onAlterDialogListener;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_select);
-        listView = findViewById(R.id.list_view);
-        SelectDialogAdapter selectDialogAdapter = new SelectDialogAdapter(mlist, context);
-        listView.setAdapter(selectDialogAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        setContentView(R.layout.dialog_alert);
+        tvContent = findViewById(R.id.tv_content);
+        btnRight = findViewById(R.id.btn_pos);
+        btnLeft = findViewById(R.id.btn_neg);
+
+        tvContent.setText(strContent);
+        btnRight.setText(strButton);
+        btnLeft.setText("取消");
+
+        btnRight.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(onSelectListener != null){
-                    onSelectListener.onItemSelect(view,position,id);
-                }
+            public void onClick(View view) {
+                onAlterDialogListener.onRightClick();
                 dismiss();
             }
         });
-        findViewById(R.id.tv_close).setOnClickListener(new View.OnClickListener() {
+        btnLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                onAlterDialogListener.onLeftClick();
                 dismiss();
             }
         });
 
         setCanceledOnTouchOutside(false);
-        getWindow().setGravity(Gravity.BOTTOM);
-
-        WindowManager windowManager = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
-        display = windowManager.getDefaultDisplay();
-        findViewById(R.id.bg_dialog_select).setLayoutParams(new FrameLayout.LayoutParams((int) (display
-                .getWidth() * 1.0), LinearLayout.LayoutParams.WRAP_CONTENT));
-    }
-
-    public interface OnSelectListener{
-        void onItemSelect(View view, int position, long id);
     }
 
     @Override
