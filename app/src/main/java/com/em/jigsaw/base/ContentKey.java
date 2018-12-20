@@ -46,4 +46,9 @@ public class ContentKey {
     public static final String SHARE_URL = "https://www.baidu.com/";
     public static final String SHARE_TITLE = "";
     public static final String SHARE_CONTENT = "";
+    /**
+     * 用户信息相关
+     */
+    public static String LOGIN_JSONSTR = "EQCHA_LOGIN_JSONSTR";
+    public static String LOGIN_STATUS = "EQCHA_LOGIN_STATUS";
 }

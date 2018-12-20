@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="88dp"
+        android:layout_height="128dp"
         android:layout_weight="1">
         <ImageView
             android:id="@+id/iv_head"
@@ -47,6 +47,30 @@
             android:lines="2"
             android:layout_marginLeft="8dp"
             android:text="contentcontentcontentcontentcontent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/iv_head">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="lable"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="lable"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="lable"/>
+        </LinearLayout>
     </RelativeLayout>
 
     <RelativeLayout

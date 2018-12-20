@@ -1,6 +1,8 @@
 package com.em.jigsaw;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
@@ -29,11 +31,17 @@ import okhttp3.OkHttpClient;
  * Description ： .
  */
 public class BaseApplication extends Application{
+    public static SharedPreferences sf = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
         initOkGO();
+        initSharedPreferences();
+    }
+
+    private void initSharedPreferences() {
+        sf = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     private void initOkGO() {

@@ -33,7 +33,8 @@
         <activity android:name=".activity.ChangeUserInfoActivity" />
         <activity android:name=".activity.MyStarListActivity" />
         <activity android:name=".activity.MyReleaseListActivity" />
-        <activity android:name=".activity.SelectJStatusActivity"></activity>
+        <activity android:name=".activity.SelectJStatusActivity" />
+        <activity android:name=".activity.LoginActivity"></activity>
     </application>
 
 </manifest>
