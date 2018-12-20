@@ -14,7 +14,16 @@ import android.widget.TextView;
 import com.em.jigsaw.R;
 import com.em.jigsaw.activity.PersonalActivity;
 import com.em.jigsaw.activity.ReleaseListActivity;
+import com.em.jigsaw.activity.SelectJStatusActivity;
 import com.em.jigsaw.activity.StarListActivity;
+import com.em.jigsaw.base.ContentKey;
+import com.em.jigsaw.utils.ToastUtil;
+import com.em.jigsaw.view.SelectDialog;
+import com.em.jigsaw.wxapi.OnResponseListener;
+import com.em.jigsaw.wxapi.WXShare;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,17 +60,52 @@ public class PersonalFragment extends Fragment {
     @BindView(R.id.btn_share)
     RelativeLayout btnShare;
 
+    WXShare wxShare;
+    SelectDialog selectDialog;
+    List<String> shareTypeList = new ArrayList<>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_personal, container, false);
         ButterKnife.bind(this, rootView);
         initUI();
+        initData();
+        initWxShare();
         return rootView;
     }
 
     private void initUI() {
         backBtn.setVisibility(View.GONE);
         tvBarCenter.setText("个人主页");
+    }
+
+    private void initData() {
+        shareTypeList.add("分享到朋友圈");
+        shareTypeList.add("分享给好友");
+    }
+
+    private void initWxShare() {
+        //微信分享相关
+        wxShare = new WXShare(getActivity());
+        wxShare.setListener(new OnResponseListener() {
+            @Override
+            public void onSuccess() {
+                // 分享成功
+                ToastUtil.show(getActivity(),"分享成功");
+            }
+
+            @Override
+            public void onCancel() {
+                // 分享取消
+                ToastUtil.show(getActivity(),"分享取消");
+            }
+
+            @Override
+            public void onFail(String message) {
+                // 分享失败
+                ToastUtil.show(getActivity(),"分享失败");
+            }
+        });
     }
 
     @Override
@@ -82,7 +126,20 @@ public class PersonalFragment extends Fragment {
                 startActivity(new Intent(getActivity(),StarListActivity.class));
                 break;
             case R.id.btn_share:
-                //TODO 分享给好友
+                selectDialog = new SelectDialog(getActivity(), shareTypeList, new SelectDialog.OnSelectListener() {
+                    @Override
+                    public void onItemSelect(View view, int position, long id) {
+                        switch (position){
+                            case 0:
+                                wxShare.share(getActivity(),ContentKey.SHARE_URL,ContentKey.SHARE_TITLE,ContentKey.SHARE_CONTENT,0);
+                                break;
+                            case 1:
+                                wxShare.share(getActivity(),ContentKey.SHARE_URL,ContentKey.SHARE_TITLE,ContentKey.SHARE_CONTENT,1);
+                                break;
+                        }
+                    }
+                });
+                selectDialog.show();
                 break;
         }
     }

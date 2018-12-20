@@ -40,4 +40,10 @@ public class ContentKey {
     public static final int Limit_Type_None = 0;
     public static final int Limit_Type_Count = 1;
     public static final int Limit_Type_Timer = 2;
+    /**
+     * 分享相关
+     */
+    public static final String SHARE_URL = "https://www.baidu.com/";
+    public static final String SHARE_TITLE = "";
+    public static final String SHARE_CONTENT = "";
 }

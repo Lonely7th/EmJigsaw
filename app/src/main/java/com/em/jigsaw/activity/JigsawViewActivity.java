@@ -108,6 +108,7 @@ public class JigsawViewActivity extends AppCompatActivity {
             public void onChanged(ArrayList<JigsawImgBean> arrayList) {
                 if (imgUtil.jigsawSuccess(arrayList)) {
                     JigsawSuccess = true;
+                    viewJigsaw.setViewTouched(false);
 
 //                    ivContent.setVisibility(View.VISIBLE);
 //                    viewJigsaw.setVisibility(View.GONE);
@@ -118,7 +119,7 @@ public class JigsawViewActivity extends AppCompatActivity {
                     currentLimit--;
                     tvLimitCount.setText(""+(currentLimit<0?0:currentLimit));
 
-                    if(currentLimit <= 0 || JigsawSuccess){
+                    if(currentLimit <= 0){
                         viewJigsaw.setViewTouched(false);
                     }
                 }else if(limitType == ContentKey.Limit_Type_Timer){
@@ -177,7 +178,7 @@ public class JigsawViewActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 1:
                     tvLimitCount.setText(""+(currentLimit<0?0:currentLimit));
-                    if (currentLimit == 0 || JigsawSuccess) {
+                    if (currentLimit == 0) {
                         viewJigsaw.setViewTouched(false);
                     }
             }
