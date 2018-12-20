@@ -201,10 +201,10 @@ public class JigsawViewActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_replay:
-                showDialog("重新开始？");
+                showDialog("重新开始？",1);
                 break;
             case R.id.btn_close:
-                showDialog("退出当前页面？");
+                showDialog("退出当前页面？",0);
                 break;
         }
     }
@@ -212,18 +212,25 @@ public class JigsawViewActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            showDialog("退出当前页面？");
+            showDialog("退出当前页面？",0);
             return true;
         }
         return super.onKeyDown(keyCode, event);
     }
 
-    private void showDialog(String content){
+    private void showDialog(String content,final int type){
         alertDialog = new AlertDialog(JigsawViewActivity.this, content,
                 "确定", new OnAlterDialogListener() {
             @Override
             public void onRightClick() {
-                finish();
+                switch (type){
+                    case 0:
+                        finish();
+                        break;
+                    case 1:
+                        updateLimitStatus();
+                        break;
+                }
             }
 
             @Override
