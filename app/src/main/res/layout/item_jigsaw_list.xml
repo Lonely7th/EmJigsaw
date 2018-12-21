@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="128dp"
+        android:layout_height="120dp"
         android:layout_weight="1">
         <ImageView
             android:id="@+id/iv_head"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/iv_head"
             android:textColor="@color/colorBlack"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:layout_marginLeft="8dp"
             android:text="user_name"/>
@@ -49,7 +49,7 @@
             android:text="contentcontentcontentcontentcontent"/>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="32dp"
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@+id/iv_head">
             <TextView
@@ -57,19 +57,37 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="lable"/>
+                android:layout_margin="4dp"
+                android:textSize="12sp"
+                android:textColor="@color/colorRed"
+                android:background="@drawable/bg_border_red"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="风景"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="lable"/>
+                android:layout_margin="4dp"
+                android:textSize="12sp"
+                android:textColor="@color/colorRed"
+                android:ellipsize="end"
+                android:lines="1"
+                android:background="@drawable/bg_border_red"
+                android:text="巴塞罗那"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="lable"/>
+                android:layout_margin="4dp"
+                android:textSize="12sp"
+                android:textColor="@color/colorRed"
+                android:background="@drawable/bg_border_red"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="足球"/>
         </LinearLayout>
     </RelativeLayout>
 
@@ -84,17 +102,18 @@
             android:layout_alignParentRight="true"
             android:textColor="@color/colorDivider"
             android:textSize="10sp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:text="2018-12-15 17:50"/>
         <ImageView
             android:id="@+id/iv_jigsaw"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitEnd"
-            android:src="@mipmap/icon_photo"
-            android:layout_centerVertical="true"
+            android:src="@color/colorBg"
             android:layout_below="@+id/tv_creat_time"
-            android:padding="8dp"/>
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="4dp"/>
     </RelativeLayout>
 
 </LinearLayout>

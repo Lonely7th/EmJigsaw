@@ -55,6 +55,7 @@ public class PersonalActivity extends AppCompatActivity {
                 startActivity(new Intent(PersonalActivity.this,ChangeUserInfoActivity.class));
                 break;
             case R.id.btn_logout:
+                startActivity(new Intent(PersonalActivity.this,LoginActivity.class));
                 break;
         }
     }

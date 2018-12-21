@@ -1,9 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.LoginActivity">
+    tools:context=".activity.LoginActivity"
+    android:background="@color/colorBg">
 
-</android.support.constraint.ConstraintLayout>
+    <include layout="@layout/view_common_bar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:background="@drawable/bg_shape_white"
+        android:layout_margin="16dp"
+        android:paddingTop="16dp"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
+        android:paddingBottom="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#060C38"
+            android:textSize="16sp"
+            android:layout_marginTop="32dp"
+            android:textStyle="bold"
+            android:text="手机号"/>
+        <EditText
+            android:id="@+id/edt_phone"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:textSize="14sp"
+            android:inputType="phone"
+            android:hint="请输入手机号"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorDivider"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#060C38"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"
+            android:textStyle="bold"
+            android:text="验证码"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <EditText
+                android:id="@+id/edt_password"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@null"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:hint="请输入验证码"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorDivider"/>
+            <Button
+                android:id="@+id/btn_get_code"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:padding="4dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/bg_shape_blue"
+                android:alpha="0.4"
+                android:text="获取验证码"
+                android:layout_centerVertical="true"
+                android:textSize="12sp"
+                android:textColor="@color/colorWhite"/>
+        </RelativeLayout>
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="32dp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/bg_shape_black"
+            android:alpha="0.4"
+            android:text="登陆"/>
+    </LinearLayout>
+
+</RelativeLayout>
