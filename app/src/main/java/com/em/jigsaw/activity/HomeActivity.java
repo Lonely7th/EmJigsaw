@@ -17,10 +17,14 @@ import com.em.jigsaw.R;
 import com.em.jigsaw.activity.fragment.MainFragment;
 import com.em.jigsaw.activity.fragment.PersonalFragment;
 import com.em.jigsaw.base.ContentKey;
+import com.em.jigsaw.base.ServiceAPI;
+import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.view.SelectDialog;
 import com.linchaolong.android.imagepicker.ImagePicker;
 import com.linchaolong.android.imagepicker.cropper.CropImage;
 import com.linchaolong.android.imagepicker.cropper.CropImageView;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +75,12 @@ public class HomeActivity extends AppCompatActivity {
         initImagePicker();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateUserInfo();
+    }
+
     /**
      * 初始化数据
      */
@@ -87,6 +97,22 @@ public class HomeActivity extends AppCompatActivity {
         mainFragment = new MainFragment();
         plFragment = new PersonalFragment();
         switchFragment(mainFragment);
+    }
+
+    /**
+     * 刷新用户状态
+     */
+    private void updateUserInfo(){
+        if(LoginUtil.isLogin()){
+            OkGo.<String>get(ServiceAPI.GetUserInfo).tag(this)
+                    .params("user_no", "")
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(com.lzy.okgo.model.Response<String> response) {
+
+                        }
+                    });
+        }
     }
 
     /**

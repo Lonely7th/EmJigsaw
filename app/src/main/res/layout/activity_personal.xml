@@ -60,18 +60,37 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorGary"
             android:textSize="14sp"
-            android:layout_toLeftOf="@+id/iv_rigth_1"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="12dp"
+            android:layout_marginRight="8dp"
             android:text="user_id"/>
-        <ImageView
-            android:id="@+id/iv_rigth_1"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+    </RelativeLayout>
+
+    <!--用户手机号-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorWhite"
+        android:padding="8dp"
+        android:layout_marginTop="1dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textSize="14sp"
+            android:layout_marginLeft="8dp"
+            android:layout_centerVertical="true"
+            android:text="手机号码"/>
+        <TextView
+            android:id="@+id/tv_user_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGary"
+            android:textSize="14sp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:visibility="invisible"
-            android:background="@mipmap/icon_chevron_right"/>
+            android:layout_marginRight="8dp"
+            android:text="phone_number"/>
     </RelativeLayout>
 
     <!--用户名-->

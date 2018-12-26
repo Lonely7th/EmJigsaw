@@ -12,11 +12,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.em.jigsaw.R;
+import com.em.jigsaw.activity.LoginActivity;
 import com.em.jigsaw.activity.PersonalActivity;
 import com.em.jigsaw.activity.ReleaseListActivity;
 import com.em.jigsaw.activity.SelectJStatusActivity;
 import com.em.jigsaw.activity.StarListActivity;
 import com.em.jigsaw.base.ContentKey;
+import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.SelectDialog;
 import com.em.jigsaw.wxapi.OnResponseListener;
@@ -74,6 +76,12 @@ public class PersonalFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUserInfo();
+    }
+
     private void initUI() {
         backBtn.setVisibility(View.GONE);
         tvBarCenter.setText("个人主页");
@@ -82,6 +90,10 @@ public class PersonalFragment extends Fragment {
     private void initData() {
         shareTypeList.add("分享到朋友圈");
         shareTypeList.add("分享给好友");
+    }
+
+    private void updateUserInfo(){
+
     }
 
     private void initWxShare() {
@@ -117,13 +129,11 @@ public class PersonalFragment extends Fragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_user_info:
-                startActivity(new Intent(getActivity(),PersonalActivity.class));
-                break;
-            case R.id.btn_release:
-                startActivity(new Intent(getActivity(),ReleaseListActivity.class));
-                break;
-            case R.id.btn_star:
-                startActivity(new Intent(getActivity(),StarListActivity.class));
+                if(!LoginUtil.isLogin()){
+                    startActivity(new Intent(getActivity(),PersonalActivity.class));
+                }else {
+                    startActivity(new Intent(getActivity(),LoginActivity.class));
+                }
                 break;
             case R.id.btn_share:
                 selectDialog = new SelectDialog(getActivity(), shareTypeList, new SelectDialog.OnSelectListener() {
@@ -140,6 +150,16 @@ public class PersonalFragment extends Fragment {
                     }
                 });
                 selectDialog.show();
+                break;
+            case R.id.btn_release:
+                if(LoginUtil.isLogin()){
+                    startActivity(new Intent(getActivity(),ReleaseListActivity.class));
+                }
+                break;
+            case R.id.btn_star:
+                if(LoginUtil.isLogin()){
+                    startActivity(new Intent(getActivity(),StarListActivity.class));
+                }
                 break;
         }
     }

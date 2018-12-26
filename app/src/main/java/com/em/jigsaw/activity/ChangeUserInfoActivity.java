@@ -2,6 +2,7 @@ package com.em.jigsaw.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -9,6 +10,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.em.jigsaw.R;
+import com.em.jigsaw.base.ServiceAPI;
+import com.em.jigsaw.utils.ToastUtil;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,10 +34,13 @@ public class ChangeUserInfoActivity extends AppCompatActivity {
     @BindView(R.id.edt_content)
     EditText edtContent;
 
+    private String cType = "0";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_user_info);
+        cType = getIntent().getStringExtra("cType");
         ButterKnife.bind(this);
         initUI();
     }
@@ -43,6 +51,26 @@ public class ChangeUserInfoActivity extends AppCompatActivity {
         tvBarRight.setVisibility(View.VISIBLE);
     }
 
+    private void changeUserInfo(){
+        String content = edtContent.getText().toString();
+
+        OkGo.<String>post(ServiceAPI.ChangeInfo).tag(this)
+                .params("user_no", "")
+                .params("content", content)
+                .params("ctype", cType)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<String> response) {
+
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<String> response) {
+                        super.onError(response);
+                    }
+                });
+    }
+
     @OnClick({R.id.back_btn, R.id.right_btn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -50,6 +78,11 @@ public class ChangeUserInfoActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.right_btn:
+                if(TextUtils.isEmpty(edtContent.getText().toString())){
+                    ToastUtil.show(ChangeUserInfoActivity.this,"内容不能为空");
+                }else{
+                    changeUserInfo();
+                }
                 break;
         }
     }

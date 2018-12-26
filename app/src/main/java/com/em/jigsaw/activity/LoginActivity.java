@@ -15,7 +15,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.em.jigsaw.R;
+import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.utils.PhoneFormatCheckUtil;
+import com.em.jigsaw.utils.ToastUtil;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,6 +30,10 @@ import java.util.TimerTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
+import okhttp3.Call;
+import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -47,12 +58,34 @@ public class LoginActivity extends AppCompatActivity {
     private int countDown = 0;
     private Timer timer = new Timer();
 
+    private String phoneNumber;
+
+    EventHandler eh = new EventHandler() {
+        @Override
+        public void afterEvent(int event, int result, Object data) {
+            Message msg = new Message();
+            msg.arg1 = event;
+            msg.arg2 = result;
+            msg.obj = data;
+            if (result == SMSSDK.RESULT_COMPLETE) {
+                toLogin();
+            } else if (result == SMSSDK.RESULT_ERROR) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.show(LoginActivity.this, "验证码错误");
+                    }
+                });
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
+        SMSSDK.registerEventHandler(eh);
         initUI();
     }
 
@@ -104,6 +137,40 @@ public class LoginActivity extends AppCompatActivity {
         });
         //开启定时器
         timer.schedule(timerTask, 1000, 1000);
+    }
+
+    /**
+     * 获取验证码
+     */
+    private void getVerCode() {
+        phoneNumber = edtPhone.getText().toString().trim();
+        if (PhoneFormatCheckUtil.isPhoneLegal(phoneNumber)) {
+            //开始倒计时60s
+            startTimer();
+            //开始网络请求
+            SMSSDK.getVerificationCode("86", phoneNumber);
+        } else {
+            ToastUtil.show(this, "请输入正确的手机号");
+        }
+    }
+
+    /**
+     * 开始登录
+     */
+    private void toLogin(){
+        OkGo.<String>post(ServiceAPI.Login).tag(this)
+                .params("phoneNumber", phoneNumber)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<String> response) {
+
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<String> response) {
+                        super.onError(response);
+                    }
+                });
     }
 
     /**
@@ -160,14 +227,13 @@ public class LoginActivity extends AppCompatActivity {
                 break;
             case R.id.btn_get_code:
                 if(getVerCode){
-                    startTimer();
-                    //TODO 获取验证码
+                    getVerCode();
                 }
                 break;
             case R.id.btn_login:
-                if(toLogin){
-                    finish();
-                }
+//                if(toLogin){
+                    toLogin();
+//                }
                 break;
         }
     }

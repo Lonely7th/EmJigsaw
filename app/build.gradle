@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'com.mob.sdk'
 
 android {
     compileSdkVersion 28
@@ -41,4 +42,11 @@ dependencies {
 
     //微信分享
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+}
+
+MobSDK {
+    appKey "26fc18c181ddd"
+    appSecret "4205eec838aa0450a3c5034ac20db2e1"
+
+    SMSSDK {}
 }
