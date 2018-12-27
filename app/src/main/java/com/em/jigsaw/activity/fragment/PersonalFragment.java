@@ -18,6 +18,7 @@ import com.em.jigsaw.activity.ReleaseListActivity;
 import com.em.jigsaw.activity.SelectJStatusActivity;
 import com.em.jigsaw.activity.StarListActivity;
 import com.em.jigsaw.base.ContentKey;
+import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.SelectDialog;
@@ -93,7 +94,14 @@ public class PersonalFragment extends Fragment {
     }
 
     private void updateUserInfo(){
-
+        if(LoginUtil.isLogin()){
+            UserBean userBean = LoginUtil.getUserInfo();
+            tvUserName.setText(userBean.getUserName());
+            tvUserId.setText("user_id：" + userBean.getUserNo());
+        }else{
+            tvUserName.setText("未登录");
+            tvUserId.setText("点击登录");
+        }
     }
 
     private void initWxShare() {
@@ -129,7 +137,7 @@ public class PersonalFragment extends Fragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_user_info:
-                if(!LoginUtil.isLogin()){
+                if(LoginUtil.isLogin()){
                     startActivity(new Intent(getActivity(),PersonalActivity.class));
                 }else {
                     startActivity(new Intent(getActivity(),LoginActivity.class));

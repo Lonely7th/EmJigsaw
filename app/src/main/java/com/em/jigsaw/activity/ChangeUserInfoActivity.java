@@ -11,9 +11,13 @@ import android.widget.TextView;
 
 import com.em.jigsaw.R;
 import com.em.jigsaw.base.ServiceAPI;
+import com.em.jigsaw.bean.UserBean;
+import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
+
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,16 +56,29 @@ public class ChangeUserInfoActivity extends AppCompatActivity {
     }
 
     private void changeUserInfo(){
-        String content = edtContent.getText().toString();
+        final String content = edtContent.getText().toString();
 
         OkGo.<String>post(ServiceAPI.ChangeInfo).tag(this)
-                .params("user_no", "")
+                .params("user_no", LoginUtil.getUserInfo().getUserNo())
                 .params("content", content)
                 .params("ctype", cType)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<String> response) {
-
+                        try {
+                            JSONObject body = new JSONObject(response.body());
+                            if(body.getInt("ResultCode") == ServiceAPI.HttpSuccess){
+                                ToastUtil.show(ChangeUserInfoActivity.this,"操作成功");
+                                UserBean userBean = LoginUtil.getUserInfo();
+                                userBean.setUserName(content);
+                                LoginUtil.changeUserInfo(userBean);
+                                finish();
+                            }else{
+                                ToastUtil.show(ChangeUserInfoActivity.this,"网络异常");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override

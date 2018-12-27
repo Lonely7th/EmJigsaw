@@ -5,15 +5,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.em.jigsaw.R;
 import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
+import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.utils.LoginUtil;
+import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.SelectDialog;
 import com.linchaolong.android.imagepicker.ImagePicker;
 import com.linchaolong.android.imagepicker.cropper.CropImage;
@@ -21,7 +25,11 @@ import com.linchaolong.android.imagepicker.cropper.CropImageView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
+import org.json.JSONObject;
+
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +60,8 @@ public class PersonalActivity extends AppCompatActivity {
     SelectDialog selectDialog = null;
     List<String> selectList = new ArrayList<>();
 
+    UserBean userBean;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,8 +73,24 @@ public class PersonalActivity extends AppCompatActivity {
         initImagePicker();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateUI();
+    }
+
     private void initUI() {
         tvBarCenter.setText("个人主页");
+    }
+
+    private void updateUI(){
+        userBean = LoginUtil.getUserInfo();
+        tvUserName.setText(userBean.getUserName());
+        tvUserId.setText(userBean.getUserNo());
+        tvUserPhone.setText(userBean.getUserPhone());
+        if(!TextUtils.isEmpty(userBean.getNameHead())){
+            Glide.with(PersonalActivity.this).load(userBean.getNameHead()).into(ivHead);
+        }
     }
 
     /**
@@ -90,15 +116,27 @@ public class PersonalActivity extends AppCompatActivity {
      * 修改用户头像
      */
     private void changeUserHead(File file){
-//        OkGo.<File>post(ServiceAPI.GetUserHead).tag(this)
-//                .params("user_no", "")
-//                .params("src", file)
-//                .execute(new StringCallback() {
-//                    @Override
-//                    public void onSuccess(com.lzy.okgo.model.Response<String> response) {
-//
-//                    }
-//                });
+        OkGo.<String>post(ServiceAPI.GetUserHead).tag(this)
+                .params("user_no", LoginUtil.getUserInfo().getUserNo())
+                .params("src", file)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<String> response) {
+                        try {
+                            JSONObject body = new JSONObject(response.body());
+                            if(body.getInt("ResultCode") == ServiceAPI.HttpSuccess){
+                                ToastUtil.show(PersonalActivity.this,"操作成功");
+                                UserBean userBean = LoginUtil.getUserInfo();
+                                userBean.setNameHead(body.getString("ResultData"));
+                                LoginUtil.changeUserInfo(userBean);
+                            }else{
+                                ToastUtil.show(PersonalActivity.this,"网络异常");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     @OnClick({R.id.back_btn, R.id.iv_head, R.id.btn_user_name, R.id.btn_logout})
@@ -129,6 +167,7 @@ public class PersonalActivity extends AppCompatActivity {
                 break;
             case R.id.btn_logout:
                 LoginUtil.exitLogin();
+                finish();
                 break;
         }
     }
@@ -146,7 +185,11 @@ public class PersonalActivity extends AppCompatActivity {
                     // 裁剪图片回调
                     @Override
                     public void onCropImage(Uri imageUri) {
-                        ivHead.setImageURI(imageUri);
+                        try {
+                            changeUserHead(new File(new URI(imageUri.toString())));
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     // 自定义裁剪配置
@@ -155,7 +198,7 @@ public class PersonalActivity extends AppCompatActivity {
                         builder.setMultiTouchEnabled(false)// 是否启动多点触摸
                                 .setGuidelines(CropImageView.Guidelines.OFF)// 设置网格显示模式
                                 .setCropShape(CropImageView.CropShape.RECTANGLE)// 圆形/矩形
-                                .setRequestedSize(256, 256)// 调整裁剪后的图片最终大小
+                                .setRequestedSize(128, 128)// 调整裁剪后的图片最终大小
                                 .setAspectRatio(1, 1);// 宽高比
                     }
 
@@ -176,7 +219,11 @@ public class PersonalActivity extends AppCompatActivity {
                     // 裁剪图片回调
                     @Override
                     public void onCropImage(Uri imageUri) {
-                        ivHead.setImageURI(imageUri);
+                        try {
+                            changeUserHead(new File(new URI(imageUri.toString())));
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     // 自定义裁剪配置
@@ -185,7 +232,7 @@ public class PersonalActivity extends AppCompatActivity {
                         builder.setMultiTouchEnabled(false)// 是否启动多点触摸
                                 .setGuidelines(CropImageView.Guidelines.OFF)// 设置网格显示模式
                                 .setCropShape(CropImageView.CropShape.RECTANGLE)// 圆形/矩形
-                                .setRequestedSize(256, 256)// 调整裁剪后的图片最终大小
+                                .setRequestedSize(128, 128)// 调整裁剪后的图片最终大小
                                 .setAspectRatio(1, 1);// 宽高比
                     }
 

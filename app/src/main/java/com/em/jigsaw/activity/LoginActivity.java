@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,8 +17,11 @@ import android.widget.TextView;
 
 import com.em.jigsaw.R;
 import com.em.jigsaw.base.ServiceAPI;
+import com.em.jigsaw.bean.UserBean;
+import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.PhoneFormatCheckUtil;
 import com.em.jigsaw.utils.ToastUtil;
+import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
@@ -58,8 +62,6 @@ public class LoginActivity extends AppCompatActivity {
     private int countDown = 0;
     private Timer timer = new Timer();
 
-    private String phoneNumber;
-
     EventHandler eh = new EventHandler() {
         @Override
         public void afterEvent(int event, int result, Object data) {
@@ -68,7 +70,11 @@ public class LoginActivity extends AppCompatActivity {
             msg.arg2 = result;
             msg.obj = data;
             if (result == SMSSDK.RESULT_COMPLETE) {
-                toLogin();
+                if(event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE){
+                    toLogin();
+                }else if(event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
+                    ToastUtil.show(LoginActivity.this, "获取验证码成功");
+                }
             } else if (result == SMSSDK.RESULT_ERROR) {
                 runOnUiThread(new Runnable() {
                     @Override
@@ -143,12 +149,11 @@ public class LoginActivity extends AppCompatActivity {
      * 获取验证码
      */
     private void getVerCode() {
-        phoneNumber = edtPhone.getText().toString().trim();
-        if (PhoneFormatCheckUtil.isPhoneLegal(phoneNumber)) {
+        if (PhoneFormatCheckUtil.isPhoneLegal(edtPhone.getText().toString().trim())) {
             //开始倒计时60s
             startTimer();
             //开始网络请求
-            SMSSDK.getVerificationCode("86", phoneNumber);
+            SMSSDK.getVerificationCode("86", edtPhone.getText().toString().trim());
         } else {
             ToastUtil.show(this, "请输入正确的手机号");
         }
@@ -159,16 +164,28 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void toLogin(){
         OkGo.<String>post(ServiceAPI.Login).tag(this)
-                .params("phoneNumber", phoneNumber)
+                .params("phoneNumber", edtPhone.getText().toString().trim())
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<String> response) {
-
+                        try {
+                            JSONObject body = new JSONObject(response.body());
+                            if(body.getInt("ResultCode") == ServiceAPI.HttpSuccess){
+                                LoginUtil.loginSuccess(body.getString("ResultData"));
+                                ToastUtil.show(LoginActivity.this,"登录成功");
+                                finish();
+                            }else{
+                                ToastUtil.show(LoginActivity.this,"网络异常");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
                     public void onError(com.lzy.okgo.model.Response<String> response) {
                         super.onError(response);
+                        ToastUtil.show(LoginActivity.this,"网络异常");
                     }
                 });
     }
@@ -231,10 +248,16 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.btn_login:
-//                if(toLogin){
-                    toLogin();
-//                }
+                if(toLogin){
+                    SMSSDK.submitVerificationCode("86", edtPhone.getText().toString(), edtPassword.getText().toString());
+                }
                 break;
         }
+    }
+
+    protected void onStop() {
+        super.onStop();
+        //用完回调要注销掉，否则可能会出现内存泄露
+        SMSSDK.unregisterEventHandler(eh);
     }
 }

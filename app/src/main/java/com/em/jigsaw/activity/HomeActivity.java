@@ -18,13 +18,18 @@ import com.em.jigsaw.activity.fragment.MainFragment;
 import com.em.jigsaw.activity.fragment.PersonalFragment;
 import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
+import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.utils.LoginUtil;
+import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.SelectDialog;
+import com.google.gson.Gson;
 import com.linchaolong.android.imagepicker.ImagePicker;
 import com.linchaolong.android.imagepicker.cropper.CropImage;
 import com.linchaolong.android.imagepicker.cropper.CropImageView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +56,8 @@ public class HomeActivity extends AppCompatActivity {
     TextView tab3Tv;
     @BindView(R.id.rl_tab3)
     RelativeLayout rlTab3;
+
+    private Gson gson = new Gson();
 
     Fragment currentFragment = new Fragment();
     FragmentManager manager;
@@ -105,11 +112,18 @@ public class HomeActivity extends AppCompatActivity {
     private void updateUserInfo(){
         if(LoginUtil.isLogin()){
             OkGo.<String>get(ServiceAPI.GetUserInfo).tag(this)
-                    .params("user_no", "")
+                    .params("user_no", LoginUtil.getUserInfo().getUserNo())
                     .execute(new StringCallback() {
                         @Override
                         public void onSuccess(com.lzy.okgo.model.Response<String> response) {
-
+                            try {
+                                JSONObject body = new JSONObject(response.body());
+                                if(body.getInt("ResultCode") == ServiceAPI.HttpSuccess){
+                                    LoginUtil.changeUserInfo(gson.fromJson(body.getString("ResultData"), UserBean.class));
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
         }
