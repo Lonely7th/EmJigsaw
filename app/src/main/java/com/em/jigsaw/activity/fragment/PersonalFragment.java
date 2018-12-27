@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.em.jigsaw.R;
 import com.em.jigsaw.activity.LoginActivity;
 import com.em.jigsaw.activity.PersonalActivity;
@@ -98,6 +100,9 @@ public class PersonalFragment extends Fragment {
             UserBean userBean = LoginUtil.getUserInfo();
             tvUserName.setText(userBean.getUserName());
             tvUserId.setText("user_id：" + userBean.getUserNo());
+            if(!TextUtils.isEmpty(userBean.getNameHead())){
+                Glide.with(getActivity()).load(userBean.getNameHead()).into(ivHead);
+            }
         }else{
             tvUserName.setText("未登录");
             tvUserId.setText("点击登录");

@@ -7,6 +7,7 @@ package com.em.jigsaw.base;
  */
 public class ServiceAPI {
     public final static String BASE_URL = "http://172.31.71.35:8080/";
+    public final static String IMAGE_URL = "http://172.31.71.35:8089/";
 
     /**
      * 状态码
@@ -20,4 +21,8 @@ public class ServiceAPI {
     public static final String ChangeInfo = BASE_URL + "api/v1/changeInfo";
     public static final String GetUserInfo = BASE_URL + "api/v1/getUserInfo";
     public static final String GetUserHead = BASE_URL + "api/v1/changeHead";
+
+    /**
+     * 帖子相关
+     */
 }
