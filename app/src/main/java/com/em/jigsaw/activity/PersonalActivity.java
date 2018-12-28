@@ -118,7 +118,7 @@ public class PersonalActivity extends AppCompatActivity {
     private void changeUserHead(File file){
         OkGo.<String>post(ServiceAPI.GetUserHead).tag(this)
                 .params("user_no", LoginUtil.getUserInfo().getUserNo())
-                .params("src", file)
+                .params("res", file)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<String> response) {
@@ -129,6 +129,7 @@ public class PersonalActivity extends AppCompatActivity {
                                 UserBean userBean = LoginUtil.getUserInfo();
                                 userBean.setNameHead(body.getString("ResultData"));
                                 LoginUtil.changeUserInfo(userBean);
+                                updateUI();
                             }else{
                                 ToastUtil.show(PersonalActivity.this,"网络异常");
                             }
@@ -198,7 +199,7 @@ public class PersonalActivity extends AppCompatActivity {
                         builder.setMultiTouchEnabled(false)// 是否启动多点触摸
                                 .setGuidelines(CropImageView.Guidelines.OFF)// 设置网格显示模式
                                 .setCropShape(CropImageView.CropShape.RECTANGLE)// 圆形/矩形
-                                .setRequestedSize(128, 128)// 调整裁剪后的图片最终大小
+                                .setRequestedSize(256, 256)// 调整裁剪后的图片最终大小
                                 .setAspectRatio(1, 1);// 宽高比
                     }
 
@@ -232,7 +233,7 @@ public class PersonalActivity extends AppCompatActivity {
                         builder.setMultiTouchEnabled(false)// 是否启动多点触摸
                                 .setGuidelines(CropImageView.Guidelines.OFF)// 设置网格显示模式
                                 .setCropShape(CropImageView.CropShape.RECTANGLE)// 圆形/矩形
-                                .setRequestedSize(128, 128)// 调整裁剪后的图片最终大小
+                                .setRequestedSize(256, 256)// 调整裁剪后的图片最终大小
                                 .setAspectRatio(1, 1);// 宽高比
                     }
 

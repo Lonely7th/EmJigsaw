@@ -23,6 +23,8 @@ public class ServiceAPI {
     public static final String GetUserHead = BASE_URL + "api/v1/changeHead";
 
     /**
-     * 帖子相关
+     * 发布相关
      */
+    public static final String GetCategroy = BASE_URL + "api/v2/getCategroy";
+    public static final String GetJList = BASE_URL + "api/v3/getJNoteList";
 }

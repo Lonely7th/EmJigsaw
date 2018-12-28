@@ -17,10 +17,19 @@ import android.widget.TextView;
 
 import com.em.jigsaw.R;
 import com.em.jigsaw.activity.JigsawViewActivity;
+import com.em.jigsaw.activity.LoginActivity;
 import com.em.jigsaw.adapter.JigsawListAdapter;
 import com.em.jigsaw.adapter.TopBarAdapter;
+import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.JigsawListBean;
 import com.em.jigsaw.bean.MainTopBarBean;
+import com.em.jigsaw.utils.LoginUtil;
+import com.em.jigsaw.utils.ToastUtil;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,13 +58,17 @@ public class MainFragment extends Fragment {
     private ArrayList<MainTopBarBean> topBarBeanList = new ArrayList<>();
     private TopBarAdapter topBarAdapter;
 
+    private int currentTopBar = 0;
+    private int currentPager = 0;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, rootView);
         initUI();
         initData();
-        loadData();
+        loadBarData();
+        loadItemData();
         return rootView;
     }
 
@@ -87,6 +100,7 @@ public class MainFragment extends Fragment {
             @Override
             public void OnItemClick(View view, int position) {
                 for(int i = 0;i < topBarBeanList.size();i++){
+                    currentTopBar = position;
                     if(i == position){
                         topBarBeanList.get(i).setSelect(true);
                     }else{
@@ -98,19 +112,79 @@ public class MainFragment extends Fragment {
         });
     }
 
-    private void loadData() {
-        for (int i = 0; i < 10; i++) {
-            JigsawListBean bean = new JigsawListBean();
-            list.add(bean);
-            MainTopBarBean barBean = new MainTopBarBean();
-            barBean.setTitle("item-"+i);
-            if(i == 0){
-                barBean.setSelect(true);
-            }
-            topBarBeanList.add(barBean);
-        }
-        jigsawListAdapter.notifyDataSetChanged();
-        topBarAdapter.notifyDataSetChanged();
+    private void loadBarData() {
+        OkGo.<String>get(ServiceAPI.GetCategroy).tag(this)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<String> response) {
+                        try {
+                            JSONObject body = new JSONObject(response.body());
+                            if(body.getInt("ResultCode") == ServiceAPI.HttpSuccess){
+                                JSONArray array = body.getJSONArray("ResultData");
+                                for(int i = 0;i < array.length();i++){
+                                    JSONObject obj = array.getJSONObject(i);
+                                    MainTopBarBean barBean = new MainTopBarBean();
+                                    barBean.setTitle(obj.getString("Title"));
+                                    barBean.setID(obj.getString("Id"));
+                                    if(i == 0){
+                                        barBean.setSelect(true);
+                                    }
+                                    topBarBeanList.add(barBean);
+                                }
+                                topBarAdapter.notifyDataSetChanged();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    private void loadItemData(){
+        OkGo.<String>get(ServiceAPI.GetJList).tag(this)
+                .params("categroy",""+currentTopBar)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<String> response) {
+                        try {
+                            JSONObject body = new JSONObject(response.body());
+                            if(body.getInt("ResultCode") == ServiceAPI.HttpSuccess){
+                                JSONArray array = body.getJSONArray("ResultData");
+                                for(int i = 0;i < array.length();i++){
+                                    JSONObject obj = array.getJSONObject(i);
+                                    JigsawListBean jigsawListBean = new JigsawListBean();
+
+                                    jigsawListBean.setBestResults(obj.getString("BestResults"));
+                                    jigsawListBean.setCompleteNum(obj.getString("CompleteNum"));
+                                    jigsawListBean.setContent(obj.getString("Content"));
+                                    jigsawListBean.setCreatTime(obj.getLong("CreatTime"));
+                                    jigsawListBean.setCropFormat(obj.getString("CropFormat"));
+                                    jigsawListBean.setDisplayNum(obj.getString("DisplayNum"));
+                                    jigsawListBean.setHideUser(obj.getBoolean("HideUser"));
+                                    jigsawListBean.setJType(obj.getString("JType"));
+                                    jigsawListBean.setLabel1(obj.getString("Label1"));
+                                    jigsawListBean.setLabel2(obj.getString("Label2"));
+                                    jigsawListBean.setLabel3(obj.getString("Label3"));
+                                    jigsawListBean.setLabelTitle1(obj.getString("LabelTitle1"));
+                                    jigsawListBean.setLabelTitle2(obj.getString("LabelTitle2"));
+                                    jigsawListBean.setLabelTitle3(obj.getString("LabelTitle3"));
+                                    jigsawListBean.setLimitNum(obj.getString("LimitNum"));
+                                    jigsawListBean.setNoteId(obj.getString("NoteId"));
+                                    jigsawListBean.setResPath(obj.getString("ResPath"));
+
+                                    JSONObject userObj = obj.getJSONObject("Releaser");
+                                    jigsawListBean.setUserHead(userObj.getString("NameHead"));
+                                    jigsawListBean.setUserName(userObj.getString("UserName"));
+                                    jigsawListBean.setUserNo(userObj.getString("UserNo"));
+                                    list.add(jigsawListBean);
+                                }
+                                jigsawListAdapter.notifyDataSetChanged();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     @Override

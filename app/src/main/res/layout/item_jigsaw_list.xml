@@ -14,6 +14,7 @@
             android:id="@+id/iv_head"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:padding="2dp"
             android:background="@mipmap/icon_account_circle"/>
         <TextView
             android:id="@+id/tv_user_name"
@@ -34,26 +35,38 @@
             android:textColor="@color/colorRed"
             android:textSize="12sp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="4dp"
-            android:text="725人挑战/125人成功"/>
+            android:layout_marginTop="4dp"/>
         <TextView
-            android:id="@+id/tv_content"
+            android:id="@+id/tv_crop_format"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/iv_head"
             android:layout_below="@+id/iv_head"
             android:textColor="@color/colorGary"
-            android:textSize="13sp"
-            android:lines="2"
+            android:textSize="12sp"
+            android:lines="1"
+            android:ellipsize="end"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="2dp"
-            android:text="contentcontentcontentcontentcontent"/>
+            android:layout_marginTop="2dp"/>
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/iv_head"
+            android:layout_below="@+id/tv_crop_format"
+            android:textColor="@color/colorGary"
+            android:textSize="13sp"
+            android:lines="1"
+            android:ellipsize="end"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="32dp"
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@+id/iv_head">
             <TextView
+                android:id="@+id/tv_label_1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -66,6 +79,7 @@
                 android:lines="1"
                 android:text="风景"/>
             <TextView
+                android:id="@+id/tv_label_2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -78,6 +92,7 @@
                 android:background="@drawable/bg_border_red"
                 android:text="巴塞罗那"/>
             <TextView
+                android:id="@+id/tv_label_3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

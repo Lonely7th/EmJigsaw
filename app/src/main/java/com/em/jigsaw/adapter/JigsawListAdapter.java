@@ -1,16 +1,21 @@
 package com.em.jigsaw.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.em.jigsaw.R;
+import com.em.jigsaw.activity.PersonalActivity;
+import com.em.jigsaw.base.ContentKey;
+import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.base.YBaseAdapter;
 import com.em.jigsaw.base.YBaseHolder;
 import com.em.jigsaw.bean.JigsawImgBean;
 import com.em.jigsaw.bean.JigsawListBean;
+import com.em.jigsaw.utils.TimerUtil;
 
 import java.util.List;
 
@@ -33,7 +38,8 @@ public class JigsawListAdapter extends YBaseAdapter<JigsawListBean> {
     private class MyHolder extends YBaseHolder<JigsawListBean> {
 
         ImageView ivJigsaw,ivHead;
-        TextView tvUserName,tvCreatTime,tvContent;
+        TextView tvUserName,tvCreatTime,tvContent,tvCropFormat,tvResult;
+        TextView tvLabel1,tvLabel2,tvLabel3;
 
         public MyHolder(Context mContext, List<JigsawListBean> mLists) {
             super(mContext, mLists);
@@ -47,12 +53,45 @@ public class JigsawListAdapter extends YBaseAdapter<JigsawListBean> {
             tvUserName = view.findViewById(R.id.tv_user_name);
             tvCreatTime = view.findViewById(R.id.tv_creat_time);
             tvContent = view.findViewById(R.id.tv_content);
+            tvCropFormat = view.findViewById(R.id.tv_crop_format);
+            tvResult = view.findViewById(R.id.tv_zan_status);
+
+            tvLabel1 = view.findViewById(R.id.tv_label_1);
+            tvLabel2 = view.findViewById(R.id.tv_label_2);
+            tvLabel3 = view.findViewById(R.id.tv_label_3);
             return view;
         }
 
         @Override
         public void bindData(final int position) {
+            JigsawListBean baen = mLists.get(position);
+            tvUserName.setText(baen.getUserName());
+            tvCreatTime.setText(TimerUtil.timeStamp2Date(baen.getCreatTime()));
+            tvContent.setText(baen.getContent());
 
+            tvCropFormat.setText("裁剪格式：" + baen.getCropFormat());
+
+            Glide.with(mContext).load(baen.getUserHead()).into(ivHead);
+            Glide.with(mContext).load(baen.getResPath().startsWith("http")?baen.getResPath(): ServiceAPI.IMAGE_URL + baen.getResPath()).into(ivJigsaw);
+
+            if(TextUtils.isEmpty(baen.getLabelTitle1())){
+                tvLabel1.setVisibility(View.INVISIBLE);
+            }else{
+                tvLabel1.setText(baen.getLabelTitle1());
+            }
+            if(TextUtils.isEmpty(baen.getLabelTitle2())){
+                tvLabel2.setVisibility(View.INVISIBLE);
+            }else{
+                tvLabel2.setText(baen.getLabelTitle2());
+            }
+            if(TextUtils.isEmpty(baen.getLabelTitle3())){
+                tvLabel3.setVisibility(View.INVISIBLE);
+            }else{
+                tvLabel3.setText(baen.getLabelTitle3());
+            }
+
+            //展示次数
+            tvResult.setText(baen.getDisplayNum() + "次挑战/" + baen.getCompleteNum() + "成功");
         }
     }
 }

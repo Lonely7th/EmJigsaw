@@ -11,7 +11,7 @@ public class UserBean {
     private String UserName;
     private String UserToken;
     private String UserPhone;
-    private String NameHead;
+    private String NameHead = "";
     private String NameCity;
     private String CreatTime;
 

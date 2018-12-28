@@ -106,6 +106,7 @@ public class PersonalFragment extends Fragment {
         }else{
             tvUserName.setText("未登录");
             tvUserId.setText("点击登录");
+            Glide.with(getActivity()).load("").into(ivHead);
         }
     }
 
