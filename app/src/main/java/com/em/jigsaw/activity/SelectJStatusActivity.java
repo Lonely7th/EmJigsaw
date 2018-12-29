@@ -1,24 +1,41 @@
 package com.em.jigsaw.activity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.em.jigsaw.R;
 import com.em.jigsaw.base.ContentKey;
+import com.em.jigsaw.base.ServiceAPI;
+import com.em.jigsaw.bean.event.ReleaseEvent;
+import com.em.jigsaw.utils.LoginUtil;
+import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.LoadingDialog;
 import com.em.jigsaw.view.SelectDialog;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 /**
  * Time ： 2018/12/11 0011 .
  * Author ： JN Zhang .
@@ -54,9 +71,18 @@ public class SelectJStatusActivity extends AppCompatActivity {
     ImageView ivHideName;
     @BindView(R.id.tv_hide_name)
     TextView tvHideName;
+    @BindView(R.id.tv_label_1)
+    TextView tvLabel1;
+    @BindView(R.id.tv_label_2)
+    TextView tvLabel2;
+    @BindView(R.id.tv_label_3)
+    TextView tvLabel3;
+    @BindView(R.id.edt_content)
+    EditText edtContent;
 
-    String cropFormat;
     Uri imageUri;
+    File ResFile;
+    String cropFormat;
     boolean isHideName = false;
 
     SelectDialog selectDialog;
@@ -90,13 +116,68 @@ public class SelectJStatusActivity extends AppCompatActivity {
         selectTypeList.addAll(Arrays.asList(ContentKey.Limit_Type_Array));
     }
 
-    @OnClick({R.id.back_btn, R.id.right_btn, R.id.btn_crop_format, R.id.btn_hide_name, R.id.btn_limit_type, R.id.btn_limit_count})
+    private void release() {
+        String content = TextUtils.isEmpty(edtContent.getText().toString())?"我发布了一条新状态，快来点击看看吧~":edtContent.getText().toString();
+        try {
+            ResFile = new File(new URI(imageUri.toString()));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        OkGo.<String>post(ServiceAPI.AddJDetails).tag(this)
+                .params("content", content)
+                .params("releaser", LoginUtil.getUserInfo().getUserNo())
+                .params("res", ResFile)
+                .params("jtype", ""+curSelectType)
+                .params("limitNum", ""+curSelectCount)
+                .params("hideUser", isHideName)
+                .params("cropFormat", cropFormat)
+                .params("label1", "8")
+                .params("labelTitle1", "非主流")
+                .params("label2", "9")
+                .params("labelTitle2", "搞笑")
+                .params("label3", "")
+                .params("labelTitle3", "")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            JSONObject body = new JSONObject(response.body());
+                            if (body.getInt("ResultCode") == ServiceAPI.HttpSuccess) {
+                                JSONObject ResultData = body.getJSONObject("ResultData");
+                                if(loadingDialog != null){
+                                    loadingDialog.dismiss();
+                                }
+                                ToastUtil.show(SelectJStatusActivity.this, "发布成功");
+                                startActivity(new Intent(SelectJStatusActivity.this, JigsawViewActivity.class)
+                                        .putExtra("id",ResultData.getString("NoteId")));
+                                EventBus.getDefault().post(new ReleaseEvent(0));
+                                finish();
+                            } else {
+                                ToastUtil.show(SelectJStatusActivity.this, "网络异常");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        ToastUtil.show(SelectJStatusActivity.this, "网络异常");
+                    }
+                });
+    }
+
+    @OnClick({R.id.back_btn, R.id.right_btn, R.id.btn_crop_format, R.id.btn_hide_name, R.id.btn_limit_type, R.id.btn_limit_count, R.id.tv_label_1,
+            R.id.tv_label_2, R.id.tv_label_3})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back_btn:
                 finish();
                 break;
             case R.id.right_btn:
+                release();
                 loadingDialog = new LoadingDialog(SelectJStatusActivity.this);
                 loadingDialog.show();
                 break;
@@ -125,9 +206,9 @@ public class SelectJStatusActivity extends AppCompatActivity {
                 break;
             case R.id.btn_limit_count:
                 selectCountList.clear();
-                if (curSelectType == 1) {
+                if (curSelectType == 2) {
                     selectCountList.addAll(Arrays.asList(ContentKey.Limit_Count_Array));
-                } else if (curSelectType == 2) {
+                } else if (curSelectType == 1) {
                     selectCountList.addAll(Arrays.asList(ContentKey.Limit_Time_Array));
                 } else {
                     break;
@@ -135,16 +216,33 @@ public class SelectJStatusActivity extends AppCompatActivity {
                 selectDialog = new SelectDialog(SelectJStatusActivity.this, selectCountList, new SelectDialog.OnSelectListener() {
                     @Override
                     public void onItemSelect(View view, int position, long id) {
-                        curSelectCount = position;
-                        if (curSelectType == 1) {
+                        curSelectCount = Integer.parseInt(selectCountList.get(position));
+                        if (curSelectType == 2) {
                             tvLimitCount.setText(selectCountList.get(position) + "次");
-                        } else if (curSelectType == 2) {
+                        } else if (curSelectType == 1) {
                             tvLimitCount.setText(selectCountList.get(position) + "秒");
                         }
                     }
                 });
                 selectDialog.show();
                 break;
+            case R.id.tv_label_1:
+                startActivity(new Intent(SelectJStatusActivity.this, SelectLabelActivity.class));
+                break;
+            case R.id.tv_label_2:
+                startActivity(new Intent(SelectJStatusActivity.this, SelectLabelActivity.class));
+                break;
+            case R.id.tv_label_3:
+                startActivity(new Intent(SelectJStatusActivity.this, SelectLabelActivity.class));
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(loadingDialog != null){
+            loadingDialog.dismiss();
         }
     }
 }

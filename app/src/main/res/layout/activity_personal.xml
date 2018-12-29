@@ -22,7 +22,7 @@
             android:layout_marginLeft="8dp"
             android:layout_centerVertical="true"
             android:text="头像"/>
-        <ImageView
+        <com.em.jigsaw.view.RoundImageView
             android:id="@+id/iv_head"
             android:layout_width="60dp"
             android:layout_height="60dp"

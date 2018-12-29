@@ -19,6 +19,7 @@
             android:layout_alignParentRight="true"
             android:src="@mipmap/icon_replay"/>
         <LinearLayout
+            android:id="@+id/view_cneter_bar"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
@@ -30,8 +31,7 @@
                 android:textColor="@color/colorWhite"
                 android:gravity="center"
                 android:textSize="14sp"
-                android:textStyle="bold"
-                android:text="剩余"/>
+                android:textStyle="bold"/>
             <TextView
                 android:id="@+id/tv_limit_count"
                 android:layout_width="wrap_content"
@@ -41,8 +41,7 @@
                 android:textStyle="bold|italic"
                 android:gravity="top"
                 android:layout_marginRight="8dp"
-                android:layout_marginLeft="8dp"
-                android:text="60"/>
+                android:layout_marginLeft="8dp"/>
             <TextView
                 android:id="@+id/tv_limit_unit"
                 android:layout_width="wrap_content"
@@ -50,8 +49,7 @@
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:gravity="center"
-                android:text="次"/>
+                android:gravity="center"/>
         </LinearLayout>
         <ImageView
             android:id="@+id/btn_close"
@@ -73,8 +71,7 @@
             android:textColor="@color/colorWhite"
             android:textSize="14sp"
             android:layout_toLeftOf="@+id/tv_top"
-            android:maxLines="2"
-            android:text="暂无内容"/>
+            android:maxLines="2"/>
         <TextView
             android:id="@+id/tv_top"
             android:layout_width="wrap_content"
@@ -84,8 +81,7 @@
             android:layout_centerVertical="true"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:maxLines="1"
-            android:text="最优：118秒"/>
+            android:maxLines="1"/>
     </RelativeLayout>
 
     <RelativeLayout

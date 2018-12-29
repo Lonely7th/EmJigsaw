@@ -27,4 +27,6 @@ public class ServiceAPI {
      */
     public static final String GetCategroy = BASE_URL + "api/v2/getCategroy";
     public static final String GetJList = BASE_URL + "api/v3/getJNoteList";
+    public static final String GetJDetails = BASE_URL + "api/v3/getJNoteDetails";
+    public static final String AddJDetails = BASE_URL + "api/v3/addJNote";
 }

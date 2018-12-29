@@ -7,12 +7,12 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:background="@color/colorMain"
-        android:layout_height="52dp"
+        android:layout_height="48dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp">
         <RelativeLayout
             android:id="@+id/back_btn"
-            android:layout_width="52dp"
+            android:layout_width="48dp"
             android:layout_height="match_parent">
             <ImageView
                 android:layout_width="24dp"
@@ -29,7 +29,7 @@
             android:gravity="center"
             android:textColor="@color/colorWhite"
             android:textStyle="bold"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:layout_centerInParent="true"/>
 
         <RelativeLayout

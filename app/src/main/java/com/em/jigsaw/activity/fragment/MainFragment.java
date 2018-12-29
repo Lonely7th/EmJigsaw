@@ -17,17 +17,15 @@ import android.widget.TextView;
 
 import com.em.jigsaw.R;
 import com.em.jigsaw.activity.JigsawViewActivity;
-import com.em.jigsaw.activity.LoginActivity;
 import com.em.jigsaw.adapter.JigsawListAdapter;
 import com.em.jigsaw.adapter.TopBarAdapter;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.JigsawListBean;
 import com.em.jigsaw.bean.MainTopBarBean;
-import com.em.jigsaw.utils.LoginUtil;
-import com.em.jigsaw.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -65,6 +63,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, rootView);
+
         initUI();
         initData();
         loadBarData();
@@ -78,7 +77,7 @@ public class MainFragment extends Fragment {
         mainListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                startActivity(new Intent(getActivity(), JigsawViewActivity.class));
+                startActivity(new Intent(getActivity(), JigsawViewActivity.class).putExtra("id",list.get(i).getNoteId()));
             }
         });
 
@@ -86,7 +85,6 @@ public class MainFragment extends Fragment {
 
     private void initUI() {
         backBtn.setVisibility(View.GONE);
-        tvBarCenter.setText("发现 8 条新内容");
 
         topbarView.setHasFixedSize(true);//设置固定大小
         topbarView.setItemAnimator(new DefaultItemAnimator());//设置默认动画
@@ -131,6 +129,7 @@ public class MainFragment extends Fragment {
                                     }
                                     topBarBeanList.add(barBean);
                                 }
+                                tvBarCenter.setText("发现 " + topBarBeanList.size() + " 条新内容");
                                 topBarAdapter.notifyDataSetChanged();
                             }
                         } catch (Exception e) {
@@ -190,5 +189,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        EventBus.getDefault().unregister(getActivity());
     }
 }

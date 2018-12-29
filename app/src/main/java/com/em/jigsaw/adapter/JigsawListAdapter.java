@@ -65,13 +65,27 @@ public class JigsawListAdapter extends YBaseAdapter<JigsawListBean> {
         @Override
         public void bindData(final int position) {
             JigsawListBean baen = mLists.get(position);
-            tvUserName.setText(baen.getUserName());
+            if(baen.isHideUser()){
+                tvUserName.setText("匿名用户");
+            }else{
+                tvUserName.setText(baen.getUserName());
+                Glide.with(mContext).load(baen.getUserHead()).into(ivHead);
+            }
+
             tvCreatTime.setText(TimerUtil.timeStamp2Date(baen.getCreatTime()));
             tvContent.setText(baen.getContent());
 
-            tvCropFormat.setText("裁剪格式：" + baen.getCropFormat());
+            StringBuilder sbLimit = new StringBuilder();
+            switch (baen.getJType()){
+                case "1":
+                    sbLimit.append("时间限制：").append(baen.getLimitNum()).append("秒");
+                    break;
+                case "2":
+                    sbLimit.append("次数限制：").append(baen.getLimitNum()).append("次");
+                    break;
+            }
+            tvCropFormat.setText("格式：" + baen.getCropFormat() + "    " + sbLimit.toString());
 
-            Glide.with(mContext).load(baen.getUserHead()).into(ivHead);
             Glide.with(mContext).load(baen.getResPath().startsWith("http")?baen.getResPath(): ServiceAPI.IMAGE_URL + baen.getResPath()).into(ivJigsaw);
 
             if(TextUtils.isEmpty(baen.getLabelTitle1())){

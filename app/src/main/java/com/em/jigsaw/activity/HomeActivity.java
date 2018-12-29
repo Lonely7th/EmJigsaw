@@ -20,7 +20,6 @@ import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.utils.LoginUtil;
-import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.SelectDialog;
 import com.google.gson.Gson;
 import com.linchaolong.android.imagepicker.ImagePicker;
@@ -234,7 +233,7 @@ public class HomeActivity extends AppCompatActivity {
                     // 裁剪图片回调
                     @Override
                     public void onCropImage(Uri imageUri) {
-                        startActivity(new Intent(HomeActivity.this, JigsawViewActivity.class)
+                        startActivity(new Intent(HomeActivity.this, AddJigsawActivity.class)
                                 .putExtra("ImageUri",imageUri.toString())
                                 .putExtra("ImgFormat",ImgFormat));
                     }
@@ -266,7 +265,7 @@ public class HomeActivity extends AppCompatActivity {
                     // 裁剪图片回调
                     @Override
                     public void onCropImage(Uri imageUri) {
-                        startActivity(new Intent(HomeActivity.this, JigsawViewActivity.class)
+                        startActivity(new Intent(HomeActivity.this, AddJigsawActivity.class)
                                 .putExtra("ImageUri",imageUri.toString())
                                 .putExtra("ImgFormat",ImgFormat));
                     }

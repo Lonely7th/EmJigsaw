@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="126dp"
         android:layout_weight="1">
-        <ImageView
+        <com.em.jigsaw.view.RoundImageView
             android:id="@+id/iv_head"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -22,9 +22,10 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/iv_head"
             android:textColor="@color/colorBlack"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:layout_marginLeft="8dp"
+            android:layout_marginTop="2dp"
             android:text="user_name"/>
         <TextView
             android:id="@+id/tv_zan_status"

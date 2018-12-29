@@ -18,8 +18,13 @@ import com.em.jigsaw.adapter.FormatSelectAdapter;
 import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.bean.FormatSelectBean;
 import com.em.jigsaw.bean.JigsawImgBean;
+import com.em.jigsaw.bean.event.ReleaseEvent;
 import com.em.jigsaw.utils.ImgUtil;
 import com.em.jigsaw.view.JigsawView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +53,7 @@ public class AddJigsawActivity extends AppCompatActivity {
     private ImgUtil imgUtil;
     private Uri imageUri;
     private int[] ImgFormat;
+    private boolean fristLoad = true;
 
     private ArrayList<JigsawImgBean> list = new ArrayList<>();
 
@@ -60,6 +66,7 @@ public class AddJigsawActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_jigsaw_view);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         imgUtil = new ImgUtil(AddJigsawActivity.this);
 
         imageUri = Uri.parse(getIntent().getStringExtra("ImageUri"));
@@ -72,7 +79,16 @@ public class AddJigsawActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        updateJigsawList(imgUtil.getBitmap(imageUri));
+        if(fristLoad){
+            fristLoad = false;
+            updateJigsawList(imgUtil.getBitmap(imageUri));
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     private void initData() {
@@ -111,6 +127,8 @@ public class AddJigsawActivity extends AppCompatActivity {
                 updateJigsawList(imgUtil.getBitmap(imageUri));
             }
         });
+
+        viewJigsaw.setViewTouched(false);
     }
 
     /**
@@ -119,9 +137,6 @@ public class AddJigsawActivity extends AppCompatActivity {
     private void updateJigsawList(Bitmap bitmap) {
         list.clear();
         list.addAll(imgUtil.sortImgArray(imgUtil.getImgArray(bitmap, formatSelectBeans.get(currentFormat).getFormat(), ImgFormat)));
-        for(JigsawImgBean bean : list){
-            Log.d("JigsawImgBean",bean.getImgPath());
-        }
         viewJigsaw.setLabels(list);
     }
 
@@ -135,6 +150,13 @@ public class AddJigsawActivity extends AppCompatActivity {
                 startActivity(new Intent(AddJigsawActivity.this,SelectJStatusActivity.class)
                         .putExtra("ImageUri",imageUri.toString()).putExtra("CropFormat",formatSelectBeans.get(currentFormat).getTitle()));
                 break;
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ReleaseEvent event) {
+        if(event.getEvent() == 0){
+            finish();
         }
     }
 }

@@ -15,7 +15,7 @@
         android:background="@color/colorWhite"
         android:padding="8dp"
         android:layout_marginTop="20dp">
-        <ImageView
+        <com.em.jigsaw.view.RoundImageView
             android:id="@+id/iv_head"
             android:layout_width="60dp"
             android:layout_height="60dp"
