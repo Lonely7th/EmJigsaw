@@ -7,16 +7,19 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.em.jigsaw.R;
 import com.em.jigsaw.activity.JigsawViewActivity;
+import com.em.jigsaw.activity.SearchActivity;
 import com.em.jigsaw.adapter.JigsawListAdapter;
 import com.em.jigsaw.adapter.TopBarAdapter;
 import com.em.jigsaw.base.ServiceAPI;
@@ -24,6 +27,7 @@ import com.em.jigsaw.bean.JigsawListBean;
 import com.em.jigsaw.bean.MainTopBarBean;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -34,6 +38,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Time ： 2018/12/11 0011 .
@@ -49,7 +54,13 @@ public class MainFragment extends Fragment {
     @BindView(R.id.main_listview)
     ListView mainListview;
     @BindView(R.id.topbar_view)
-    android.support.v7.widget.RecyclerView topbarView;
+    RecyclerView topbarView;
+    @BindView(R.id.iv_right_icon)
+    ImageView ivRightIcon;
+    @BindView(R.id.tv_bar_right)
+    TextView tvBarRight;
+    @BindView(R.id.right_btn)
+    RelativeLayout rightBtn;
 
     private List<JigsawListBean> list = new ArrayList<>();
     private JigsawListAdapter jigsawListAdapter;
@@ -77,7 +88,7 @@ public class MainFragment extends Fragment {
         mainListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                startActivity(new Intent(getActivity(), JigsawViewActivity.class).putExtra("id",list.get(i).getNoteId()));
+                startActivity(new Intent(getActivity(), JigsawViewActivity.class).putExtra("id", list.get(i).getNoteId()));
             }
         });
 
@@ -85,23 +96,25 @@ public class MainFragment extends Fragment {
 
     private void initUI() {
         backBtn.setVisibility(View.GONE);
+        ivRightIcon.setVisibility(View.VISIBLE);
+        ivRightIcon.setImageDrawable(getResources().getDrawable(R.mipmap.icon_search));
 
         topbarView.setHasFixedSize(true);//设置固定大小
         topbarView.setItemAnimator(new DefaultItemAnimator());//设置默认动画
-        LinearLayoutManager mLayoutManage=new LinearLayoutManager(getActivity());
+        LinearLayoutManager mLayoutManage = new LinearLayoutManager(getActivity());
         mLayoutManage.setOrientation(OrientationHelper.HORIZONTAL);//设置滚动方向，横向滚动
         topbarView.setLayoutManager(mLayoutManage);
-        topBarAdapter = new TopBarAdapter(getActivity(),topBarBeanList);
+        topBarAdapter = new TopBarAdapter(getActivity(), topBarBeanList);
         topbarView.setAdapter(topBarAdapter);
 
         topBarAdapter.setOnItemClickListener(new TopBarAdapter.OnRecycleViewItemClickListener() {
             @Override
             public void OnItemClick(View view, int position) {
-                for(int i = 0;i < topBarBeanList.size();i++){
+                for (int i = 0; i < topBarBeanList.size(); i++) {
                     currentTopBar = position;
-                    if(i == position){
+                    if (i == position) {
                         topBarBeanList.get(i).setSelect(true);
-                    }else{
+                    } else {
                         topBarBeanList.get(i).setSelect(false);
                     }
                 }
@@ -114,17 +127,17 @@ public class MainFragment extends Fragment {
         OkGo.<String>get(ServiceAPI.GetCategroy).tag(this)
                 .execute(new StringCallback() {
                     @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<String> response) {
+                    public void onSuccess(Response<String> response) {
                         try {
                             JSONObject body = new JSONObject(response.body());
-                            if(body.getInt("ResultCode") == ServiceAPI.HttpSuccess){
+                            if (body.getInt("ResultCode") == ServiceAPI.HttpSuccess) {
                                 JSONArray array = body.getJSONArray("ResultData");
-                                for(int i = 0;i < array.length();i++){
+                                for (int i = 0; i < array.length(); i++) {
                                     JSONObject obj = array.getJSONObject(i);
                                     MainTopBarBean barBean = new MainTopBarBean();
                                     barBean.setTitle(obj.getString("Title"));
                                     barBean.setID(obj.getString("Id"));
-                                    if(i == 0){
+                                    if (i == 0) {
                                         barBean.setSelect(true);
                                     }
                                     topBarBeanList.add(barBean);
@@ -139,17 +152,17 @@ public class MainFragment extends Fragment {
                 });
     }
 
-    private void loadItemData(){
+    private void loadItemData() {
         OkGo.<String>get(ServiceAPI.GetJList).tag(this)
-                .params("categroy",""+currentTopBar)
+                .params("categroy", "" + currentTopBar)
                 .execute(new StringCallback() {
                     @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<String> response) {
+                    public void onSuccess(Response<String> response) {
                         try {
                             JSONObject body = new JSONObject(response.body());
-                            if(body.getInt("ResultCode") == ServiceAPI.HttpSuccess){
+                            if (body.getInt("ResultCode") == ServiceAPI.HttpSuccess) {
                                 JSONArray array = body.getJSONArray("ResultData");
-                                for(int i = 0;i < array.length();i++){
+                                for (int i = 0; i < array.length(); i++) {
                                     JSONObject obj = array.getJSONObject(i);
                                     JigsawListBean jigsawListBean = new JigsawListBean();
 
@@ -190,5 +203,10 @@ public class MainFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         EventBus.getDefault().unregister(getActivity());
+    }
+
+    @OnClick(R.id.right_btn)
+    public void onViewClicked() {
+        startActivity(new Intent(getActivity(),SearchActivity.class));
     }
 }

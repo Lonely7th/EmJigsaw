@@ -7,6 +7,11 @@ package com.em.jigsaw.base;
  */
 public class ContentKey {
     /**
+     * 页面返回状态
+     */
+    public static final int Pager_Complete = 200;
+
+    /**
      * 图片尺寸
      */
     public static final int[] ImgFormat_9_16 = {9,16,540,960};// 宽9高16

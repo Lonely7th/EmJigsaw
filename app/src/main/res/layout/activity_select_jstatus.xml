@@ -187,47 +187,82 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_margin="8dp"
-                android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@+id/iv_head">
-                <TextView
-                    android:id="@+id/tv_label_1"
+                android:orientation="horizontal">
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:layout_margin="4dp"
-                    android:textSize="12sp"
-                    android:textColor="@color/colorGary"
-                    android:background="@drawable/bg_border_gray"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text="未添加"/>
-                <TextView
-                    android:id="@+id/tv_label_2"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/tv_label_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="4dp"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorGary"
+                        android:background="@drawable/bg_border_gray"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:text="未添加"/>
+                    <ImageView
+                        android:id="@+id/iv_tab_close_1"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:padding="12dp"
+                        android:visibility="gone"
+                        android:layout_alignParentRight="true"
+                        android:src="@mipmap/icon_close_b"/>
+                </RelativeLayout>
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:layout_margin="4dp"
-                    android:textSize="12sp"
-                    android:textColor="@color/colorGary"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:background="@drawable/bg_border_gray"
-                    android:text="未添加"/>
-                <TextView
-                    android:id="@+id/tv_label_3"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/tv_label_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="4dp"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorGary"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:background="@drawable/bg_border_gray"
+                        android:text="未添加"/>
+                    <ImageView
+                        android:id="@+id/iv_tab_close_2"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:padding="12dp"
+                        android:visibility="gone"
+                        android:layout_alignParentRight="true"
+                        android:src="@mipmap/icon_close_b"/>
+                </RelativeLayout>
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:layout_margin="4dp"
-                    android:textSize="12sp"
-                    android:textColor="@color/colorGary"
-                    android:background="@drawable/bg_border_gray"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text="未添加"/>
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/tv_label_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="4dp"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorGary"
+                        android:background="@drawable/bg_border_gray"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:text="未添加"/>
+                    <ImageView
+                        android:id="@+id/iv_tab_close_3"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:padding="12dp"
+                        android:visibility="gone"
+                        android:layout_alignParentRight="true"
+                        android:src="@mipmap/icon_close_b"/>
+                </RelativeLayout>
             </LinearLayout>
 
         </LinearLayout>
