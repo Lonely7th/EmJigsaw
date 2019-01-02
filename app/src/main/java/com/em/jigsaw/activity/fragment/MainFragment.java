@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,6 +25,8 @@ import com.em.jigsaw.adapter.TopBarAdapter;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.JigsawListBean;
 import com.em.jigsaw.bean.MainTopBarBean;
+import com.em.jigsaw.utils.ToastUtil;
+import com.em.jigsaw.view.TouchListView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -53,7 +54,7 @@ public class MainFragment extends Fragment {
     @BindView(R.id.tv_bar_center)
     TextView tvBarCenter;
     @BindView(R.id.main_listview)
-    ListView mainListview;
+    TouchListView mainListview;
     @BindView(R.id.topbar_view)
     RecyclerView topbarView;
     @BindView(R.id.iv_right_icon)
@@ -133,6 +134,17 @@ public class MainFragment extends Fragment {
             }
         });
 
+        mainListview.setListTouchListener(new TouchListView.MyListTouchListener() {
+            @Override
+            public void touchLeft() {
+                ToastUtil.show(getActivity(),"touchLeft");
+            }
+
+            @Override
+            public void touchRight() {
+                ToastUtil.show(getActivity(),"touchRight");
+            }
+        });
     }
 
     private void loadBarData() {
