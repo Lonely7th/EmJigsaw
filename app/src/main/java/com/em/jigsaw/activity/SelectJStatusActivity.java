@@ -186,7 +186,7 @@ public class SelectJStatusActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.right_btn:
-                if(TextUtils.isEmpty(tabId1) && TextUtils.isEmpty(tabId1) && TextUtils.isEmpty(tabId1)){
+                if(TextUtils.isEmpty(tabId1) && TextUtils.isEmpty(tabId2) && TextUtils.isEmpty(tabId3)){
                     ToastUtil.show(SelectJStatusActivity.this,"请添加至少一个标签");
                     return ;
                 }

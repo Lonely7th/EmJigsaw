@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -61,6 +62,8 @@ public class MainFragment extends Fragment {
     TextView tvBarRight;
     @BindView(R.id.right_btn)
     RelativeLayout rightBtn;
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     private List<JigsawListBean> list = new ArrayList<>();
     private JigsawListAdapter jigsawListAdapter;
@@ -99,6 +102,14 @@ public class MainFragment extends Fragment {
         ivRightIcon.setVisibility(View.VISIBLE);
         ivRightIcon.setImageDrawable(getResources().getDrawable(R.mipmap.icon_search));
 
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorBlue));
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadItemData();
+            }
+        });
+
         topbarView.setHasFixedSize(true);//设置固定大小
         topbarView.setItemAnimator(new DefaultItemAnimator());//设置默认动画
         LinearLayoutManager mLayoutManage = new LinearLayoutManager(getActivity());
@@ -121,6 +132,7 @@ public class MainFragment extends Fragment {
                 topBarAdapter.notifyDataSetChanged();
             }
         });
+
     }
 
     private void loadBarData() {
@@ -142,7 +154,6 @@ public class MainFragment extends Fragment {
                                     }
                                     topBarBeanList.add(barBean);
                                 }
-                                tvBarCenter.setText("发现 " + topBarBeanList.size() + " 条新内容");
                                 topBarAdapter.notifyDataSetChanged();
                             }
                         } catch (Exception e) {
@@ -161,6 +172,8 @@ public class MainFragment extends Fragment {
                         try {
                             JSONObject body = new JSONObject(response.body());
                             if (body.getInt("ResultCode") == ServiceAPI.HttpSuccess) {
+                                list.clear();
+
                                 JSONArray array = body.getJSONArray("ResultData");
                                 for (int i = 0; i < array.length(); i++) {
                                     JSONObject obj = array.getJSONObject(i);
@@ -191,6 +204,9 @@ public class MainFragment extends Fragment {
                                     list.add(jigsawListBean);
                                 }
                                 jigsawListAdapter.notifyDataSetChanged();
+
+                                tvBarCenter.setText("发现 " + list.size() + " 条新内容");
+                                mSwipeRefreshLayout.setRefreshing(false);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -207,6 +223,6 @@ public class MainFragment extends Fragment {
 
     @OnClick(R.id.right_btn)
     public void onViewClicked() {
-        startActivity(new Intent(getActivity(),SearchActivity.class));
+        startActivity(new Intent(getActivity(), SearchActivity.class));
     }
 }

@@ -8,12 +8,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.em.jigsaw.R;
-import com.em.jigsaw.activity.PersonalActivity;
-import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.base.YBaseAdapter;
 import com.em.jigsaw.base.YBaseHolder;
-import com.em.jigsaw.bean.JigsawImgBean;
 import com.em.jigsaw.bean.JigsawListBean;
 import com.em.jigsaw.utils.TimerUtil;
 
@@ -91,16 +88,19 @@ public class JigsawListAdapter extends YBaseAdapter<JigsawListBean> {
             if(TextUtils.isEmpty(baen.getLabelTitle1())){
                 tvLabel1.setVisibility(View.INVISIBLE);
             }else{
+                tvLabel1.setVisibility(View.VISIBLE);
                 tvLabel1.setText(baen.getLabelTitle1());
             }
             if(TextUtils.isEmpty(baen.getLabelTitle2())){
                 tvLabel2.setVisibility(View.INVISIBLE);
             }else{
+                tvLabel2.setVisibility(View.VISIBLE);
                 tvLabel2.setText(baen.getLabelTitle2());
             }
             if(TextUtils.isEmpty(baen.getLabelTitle3())){
                 tvLabel3.setVisibility(View.INVISIBLE);
             }else{
+                tvLabel3.setVisibility(View.VISIBLE);
                 tvLabel3.setText(baen.getLabelTitle3());
             }
 
