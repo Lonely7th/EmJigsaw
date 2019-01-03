@@ -12,6 +12,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -66,48 +69,62 @@ public class MainFragment extends Fragment {
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
+    private View listFootView;
+    private TextView tvLoadMore;
+    private ImageView ivLoadMore;
     private List<JigsawListBean> list = new ArrayList<>();
     private JigsawListAdapter jigsawListAdapter;
     private ArrayList<MainTopBarBean> topBarBeanList = new ArrayList<>();
     private TopBarAdapter topBarAdapter;
 
-    private int currentTopBar = 0;
-    private int currentPager = 0;
+    private int currentTopBar = 0; // 当前分类
+    private int currentPager = 1; // 当前加载页
+    private boolean isLoading = false; // 正在加载
+    private boolean hasMoreData = true; // 可以加载更多数据
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        listFootView = inflater.inflate(R.layout.view_main_list_foot, container, false);
+        tvLoadMore = listFootView.findViewById(R.id.tv_content);
+        ivLoadMore = listFootView.findViewById(R.id.iv_loading);
         ButterKnife.bind(this, rootView);
 
         initUI();
         initData();
         loadBarData();
-        loadItemData();
         return rootView;
     }
 
     private void initData() {
         jigsawListAdapter = new JigsawListAdapter(list, getActivity());
         mainListview.setAdapter(jigsawListAdapter);
+        mainListview.addFooterView(listFootView);
         mainListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                startActivity(new Intent(getActivity(), JigsawViewActivity.class).putExtra("id", list.get(i).getNoteId()));
+                if(i == list.size()){
+                    startLoadMore();
+                }else{
+                    startActivity(new Intent(getActivity(), JigsawViewActivity.class).putExtra("id", list.get(i).getNoteId()));
+                }
             }
         });
-
     }
 
+    /**
+     * 初始化页面
+     */
     private void initUI() {
         backBtn.setVisibility(View.GONE);
-        ivRightIcon.setVisibility(View.VISIBLE);
+//        ivRightIcon.setVisibility(View.VISIBLE);
         ivRightIcon.setImageDrawable(getResources().getDrawable(R.mipmap.icon_search));
 
         mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorBlue));
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadItemData();
+                loadItemData(true);
             }
         });
 
@@ -131,22 +148,76 @@ public class MainFragment extends Fragment {
                     }
                 }
                 topBarAdapter.notifyDataSetChanged();
+
+                loadItemData(true);
             }
         });
 
         mainListview.setListTouchListener(new TouchListView.MyListTouchListener() {
             @Override
             public void touchLeft() {
-                ToastUtil.show(getActivity(),"touchLeft");
+                if(currentTopBar < topBarBeanList.size()-1){
+                    currentTopBar++;
+                }else{
+                    return;
+                }
+                for (int i = 0; i < topBarBeanList.size(); i++) {
+                    if (i == currentTopBar) {
+                        topBarBeanList.get(i).setSelect(true);
+                    } else {
+                        topBarBeanList.get(i).setSelect(false);
+                    }
+                }
+                topbarView.scrollToPosition(currentTopBar);
+                topBarAdapter.notifyDataSetChanged();
+
+                loadItemData(true);
             }
 
             @Override
             public void touchRight() {
-                ToastUtil.show(getActivity(),"touchRight");
+                if(currentTopBar > 0){
+                    currentTopBar--;
+                }else{
+                    return;
+                }
+                for (int i = 0; i < topBarBeanList.size(); i++) {
+                    if (i == currentTopBar) {
+                        topBarBeanList.get(i).setSelect(true);
+                    } else {
+                        topBarBeanList.get(i).setSelect(false);
+                    }
+                }
+                topbarView.scrollToPosition(currentTopBar);
+                topBarAdapter.notifyDataSetChanged();
+
+                loadItemData(true);
+            }
+        });
+
+        mainListview.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+                if (i == 0) {
+                    //滚动到顶部
+                } else if ((i + i1) == i2) {
+                    //滚动到底部
+                    if(!isLoading && hasMoreData){
+                        startLoadMore();
+                    }
+                }
             }
         });
     }
 
+    /**
+     * 加载顶部导航栏
+     */
     private void loadBarData() {
         OkGo.<String>get(ServiceAPI.GetCategroy).tag(this)
                 .execute(new StringCallback() {
@@ -160,13 +231,15 @@ public class MainFragment extends Fragment {
                                     JSONObject obj = array.getJSONObject(i);
                                     MainTopBarBean barBean = new MainTopBarBean();
                                     barBean.setTitle(obj.getString("Title"));
-                                    barBean.setID(obj.getString("Id"));
+                                    barBean.setID(obj.getString("Cid"));
                                     if (i == 0) {
                                         barBean.setSelect(true);
                                     }
                                     topBarBeanList.add(barBean);
                                 }
                                 topBarAdapter.notifyDataSetChanged();
+
+                                loadItemData(true);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -175,16 +248,34 @@ public class MainFragment extends Fragment {
                 });
     }
 
-    private void loadItemData() {
+    /**
+     * 加载Data
+     * @param isRefresh 是否刷新
+     */
+    private void loadItemData(final boolean isRefresh) {
+        if(isLoading){ // 避免重复加载
+           return ;
+        }
+        isLoading = true;
+        if(isRefresh){
+            currentPager = 1;
+        }else{
+            currentPager++; // 当前页+1
+        }
+        tvBarCenter.setText("加载中...");
+
         OkGo.<String>get(ServiceAPI.GetJList).tag(this)
-                .params("categroy", "" + currentTopBar)
+                .params("categroy", topBarBeanList.get(currentTopBar).getID())
+                .params("page", "" + currentPager)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
                         try {
                             JSONObject body = new JSONObject(response.body());
                             if (body.getInt("ResultCode") == ServiceAPI.HttpSuccess) {
-                                list.clear();
+                                if(isRefresh){
+                                    list.clear();
+                                }
 
                                 JSONArray array = body.getJSONArray("ResultData");
                                 for (int i = 0; i < array.length(); i++) {
@@ -217,14 +308,63 @@ public class MainFragment extends Fragment {
                                 }
                                 jigsawListAdapter.notifyDataSetChanged();
 
-                                tvBarCenter.setText("发现 " + list.size() + " 条新内容");
-                                mSwipeRefreshLayout.setRefreshing(false);
+                                if(array.length() == 0){
+                                    hasMoreData = false;
+                                    tvBarCenter.setText("发现");
+                                    ToastUtil.show(getActivity(),"暂无更多内容");
+                                }else{
+                                    hasMoreData = true;
+                                    tvBarCenter.setText("发现 " + array.length() + " 条新内容");
+                                }
+
+                                loadFinish(isRefresh);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        loadFinish(isRefresh);
+                    }
                 });
+    }
+
+    /**
+     * 开始加载更多
+     */
+    private void startLoadMore(){
+        tvLoadMore.setText("加载更多...");
+        loadItemData(false);
+        ivLoadMore.setVisibility(View.VISIBLE);
+
+        Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_anim);
+        if (rotate != null) {
+            ivLoadMore.startAnimation(rotate);
+        }
+    }
+
+    /**
+     * 结束加载更多
+     */
+    private void endLoadMore(){
+        tvLoadMore.setText("点击加载更多");
+        ivLoadMore.setVisibility(View.GONE);
+        ivLoadMore.clearAnimation();
+    }
+
+    /**
+     * 加载结束
+     */
+    private void loadFinish(boolean isRefresh){
+        if(isRefresh){
+            mSwipeRefreshLayout.setRefreshing(false);
+        }else{
+            endLoadMore();
+        }
+        isLoading = false;
     }
 
     @Override

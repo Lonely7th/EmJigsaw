@@ -64,6 +64,7 @@ public class JigsawListAdapter extends YBaseAdapter<JigsawListBean> {
             JigsawListBean baen = mLists.get(position);
             if(baen.isHideUser()){
                 tvUserName.setText("匿名用户");
+                Glide.with(mContext).load(R.mipmap.icon_account_circle).into(ivHead);
             }else{
                 tvUserName.setText(baen.getUserName());
                 Glide.with(mContext).load(baen.getUserHead()).into(ivHead);
