@@ -17,7 +17,6 @@ import com.em.jigsaw.R;
 import com.em.jigsaw.activity.LoginActivity;
 import com.em.jigsaw.activity.PersonalActivity;
 import com.em.jigsaw.activity.ReleaseListActivity;
-import com.em.jigsaw.activity.SelectJStatusActivity;
 import com.em.jigsaw.activity.StarListActivity;
 import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.bean.UserBean;
@@ -99,7 +98,8 @@ public class PersonalFragment extends Fragment {
         if(LoginUtil.isLogin()){
             UserBean userBean = LoginUtil.getUserInfo();
             tvUserName.setText(userBean.getUserName());
-            tvUserId.setText("user_id：" + userBean.getUserNo());
+            StringBuilder stringBuilder = new StringBuilder();
+            tvUserId.setText(stringBuilder.append("user_id：").append(userBean.getUserNo()).toString());
             if(!TextUtils.isEmpty(userBean.getNameHead())){
                 Glide.with(getActivity()).load(userBean.getNameHead()).into(ivHead);
             }

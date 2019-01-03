@@ -117,7 +117,7 @@ public class MainFragment extends Fragment {
      */
     private void initUI() {
         backBtn.setVisibility(View.GONE);
-//        ivRightIcon.setVisibility(View.VISIBLE);
+        ivRightIcon.setVisibility(View.VISIBLE);
         ivRightIcon.setImageDrawable(getResources().getDrawable(R.mipmap.icon_search));
 
         mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorBlue));
