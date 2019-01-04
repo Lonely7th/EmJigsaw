@@ -27,6 +27,16 @@ public class JNoteBean {
     private boolean HideUser;
     private String CropFormat;
 
+    private int FavoriteId; // 0.未收藏 1.已收藏
+
+    public int getFavoriteId() {
+        return FavoriteId;
+    }
+
+    public void setFavoriteId(int favoriteId) {
+        FavoriteId = favoriteId;
+    }
+
     public String getNoteId() {
         return NoteId;
     }

@@ -6,18 +6,9 @@ package com.em.jigsaw.bean;
  * Description ： .
  */
 public class NoteStarBean {
-    private String StarNo;
     private String UserNo;
     private String CreatTime;
     private JNoteBean jNoteBean;
-
-    public String getStarNo() {
-        return StarNo;
-    }
-
-    public void setStarNo(String starNo) {
-        StarNo = starNo;
-    }
 
     public String getUserNo() {
         return UserNo;

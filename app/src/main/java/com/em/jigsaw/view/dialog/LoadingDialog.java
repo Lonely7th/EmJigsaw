@@ -1,4 +1,4 @@
-package com.em.jigsaw.view;
+package com.em.jigsaw.view.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -23,7 +23,7 @@ import com.em.jigsaw.adapter.SelectDialogAdapter;
 /**
  * Time ： 2018/12/18 .
  * Author ： JN Zhang .
- * Description ： .
+ * Description ：等待弹窗 .
  */
 public class LoadingDialog extends Dialog {
 

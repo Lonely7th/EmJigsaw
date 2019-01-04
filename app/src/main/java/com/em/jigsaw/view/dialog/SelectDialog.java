@@ -1,4 +1,4 @@
-package com.em.jigsaw.view;
+package com.em.jigsaw.view.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Time ： 2018/12/17 0017 .
  * Author ： JN Zhang .
- * Description ： .
+ * Description ：选择弹窗 .
  */
 public class SelectDialog extends Dialog {
     private Context context;

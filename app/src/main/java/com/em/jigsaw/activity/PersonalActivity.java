@@ -18,7 +18,7 @@ import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.ToastUtil;
-import com.em.jigsaw.view.SelectDialog;
+import com.em.jigsaw.view.dialog.SelectDialog;
 import com.linchaolong.android.imagepicker.ImagePicker;
 import com.linchaolong.android.imagepicker.cropper.CropImage;
 import com.linchaolong.android.imagepicker.cropper.CropImageView;

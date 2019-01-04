@@ -17,8 +17,8 @@ import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.event.ReleaseEvent;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.ToastUtil;
-import com.em.jigsaw.view.LoadingDialog;
-import com.em.jigsaw.view.SelectDialog;
+import com.em.jigsaw.view.dialog.LoadingDialog;
+import com.em.jigsaw.view.dialog.SelectDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -126,11 +126,34 @@ public class SelectJStatusActivity extends AppCompatActivity {
     }
 
     private void release() {
-        String content = TextUtils.isEmpty(edtContent.getText().toString()) ? "我发布了一条新状态，快来点击看看吧~" : edtContent.getText().toString();
+        String content = TextUtils.isEmpty(edtContent.getText().toString()) ? "我发布了一条新动态，快来点击看看吧~" : edtContent.getText().toString();
         try {
             ResFile = new File(new URI(imageUri.toString()));
         } catch (URISyntaxException e) {
             e.printStackTrace();
+        }
+
+        //将标签前移，确保已经填写的标签处于最前端
+        if(TextUtils.isEmpty(tabId1)){
+            if(!TextUtils.isEmpty(tabId2)){
+                tabId1 = tabId2;
+                tabTitle1 = tabTitle2;
+                tabId2 = "";
+                tabTitle2 = "";
+            }else{
+                tabId1 = tabId3;
+                tabTitle1 = tabTitle3;
+                tabId3 = "";
+                tabTitle3 = "";
+            }
+        }
+        if(TextUtils.isEmpty(tabId2)){
+            if(!TextUtils.isEmpty(tabId3)){
+                tabId2 = tabId3;
+                tabTitle2 = tabTitle3;
+                tabId3 = "";
+                tabTitle3 = "";
+            }
         }
 
         OkGo.<String>post(ServiceAPI.AddJDetails).tag(this)
@@ -213,6 +236,7 @@ public class SelectJStatusActivity extends AppCompatActivity {
                     public void onItemSelect(View view, int position, long id) {
                         curSelectType = position;
                         tvLimitType.setText(selectTypeList.get(position));
+                        tvLimitCount.setText("选择数值");
                     }
                 });
                 selectDialog.show();

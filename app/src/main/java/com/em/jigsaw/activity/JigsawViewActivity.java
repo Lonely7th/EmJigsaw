@@ -22,14 +22,15 @@ import com.bumptech.glide.request.transition.Transition;
 import com.em.jigsaw.R;
 import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
-import com.em.jigsaw.bean.JigsawImgBean;
 import com.em.jigsaw.bean.JNoteBean;
+import com.em.jigsaw.bean.JigsawImgBean;
 import com.em.jigsaw.callback.OnAlterDialogListener;
 import com.em.jigsaw.callback.OnJigsawChangedListener;
 import com.em.jigsaw.utils.ImgUtil;
+import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.ToastUtil;
-import com.em.jigsaw.view.AlertDialog;
 import com.em.jigsaw.view.JigsawView;
+import com.em.jigsaw.view.dialog.AlertDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -65,6 +66,10 @@ public class JigsawViewActivity extends AppCompatActivity {
     LinearLayout viewCneterBar;
     @BindView(R.id.tv_top)
     TextView tvTop;
+    @BindView(R.id.btn_star)
+    ImageView btnStar;
+    @BindView(R.id.tv_more)
+    TextView tvMore;
 
     private ImgUtil imgUtil;
     private Bitmap resBitmap;
@@ -80,10 +85,12 @@ public class JigsawViewActivity extends AppCompatActivity {
     private int currentLimit;
 
     private Timer timer = new Timer();
-    private boolean fristTouch = true;//是否首次滑动
-    private boolean JigsawSuccess = false;//是否拼图成功
+    private boolean fristTouch = true;// 是否首次滑动
+    private boolean JigsawSuccess = false;// 是否拼图成功
 
     private AlertDialog alertDialog;
+
+    private boolean isFavorite = false;// 是否正在处理收藏相关的操作
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +111,7 @@ public class JigsawViewActivity extends AppCompatActivity {
     private void loadData() {
         OkGo.<String>get(ServiceAPI.GetJDetails).tag(this)
                 .params("note_id", NoteId)
+                .params("user_id", LoginUtil.getUserInfo().getUserNo())
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -131,6 +139,7 @@ public class JigsawViewActivity extends AppCompatActivity {
                                 JNoteBean.setLimitNum(obj.getString("LimitNum"));
                                 JNoteBean.setNoteId(obj.getString("NoteId"));
                                 JNoteBean.setResPath(obj.getString("ResPath"));
+                                JNoteBean.setFavoriteId(obj.getInt("FavoriteId"));
 
                                 JSONObject userObj = obj.getJSONObject("Releaser");
                                 JNoteBean.setUserHead(userObj.getString("NameHead"));
@@ -138,7 +147,7 @@ public class JigsawViewActivity extends AppCompatActivity {
                                 JNoteBean.setUserNo(userObj.getString("UserNo"));
 
                                 String[] cropFormatArray = JNoteBean.getCropFormat().split("-");
-                                for(int i = 0;i < cropFormatArray.length;i++){
+                                for (int i = 0; i < cropFormatArray.length; i++) {
                                     CropFormat[i] = Integer.parseInt(cropFormatArray[i]);
                                 }
 
@@ -155,13 +164,19 @@ public class JigsawViewActivity extends AppCompatActivity {
 
                                         ivContent.setImageBitmap(resBitmap);
                                         tvContent.setText(JNoteBean.getContent());
-                                        if(!JNoteBean.getBestResults().equals("-1")){
-                                            tvTop.setText("当前最佳：" + JNoteBean.getContent());
+                                        StringBuilder sb = new StringBuilder();
+                                        if (!JNoteBean.getBestResults().equals("-1")) {
+                                            sb.append("当前最佳：").append(JNoteBean.getBestResults());
+                                        } else {
+                                            sb.append("当前最佳：-");
                                         }
+                                        tvTop.setText(sb.toString());
                                         updateJigsawList();
                                         updateLimitStatus();
                                     }
                                 });
+
+                                updateFavoriteStatus();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -183,7 +198,6 @@ public class JigsawViewActivity extends AppCompatActivity {
 
                     ivContent.setVisibility(View.VISIBLE);
                     viewJigsaw.setVisibility(View.GONE);
-                    ToastUtil.show(JigsawViewActivity.this, "恭喜你~");
                 }
 
                 if (limitType == ContentKey.Limit_Type_Count) {
@@ -213,6 +227,17 @@ public class JigsawViewActivity extends AppCompatActivity {
     }
 
     /**
+     * 刷新收藏状态
+     */
+    private void updateFavoriteStatus() {
+        if(JNoteBean.getFavoriteId() == 1){
+            btnStar.setImageDrawable(getResources().getDrawable(R.mipmap.icon_favorite));
+        }else{
+            btnStar.setImageDrawable(getResources().getDrawable(R.mipmap.icon_favorite_border));
+        }
+    }
+
+    /**
      * 刷新限制状态
      */
     private void updateLimitStatus() {
@@ -223,7 +248,7 @@ public class JigsawViewActivity extends AppCompatActivity {
 
         switch (limitType) {
             case ContentKey.Limit_Type_None:
-                tvLimitStart.setText("无限制");
+                tvLimitCount.setText("--");
                 break;
             case ContentKey.Limit_Type_Count:
                 tvLimitStart.setText("剩余");
@@ -269,7 +294,58 @@ public class JigsawViewActivity extends AppCompatActivity {
         }
     };
 
-    @OnClick({R.id.btn_replay, R.id.btn_close})
+    /**
+     * 收藏相关
+     */
+    private void starNote(){
+        if(isFavorite){
+            return ;
+        }
+        if(!LoginUtil.isLogin()){
+            ToastUtil.show(JigsawViewActivity.this,"未登录");
+            return ;
+        }
+        isFavorite = true;
+
+        OkGo.<String>post(ServiceAPI.StarJNote).tag(this)
+                .params("user_no", LoginUtil.getUserInfo().getUserNo())
+                .params("note_id", JNoteBean.getNoteId())
+                .params("type", JNoteBean.getFavoriteId()==1?"1":"0")
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<String> response) {
+                        try {
+                            JSONObject body = new JSONObject(response.body());
+                            if(body.getInt("ResultCode") == ServiceAPI.HttpSuccess){
+                                if(JNoteBean.getFavoriteId()==1){
+                                    ToastUtil.show(JigsawViewActivity.this,"收藏取消");
+                                    JNoteBean.setFavoriteId(0);
+                                }else{
+                                    ToastUtil.show(JigsawViewActivity.this,"收藏成功");
+                                    JNoteBean.setFavoriteId(1);
+                                }
+                                updateFavoriteStatus();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<String> response) {
+                        super.onError(response);
+                        ToastUtil.show(JigsawViewActivity.this,"网络异常");
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        isFavorite = false;
+                    }
+                });
+    }
+
+    @OnClick({R.id.btn_replay, R.id.btn_close, R.id.btn_star, R.id.tv_more})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_replay:
@@ -278,13 +354,18 @@ public class JigsawViewActivity extends AppCompatActivity {
             case R.id.btn_close:
                 showDialog("退出当前页面？", 0);
                 break;
+            case R.id.btn_star:
+                starNote();
+                break;
+            case R.id.tv_more:
+                break;
         }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            showDialog("退出当前页面？", 0);
+            showDialog("退出当前页？", 0);
             return true;
         }
         return super.onKeyDown(keyCode, event);

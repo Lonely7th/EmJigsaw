@@ -32,4 +32,5 @@ public class ServiceAPI {
     public static final String GetLabelList = BASE_URL + "api/v3/getLabelList";
     public static final String GetReleaseList = BASE_URL + "api/v3/getReleaseList";
     public static final String GetStarList = BASE_URL + "api/v3/getStarNoteList";
+    public static final String StarJNote = BASE_URL + "api/v3/starJNote";
 }

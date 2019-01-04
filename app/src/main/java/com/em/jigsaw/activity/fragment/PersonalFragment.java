@@ -22,7 +22,7 @@ import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.ToastUtil;
-import com.em.jigsaw.view.SelectDialog;
+import com.em.jigsaw.view.dialog.SelectDialog;
 import com.em.jigsaw.wxapi.OnResponseListener;
 import com.em.jigsaw.wxapi.WXShare;
 

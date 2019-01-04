@@ -1,4 +1,4 @@
-package com.em.jigsaw.view;
+package com.em.jigsaw.view.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Time ： 2018/12/19 .
  * Author ： JN Zhang .
- * Description ： .
+ * Description ：提示弹窗 .
  */
 public class AlertDialog extends Dialog {
     private Context context;

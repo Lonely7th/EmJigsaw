@@ -73,7 +73,6 @@ public class StarListActivity extends AppCompatActivity {
                                     JSONObject data = array.getJSONObject(i);
                                     NoteStarBean noteStarBean = new NoteStarBean();
                                     noteStarBean.setCreatTime(data.getString("CreatTime"));
-                                    noteStarBean.setStarNo(data.getString("StarNo"));
                                     noteStarBean.setUserNo(data.getString("UserNo"));
 
                                     JSONObject obj = data.getJSONObject("Note");
