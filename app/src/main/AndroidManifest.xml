@@ -31,14 +31,12 @@
         <activity android:name=".activity.ReleaseListActivity" />
         <activity android:name=".activity.StarListActivity" />
         <activity android:name=".activity.ChangeUserInfoActivity" />
-        <activity android:name=".activity.MyStarListActivity" />
-        <activity android:name=".activity.MyReleaseListActivity" />
         <activity android:name=".activity.SelectJStatusActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.SelectLabelActivity"
             android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activity.SearchActivity"></activity>
+        <activity android:name=".activity.SearchActivity" />
     </application>
 
 </manifest>

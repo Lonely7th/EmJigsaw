@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,7 +23,7 @@ import com.em.jigsaw.R;
 import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.JigsawImgBean;
-import com.em.jigsaw.bean.JigsawListBean;
+import com.em.jigsaw.bean.JNoteBean;
 import com.em.jigsaw.callback.OnAlterDialogListener;
 import com.em.jigsaw.callback.OnJigsawChangedListener;
 import com.em.jigsaw.utils.ImgUtil;
@@ -69,7 +68,7 @@ public class JigsawViewActivity extends AppCompatActivity {
 
     private ImgUtil imgUtil;
     private Bitmap resBitmap;
-    private JigsawListBean jigsawListBean;
+    private JNoteBean JNoteBean;
     private ArrayList<JigsawImgBean> list = new ArrayList<>();
 
     private String NoteId;
@@ -113,41 +112,41 @@ public class JigsawViewActivity extends AppCompatActivity {
                             if (body.getInt("ResultCode") == ServiceAPI.HttpSuccess) {
                                 JSONObject obj = body.getJSONObject("ResultData");
 
-                                jigsawListBean = new JigsawListBean();
+                                JNoteBean = new JNoteBean();
 
-                                jigsawListBean.setBestResults(obj.getString("BestResults"));
-                                jigsawListBean.setCompleteNum(obj.getString("CompleteNum"));
-                                jigsawListBean.setContent(obj.getString("Content"));
-                                jigsawListBean.setCreatTime(obj.getLong("CreatTime"));
-                                jigsawListBean.setCropFormat(obj.getString("CropFormat"));
-                                jigsawListBean.setDisplayNum(obj.getString("DisplayNum"));
-                                jigsawListBean.setHideUser(obj.getBoolean("HideUser"));
-                                jigsawListBean.setJType(obj.getString("JType"));
-                                jigsawListBean.setLabel1(obj.getString("Label1"));
-                                jigsawListBean.setLabel2(obj.getString("Label2"));
-                                jigsawListBean.setLabel3(obj.getString("Label3"));
-                                jigsawListBean.setLabelTitle1(obj.getString("LabelTitle1"));
-                                jigsawListBean.setLabelTitle2(obj.getString("LabelTitle2"));
-                                jigsawListBean.setLabelTitle3(obj.getString("LabelTitle3"));
-                                jigsawListBean.setLimitNum(obj.getString("LimitNum"));
-                                jigsawListBean.setNoteId(obj.getString("NoteId"));
-                                jigsawListBean.setResPath(obj.getString("ResPath"));
+                                JNoteBean.setBestResults(obj.getString("BestResults"));
+                                JNoteBean.setCompleteNum(obj.getString("CompleteNum"));
+                                JNoteBean.setContent(obj.getString("Content"));
+                                JNoteBean.setCreatTime(obj.getLong("CreatTime"));
+                                JNoteBean.setCropFormat(obj.getString("CropFormat"));
+                                JNoteBean.setDisplayNum(obj.getString("DisplayNum"));
+                                JNoteBean.setHideUser(obj.getBoolean("HideUser"));
+                                JNoteBean.setJType(obj.getString("JType"));
+                                JNoteBean.setLabel1(obj.getString("Label1"));
+                                JNoteBean.setLabel2(obj.getString("Label2"));
+                                JNoteBean.setLabel3(obj.getString("Label3"));
+                                JNoteBean.setLabelTitle1(obj.getString("LabelTitle1"));
+                                JNoteBean.setLabelTitle2(obj.getString("LabelTitle2"));
+                                JNoteBean.setLabelTitle3(obj.getString("LabelTitle3"));
+                                JNoteBean.setLimitNum(obj.getString("LimitNum"));
+                                JNoteBean.setNoteId(obj.getString("NoteId"));
+                                JNoteBean.setResPath(obj.getString("ResPath"));
 
                                 JSONObject userObj = obj.getJSONObject("Releaser");
-                                jigsawListBean.setUserHead(userObj.getString("NameHead"));
-                                jigsawListBean.setUserName(userObj.getString("UserName"));
-                                jigsawListBean.setUserNo(userObj.getString("UserNo"));
+                                JNoteBean.setUserHead(userObj.getString("NameHead"));
+                                JNoteBean.setUserName(userObj.getString("UserName"));
+                                JNoteBean.setUserNo(userObj.getString("UserNo"));
 
-                                String[] cropFormatArray = jigsawListBean.getCropFormat().split("-");
+                                String[] cropFormatArray = JNoteBean.getCropFormat().split("-");
                                 for(int i = 0;i < cropFormatArray.length;i++){
                                     CropFormat[i] = Integer.parseInt(cropFormatArray[i]);
                                 }
 
-                                limitType = Integer.parseInt(jigsawListBean.getJType());
-                                baseLimit = Integer.parseInt(jigsawListBean.getLimitNum());
+                                limitType = Integer.parseInt(JNoteBean.getJType());
+                                baseLimit = Integer.parseInt(JNoteBean.getLimitNum());
 
                                 Glide.get(JigsawViewActivity.this).clearMemory();
-                                Glide.with(JigsawViewActivity.this).load(jigsawListBean.getResPath()).into(new SimpleTarget<Drawable>() {
+                                Glide.with(JigsawViewActivity.this).load(JNoteBean.getResPath()).into(new SimpleTarget<Drawable>() {
                                     @Override
                                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                                         resBitmap = ((BitmapDrawable) resource).getBitmap();
@@ -155,9 +154,9 @@ public class JigsawViewActivity extends AppCompatActivity {
                                         ImgFormat[1] = resBitmap.getHeight();
 
                                         ivContent.setImageBitmap(resBitmap);
-                                        tvContent.setText(jigsawListBean.getContent());
-                                        if(!jigsawListBean.getBestResults().equals("-1")){
-                                            tvTop.setText("当前最佳：" + jigsawListBean.getContent());
+                                        tvContent.setText(JNoteBean.getContent());
+                                        if(!JNoteBean.getBestResults().equals("-1")){
+                                            tvTop.setText("当前最佳：" + JNoteBean.getContent());
                                         }
                                         updateJigsawList();
                                         updateLimitStatus();

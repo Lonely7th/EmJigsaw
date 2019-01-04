@@ -11,7 +11,8 @@ import com.em.jigsaw.R;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.base.YBaseAdapter;
 import com.em.jigsaw.base.YBaseHolder;
-import com.em.jigsaw.bean.JigsawListBean;
+import com.em.jigsaw.bean.JNoteBean;
+import com.em.jigsaw.bean.NoteStarBean;
 import com.em.jigsaw.utils.TimerUtil;
 
 import java.util.List;
@@ -21,9 +22,9 @@ import java.util.List;
  * Author ： JN Zhang .
  * Description ： .
  */
-public class StarListAdapter extends YBaseAdapter<JigsawListBean> {
+public class StarListAdapter extends YBaseAdapter<NoteStarBean> {
 
-    public StarListAdapter(List<JigsawListBean> list, Context mContext) {
+    public StarListAdapter(List<NoteStarBean> list, Context mContext) {
         super(list, mContext);
     }
 
@@ -32,13 +33,13 @@ public class StarListAdapter extends YBaseAdapter<JigsawListBean> {
         return new MyHolder(mContext, mList);
     }
 
-    private class MyHolder extends YBaseHolder<JigsawListBean> {
+    private class MyHolder extends YBaseHolder<NoteStarBean> {
 
         ImageView ivJigsaw,ivHead;
         TextView tvUserName,tvCreatTime,tvContent,tvCropFormat,tvResult;
         TextView tvLabel1,tvLabel2,tvLabel3;
 
-        public MyHolder(Context mContext, List<JigsawListBean> mLists) {
+        public MyHolder(Context mContext, List<NoteStarBean> mLists) {
             super(mContext, mLists);
         }
 
@@ -61,13 +62,13 @@ public class StarListAdapter extends YBaseAdapter<JigsawListBean> {
 
         @Override
         public void bindData(final int position) {
-            JigsawListBean baen = mLists.get(position);
+            JNoteBean baen = mLists.get(position).getjNoteBean();
             if(baen.isHideUser()){
                 tvUserName.setText("匿名用户");
                 Glide.with(mContext).load(R.mipmap.icon_account_circle).into(ivHead);
             }else{
                 tvUserName.setText(baen.getUserName());
-                Glide.with(mContext).load(baen.getUserHead()).into(ivHead);
+                Glide.with(mContext).load(baen.getUserHead().startsWith("http")?baen.getUserHead(): ServiceAPI.IMAGE_URL + baen.getUserHead()).into(ivHead);
             }
 
             tvCreatTime.setText(TimerUtil.timeStamp2Date(baen.getCreatTime()));

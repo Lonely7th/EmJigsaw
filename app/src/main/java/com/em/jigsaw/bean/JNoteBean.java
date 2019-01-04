@@ -5,7 +5,7 @@ package com.em.jigsaw.bean;
  * Author ： JN Zhang .
  * Description ： .
  */
-public class JigsawListBean {
+public class JNoteBean {
     private String NoteId;
     private String Content;
     private String UserNo;

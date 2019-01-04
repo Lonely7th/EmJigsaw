@@ -42,6 +42,7 @@ public class JigsawView extends ViewGroup {
 
     private View dragView = null;
     private boolean viewTouched = true;
+    private boolean isLoading = true;
     private ImageView dragImageView = null;
     private boolean validClick = false;// 有效点击
     private int startY,startX,endX,endY;
@@ -168,6 +169,8 @@ public class JigsawView extends ViewGroup {
 
         //初始化拖动控件
         initDragView();
+
+        isLoading = false;
     }
 
     public void updateLabels(){
@@ -221,7 +224,7 @@ public class JigsawView extends ViewGroup {
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                if(!viewTouched){
+                if(!viewTouched || isLoading){
                     return true;
                 }
                 switch (event.getAction()) {
@@ -338,8 +341,10 @@ public class JigsawView extends ViewGroup {
         for(int i = 0;i < mLabels.size();i++){
             JigsawImgBean bean = mLabels.get(i);
             double[] array = bean.getImgPosition();
-            if(array[0] < x && x < array[2] && array[1] < y && y < array[3]){
-                return i;
+            if(array != null){
+                if(array[0] < x && x < array[2] && array[1] < y && y < array[3]){
+                    return i;
+                }
             }
         }
         return -1;

@@ -26,7 +26,7 @@ import com.em.jigsaw.activity.SearchActivity;
 import com.em.jigsaw.adapter.JigsawListAdapter;
 import com.em.jigsaw.adapter.TopBarAdapter;
 import com.em.jigsaw.base.ServiceAPI;
-import com.em.jigsaw.bean.JigsawListBean;
+import com.em.jigsaw.bean.JNoteBean;
 import com.em.jigsaw.bean.MainTopBarBean;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.TouchListView;
@@ -72,7 +72,7 @@ public class MainFragment extends Fragment {
     private View listFootView;
     private TextView tvLoadMore;
     private ImageView ivLoadMore;
-    private List<JigsawListBean> list = new ArrayList<>();
+    private List<JNoteBean> list = new ArrayList<>();
     private JigsawListAdapter jigsawListAdapter;
     private ArrayList<MainTopBarBean> topBarBeanList = new ArrayList<>();
     private TopBarAdapter topBarAdapter;
@@ -118,7 +118,7 @@ public class MainFragment extends Fragment {
     private void initUI() {
         backBtn.setVisibility(View.GONE);
         ivRightIcon.setVisibility(View.VISIBLE);
-        ivRightIcon.setImageDrawable(getResources().getDrawable(R.mipmap.icon_search));
+        ivRightIcon.setImageDrawable(getResources().getDrawable(R.mipmap.icon_search_x));
 
         mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorBlue));
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -277,47 +277,49 @@ public class MainFragment extends Fragment {
                                     list.clear();
                                 }
 
-                                JSONArray array = body.getJSONArray("ResultData");
-                                for (int i = 0; i < array.length(); i++) {
-                                    JSONObject obj = array.getJSONObject(i);
-                                    JigsawListBean jigsawListBean = new JigsawListBean();
+                                if(!body.getString("ResultData").equals("null")){
+                                    JSONArray array = body.getJSONArray("ResultData");
+                                    for (int i = 0; i < array.length(); i++) {
+                                        JSONObject obj = array.getJSONObject(i);
+                                        JNoteBean JNoteBean = new JNoteBean();
 
-                                    jigsawListBean.setBestResults(obj.getString("BestResults"));
-                                    jigsawListBean.setCompleteNum(obj.getString("CompleteNum"));
-                                    jigsawListBean.setContent(obj.getString("Content"));
-                                    jigsawListBean.setCreatTime(obj.getLong("CreatTime"));
-                                    jigsawListBean.setCropFormat(obj.getString("CropFormat"));
-                                    jigsawListBean.setDisplayNum(obj.getString("DisplayNum"));
-                                    jigsawListBean.setHideUser(obj.getBoolean("HideUser"));
-                                    jigsawListBean.setJType(obj.getString("JType"));
-                                    jigsawListBean.setLabel1(obj.getString("Label1"));
-                                    jigsawListBean.setLabel2(obj.getString("Label2"));
-                                    jigsawListBean.setLabel3(obj.getString("Label3"));
-                                    jigsawListBean.setLabelTitle1(obj.getString("LabelTitle1"));
-                                    jigsawListBean.setLabelTitle2(obj.getString("LabelTitle2"));
-                                    jigsawListBean.setLabelTitle3(obj.getString("LabelTitle3"));
-                                    jigsawListBean.setLimitNum(obj.getString("LimitNum"));
-                                    jigsawListBean.setNoteId(obj.getString("NoteId"));
-                                    jigsawListBean.setResPath(obj.getString("ResPath"));
+                                        JNoteBean.setBestResults(obj.getString("BestResults"));
+                                        JNoteBean.setCompleteNum(obj.getString("CompleteNum"));
+                                        JNoteBean.setContent(obj.getString("Content"));
+                                        JNoteBean.setCreatTime(obj.getLong("CreatTime"));
+                                        JNoteBean.setCropFormat(obj.getString("CropFormat"));
+                                        JNoteBean.setDisplayNum(obj.getString("DisplayNum"));
+                                        JNoteBean.setHideUser(obj.getBoolean("HideUser"));
+                                        JNoteBean.setJType(obj.getString("JType"));
+                                        JNoteBean.setLabel1(obj.getString("Label1"));
+                                        JNoteBean.setLabel2(obj.getString("Label2"));
+                                        JNoteBean.setLabel3(obj.getString("Label3"));
+                                        JNoteBean.setLabelTitle1(obj.getString("LabelTitle1"));
+                                        JNoteBean.setLabelTitle2(obj.getString("LabelTitle2"));
+                                        JNoteBean.setLabelTitle3(obj.getString("LabelTitle3"));
+                                        JNoteBean.setLimitNum(obj.getString("LimitNum"));
+                                        JNoteBean.setNoteId(obj.getString("NoteId"));
+                                        JNoteBean.setResPath(obj.getString("ResPath"));
 
-                                    JSONObject userObj = obj.getJSONObject("Releaser");
-                                    jigsawListBean.setUserHead(userObj.getString("NameHead"));
-                                    jigsawListBean.setUserName(userObj.getString("UserName"));
-                                    jigsawListBean.setUserNo(userObj.getString("UserNo"));
-                                    list.add(jigsawListBean);
-                                }
-                                jigsawListAdapter.notifyDataSetChanged();
+                                        JSONObject userObj = obj.getJSONObject("Releaser");
+                                        JNoteBean.setUserHead(userObj.getString("NameHead"));
+                                        JNoteBean.setUserName(userObj.getString("UserName"));
+                                        JNoteBean.setUserNo(userObj.getString("UserNo"));
+                                        list.add(JNoteBean);
+                                    }
+                                    jigsawListAdapter.notifyDataSetChanged();
 
-                                if(array.length() == 0){
-                                    hasMoreData = false;
-                                    tvBarCenter.setText("发现");
-                                    ToastUtil.show(getActivity(),"暂无更多内容");
+                                    if(array.length() == 0){
+                                        hasMoreData = false;
+                                        tvBarCenter.setText("发现");
+                                        ToastUtil.show(getActivity(),"暂无更多内容");
+                                    }else{
+                                        hasMoreData = true;
+                                        tvBarCenter.setText("发现 " + array.length() + " 条新内容");
+                                    }
                                 }else{
-                                    hasMoreData = true;
-                                    tvBarCenter.setText("发现 " + array.length() + " 条新内容");
+                                    tvBarCenter.setText("发现");
                                 }
-
-                                loadFinish(isRefresh);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -327,6 +329,12 @@ public class MainFragment extends Fragment {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
+                        loadFinish(isRefresh);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
                         loadFinish(isRefresh);
                     }
                 });
