@@ -85,7 +85,7 @@ public class StarListAdapter extends YBaseAdapter<NoteStarBean> {
             }
             tvCropFormat.setText("格式：" + baen.getCropFormat() + "    " + sbLimit.toString());
 
-            Glide.with(mContext).load(baen.getResPath().startsWith("http")?baen.getResPath(): ServiceAPI.IMAGE_URL + baen.getResPath()).into(ivJigsaw);
+            Glide.with(mContext).load(baen.getGsResPath().startsWith("http")?baen.getGsResPath(): ServiceAPI.IMAGE_URL + baen.getGsResPath()).into(ivJigsaw);
 
             if(TextUtils.isEmpty(baen.getLabelTitle1())){
                 tvLabel1.setVisibility(View.INVISIBLE);

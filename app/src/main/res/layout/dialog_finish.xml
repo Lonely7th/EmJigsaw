@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@mipmap/dialog_bg_white">
+
+    <RelativeLayout
+        android:id="@+id/view_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp">
+
+        <TextView
+            android:id="@+id/tv_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:paddingTop="8dp"
+            android:gravity="center"
+            android:textColor="#FF8800"
+            android:textStyle="bold|italic"
+            android:textSize="16sp"
+            android:text="评分：" />
+
+        <ImageView
+            android:id="@+id/iv_score"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_toRightOf="@+id/tv_score"
+            android:scaleType="centerInside"
+            android:layout_marginTop="7dp"
+            android:src="@mipmap/score_sss"/>
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/iv_score"
+            android:paddingBottom="4dp"
+            android:layout_marginLeft="8dp"
+            android:paddingTop="8dp"
+            android:gravity="center"
+            android:textColor="#FF8800"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:text="(完成)" />
+
+        <LinearLayout
+            android:id="@+id/view_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_score"
+            android:orientation="vertical"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+                android:id="@+id/tv_best"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view_score"
+                android:gravity="center"
+                android:textColor="@color/colorBlack"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:textSize="12sp"
+                android:text="本次成绩：120s  当前最佳：56秒" />
+
+            <TextView
+                android:id="@+id/tv_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view_score"
+                android:gravity="center"
+                android:textColor="@color/colorGary"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:textSize="12sp"
+                android:text="标签：#风景#游戏" />
+
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_label"
+                android:maxWidth="180dp"
+                android:gravity="center"
+                android:textColor="@color/colorGary"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:textSize="12sp"
+                android:text="简介：暂无内容" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorBg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_neg"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/alert_dialog_left_shape"
+            android:gravity="center"
+            android:textColor="@color/colorBlack"
+            android:text="退出页面"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorBg" />
+
+        <Button
+            android:id="@+id/btn_pos"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/alert_dialog_right_shape"
+            android:gravity="center"
+            android:textColor="@color/colorBlue"
+            android:textSize="14sp"
+            android:text="关闭弹窗"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

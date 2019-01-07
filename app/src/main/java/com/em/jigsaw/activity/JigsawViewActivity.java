@@ -31,6 +31,7 @@ import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.JigsawView;
 import com.em.jigsaw.view.dialog.AlertDialog;
+import com.em.jigsaw.view.dialog.JFinishDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -89,6 +90,7 @@ public class JigsawViewActivity extends AppCompatActivity {
     private boolean JigsawSuccess = false;// 是否拼图成功
 
     private AlertDialog alertDialog;
+    private JFinishDialog jFinishDialog;
 
     private boolean isFavorite = false;// 是否正在处理收藏相关的操作
 
@@ -165,7 +167,7 @@ public class JigsawViewActivity extends AppCompatActivity {
                                         ivContent.setImageBitmap(resBitmap);
                                         tvContent.setText(JNoteBean.getContent());
                                         StringBuilder sb = new StringBuilder();
-                                        if (!JNoteBean.getBestResults().equals("-1")) {
+                                        if (!JNoteBean.getJType().equals("0")) {
                                             sb.append("当前最佳：").append(JNoteBean.getBestResults());
                                         } else {
                                             sb.append("当前最佳：-");
@@ -192,12 +194,30 @@ public class JigsawViewActivity extends AppCompatActivity {
         viewJigsaw.setOnChangedListener(new OnJigsawChangedListener() {
             @Override
             public void onChanged(ArrayList<JigsawImgBean> arrayList) {
-                if (imgUtil.jigsawSuccess(arrayList)) {
+                if (imgUtil.jigsawSuccess(arrayList)) { // 完成拼图
                     JigsawSuccess = true;
                     viewJigsaw.setViewTouched(false);
 
+                    jFinishDialog = new JFinishDialog(JigsawViewActivity.this, JNoteBean,10, new JFinishDialog.OnFinishDialogListener() {
+                        @Override
+                        public void onCloseDialog() {
+
+                        }
+
+                        @Override
+                        public void onClosePager() {
+                            finish();
+                        }
+                    });
+                    jFinishDialog.show();
+
                     ivContent.setVisibility(View.VISIBLE);
                     viewJigsaw.setVisibility(View.GONE);
+
+                    if(!JNoteBean.getJType().equals("0")){ // 如果有时间/次数限制则提交结果
+                        int currentScore = baseLimit - currentLimit;
+                        postJResult(currentScore<Integer.parseInt(JNoteBean.getBestResults())?2:1,currentScore);
+                    }
                 }
 
                 if (limitType == ContentKey.Limit_Type_Count) {
@@ -345,6 +365,39 @@ public class JigsawViewActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * 提交结果
+     */
+    private void postJResult(final int status,final int score){
+        OkGo.<String>post(ServiceAPI.PostJResult).tag(this)
+                .params("user_no", LoginUtil.getUserInfo().getUserNo())
+                .params("note_id", JNoteBean.getNoteId())
+                .params("status", status)
+                .params("score", score)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<String> response) {
+                        try {
+                            JSONObject body = new JSONObject(response.body());
+                            if(body.getInt("ResultCode") == ServiceAPI.HttpSuccess){ }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<String> response) {
+                        super.onError(response);
+                        ToastUtil.show(JigsawViewActivity.this,"网络异常");
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                    }
+                });
+    }
+
     @OnClick({R.id.btn_replay, R.id.btn_close, R.id.btn_star, R.id.tv_more})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -352,21 +405,41 @@ public class JigsawViewActivity extends AppCompatActivity {
                 showDialog("重新开始？", 1);
                 break;
             case R.id.btn_close:
-                showDialog("退出当前页面？", 0);
+                if(JigsawSuccess){
+                    finish();
+                }else{
+                    showDialog("退出当前页面？", 0);
+                }
                 break;
             case R.id.btn_star:
                 starNote();
                 break;
             case R.id.tv_more:
+                jFinishDialog = new JFinishDialog(JigsawViewActivity.this, JNoteBean,10, new JFinishDialog.OnFinishDialogListener() {
+                    @Override
+                    public void onCloseDialog() {
+
+                    }
+
+                    @Override
+                    public void onClosePager() {
+                        finish();
+                    }
+                });
+                jFinishDialog.show();
                 break;
         }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            showDialog("退出当前页？", 0);
-            return true;
+        if(JigsawSuccess){
+            finish();
+        }else{
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+                showDialog("退出当前页？", 0);
+                return true;
+            }
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -402,6 +475,12 @@ public class JigsawViewActivity extends AppCompatActivity {
         }
         if (timerTask != null) {
             timerTask.cancel();
+        }
+        if(jFinishDialog != null){
+            jFinishDialog.dismiss();
+        }
+        if(alertDialog != null){
+            alertDialog.dismiss();
         }
     }
 }

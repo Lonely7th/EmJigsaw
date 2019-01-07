@@ -13,6 +13,7 @@ public class JNoteBean {
     private String UserHead;
     private long CreatTime;
     private String ResPath;
+    private String GsResPath;
     private String DisplayNum;
     private String CompleteNum;
     private String JType;
@@ -195,5 +196,13 @@ public class JNoteBean {
 
     public void setCropFormat(String cropFormat) {
         CropFormat = cropFormat;
+    }
+
+    public String getGsResPath() {
+        return GsResPath;
+    }
+
+    public void setGsResPath(String gsResPath) {
+        GsResPath = gsResPath;
     }
 }

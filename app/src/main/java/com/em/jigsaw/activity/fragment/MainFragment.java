@@ -300,6 +300,7 @@ public class MainFragment extends Fragment {
                                         JNoteBean.setLimitNum(obj.getString("LimitNum"));
                                         JNoteBean.setNoteId(obj.getString("NoteId"));
                                         JNoteBean.setResPath(obj.getString("ResPath"));
+                                        JNoteBean.setGsResPath(obj.getString("GsResPath"));
 
                                         JSONObject userObj = obj.getJSONObject("Releaser");
                                         JNoteBean.setUserHead(userObj.getString("NameHead"));

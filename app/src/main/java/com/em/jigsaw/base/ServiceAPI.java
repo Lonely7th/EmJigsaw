@@ -33,4 +33,6 @@ public class ServiceAPI {
     public static final String GetReleaseList = BASE_URL + "api/v3/getReleaseList";
     public static final String GetStarList = BASE_URL + "api/v3/getStarNoteList";
     public static final String StarJNote = BASE_URL + "api/v3/starJNote";
+    public static final String SearchJNote = BASE_URL + "api/v3/searchJNoteList";
+    public static final String PostJResult = BASE_URL + "api/v3/postJNoteResult";
 }

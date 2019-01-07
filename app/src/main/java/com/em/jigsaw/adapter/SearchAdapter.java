@@ -17,13 +17,13 @@ import com.em.jigsaw.utils.TimerUtil;
 import java.util.List;
 
 /**
- * Time ： 2018/12/6 .
+ * Time ： 2019/1/7 .
  * Author ： JN Zhang .
  * Description ： .
  */
-public class JigsawListAdapter extends YBaseAdapter<JNoteBean> {
+public class SearchAdapter extends YBaseAdapter<JNoteBean> {
 
-    public JigsawListAdapter(List<JNoteBean> list, Context mContext) {
+    public SearchAdapter(List<JNoteBean> list, Context mContext) {
         super(list, mContext);
     }
 
@@ -67,7 +67,7 @@ public class JigsawListAdapter extends YBaseAdapter<JNoteBean> {
                 Glide.with(mContext).load(R.mipmap.icon_account_circle).into(ivHead);
             }else{
                 tvUserName.setText(baen.getUserName());
-                Glide.with(mContext).load(baen.getUserHead()).into(ivHead);
+                Glide.with(mContext).load(baen.getUserHead().startsWith("http")?baen.getUserHead(): ServiceAPI.IMAGE_URL + baen.getUserHead()).into(ivHead);
             }
 
             tvCreatTime.setText(TimerUtil.timeStamp2Date(baen.getCreatTime()));
