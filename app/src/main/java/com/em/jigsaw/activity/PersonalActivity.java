@@ -17,6 +17,7 @@ import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.utils.LoginUtil;
+import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.dialog.SelectDialog;
 import com.linchaolong.android.imagepicker.ImagePicker;
@@ -119,6 +120,7 @@ public class PersonalActivity extends AppCompatActivity {
         OkGo.<String>post(ServiceAPI.GetUserHead).tag(this)
                 .params("user_no", LoginUtil.getUserInfo().getUserNo())
                 .params("res", file)
+                .params(SignUtil.getParams(true))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<String> response) {

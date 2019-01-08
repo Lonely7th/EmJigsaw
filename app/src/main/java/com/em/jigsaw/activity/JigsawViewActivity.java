@@ -29,6 +29,7 @@ import com.em.jigsaw.callback.OnAlterDialogListener;
 import com.em.jigsaw.callback.OnJigsawChangedListener;
 import com.em.jigsaw.utils.ImgUtil;
 import com.em.jigsaw.utils.LoginUtil;
+import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.JigsawView;
 import com.em.jigsaw.view.dialog.AlertDialog;
@@ -115,6 +116,7 @@ public class JigsawViewActivity extends AppCompatActivity {
         OkGo.<String>get(ServiceAPI.GetJDetails).tag(this)
                 .params("note_id", NoteId)
                 .params("user_id", LoginUtil.getUserInfo().getUserNo())
+                .params(SignUtil.getParams(false))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -344,6 +346,7 @@ public class JigsawViewActivity extends AppCompatActivity {
                 .params("user_no", LoginUtil.getUserInfo().getUserNo())
                 .params("note_id", JNoteBean.getNoteId())
                 .params("type", JNoteBean.getFavoriteId()==1?"1":"0")
+                .params(SignUtil.getParams(true))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<String> response) {
@@ -387,6 +390,7 @@ public class JigsawViewActivity extends AppCompatActivity {
                 .params("note_id", JNoteBean.getNoteId())
                 .params("status", status)
                 .params("score", score)
+                .params(SignUtil.getParams(true))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<String> response) {

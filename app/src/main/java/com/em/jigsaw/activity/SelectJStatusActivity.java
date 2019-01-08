@@ -16,6 +16,7 @@ import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.event.ReleaseEvent;
 import com.em.jigsaw.utils.LoginUtil;
+import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.dialog.LoadingDialog;
 import com.em.jigsaw.view.dialog.SelectDialog;
@@ -170,6 +171,7 @@ public class SelectJStatusActivity extends AppCompatActivity {
                 .params("labelTitle2", tabTitle2)
                 .params("label3", tabId3)
                 .params("labelTitle3", tabTitle3)
+                .params(SignUtil.getParams(true))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {

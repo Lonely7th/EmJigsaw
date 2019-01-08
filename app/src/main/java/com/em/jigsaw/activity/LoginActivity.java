@@ -20,6 +20,7 @@ import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.PhoneFormatCheckUtil;
+import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
@@ -165,6 +166,7 @@ public class LoginActivity extends AppCompatActivity {
     private void toLogin(){
         OkGo.<String>post(ServiceAPI.Login).tag(this)
                 .params("phoneNumber", edtPhone.getText().toString().trim())
+                .params(SignUtil.getParams(false))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<String> response) {

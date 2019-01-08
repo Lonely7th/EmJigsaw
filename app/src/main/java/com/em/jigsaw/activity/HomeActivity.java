@@ -20,6 +20,8 @@ import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.utils.LoginUtil;
+import com.em.jigsaw.utils.SignUtil;
+import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.dialog.SelectDialog;
 import com.google.gson.Gson;
 import com.linchaolong.android.imagepicker.ImagePicker;
@@ -112,6 +114,7 @@ public class HomeActivity extends AppCompatActivity {
         if(LoginUtil.isLogin()){
             OkGo.<String>get(ServiceAPI.GetUserInfo).tag(this)
                     .params("user_no", LoginUtil.getUserInfo().getUserNo())
+                    .params(SignUtil.getParams(true))
                     .execute(new StringCallback() {
                         @Override
                         public void onSuccess(com.lzy.okgo.model.Response<String> response) {
@@ -194,6 +197,11 @@ public class HomeActivity extends AppCompatActivity {
                 switchFragment(mainFragment);
                 break;
             case R.id.rl_tab2:
+                if(!LoginUtil.isLogin()){
+                    ToastUtil.show(HomeActivity.this,"登录后即可发布新动态");
+                    startActivity(new Intent(HomeActivity.this,LoginActivity.class));
+                    return ;
+                }
                 selectDialog = new SelectDialog(HomeActivity.this, selectList, new SelectDialog.OnSelectListener() {
                     @Override
                     public void onItemSelect(View view, int position, long id) {

@@ -17,6 +17,7 @@ import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.JNoteBean;
 import com.em.jigsaw.bean.NoteStarBean;
 import com.em.jigsaw.utils.LoginUtil;
+import com.em.jigsaw.utils.SignUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -62,6 +63,7 @@ public class StarListActivity extends AppCompatActivity {
     private void initData() {
         OkGo.<String>get(ServiceAPI.GetStarList).tag(this)
                 .params("user_no", LoginUtil.getUserInfo().getUserNo())
+                .params(SignUtil.getParams(true))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {

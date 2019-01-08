@@ -13,6 +13,7 @@ import com.em.jigsaw.R;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.utils.LoginUtil;
+import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -62,6 +63,7 @@ public class ChangeUserInfoActivity extends AppCompatActivity {
                 .params("user_no", LoginUtil.getUserInfo().getUserNo())
                 .params("content", content)
                 .params("ctype", cType)
+                .params(SignUtil.getParams(true))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<String> response) {

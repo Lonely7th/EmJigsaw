@@ -28,6 +28,7 @@ import com.em.jigsaw.adapter.TopBarAdapter;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.JNoteBean;
 import com.em.jigsaw.bean.MainTopBarBean;
+import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.TouchListView;
 import com.lzy.okgo.OkGo;
@@ -220,6 +221,7 @@ public class MainFragment extends Fragment {
      */
     private void loadBarData() {
         OkGo.<String>get(ServiceAPI.GetCategroy).tag(this)
+                .params(SignUtil.getParams(false))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -267,6 +269,7 @@ public class MainFragment extends Fragment {
         OkGo.<String>get(ServiceAPI.GetJList).tag(this)
                 .params("categroy", topBarBeanList.get(currentTopBar).getID())
                 .params("page", "" + currentPager)
+                .params(SignUtil.getParams(false))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {

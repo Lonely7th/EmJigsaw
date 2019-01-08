@@ -19,6 +19,7 @@ import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.LabelBean;
 import com.em.jigsaw.utils.KeyBoardUtils;
+import com.em.jigsaw.utils.SignUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -63,6 +64,7 @@ public class SelectLabelActivity extends AppCompatActivity {
     private void loadData() {
         labelBeanList.clear();
         OkGo.<String>get(ServiceAPI.GetLabelList).tag(this)
+                .params(SignUtil.getParams(false))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {

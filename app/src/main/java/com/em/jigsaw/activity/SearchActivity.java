@@ -21,6 +21,7 @@ import com.em.jigsaw.R;
 import com.em.jigsaw.adapter.SearchAdapter;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.JNoteBean;
+import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.dialog.LoadingDialog;
 import com.lzy.okgo.OkGo;
@@ -125,6 +126,7 @@ public class SearchActivity extends AppCompatActivity {
         OkGo.<String>get(ServiceAPI.SearchJNote).tag(this)
                 .params("key", key)
                 .params("page", "" + currentPager)
+                .params(SignUtil.getParams(false))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
