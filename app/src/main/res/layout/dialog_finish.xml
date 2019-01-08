@@ -19,7 +19,7 @@
             android:paddingBottom="4dp"
             android:paddingTop="8dp"
             android:gravity="center"
-            android:textColor="#FF8800"
+            android:textColor="@color/scoreS"
             android:textStyle="bold|italic"
             android:textSize="16sp"
             android:text="评分：" />
@@ -62,9 +62,10 @@
                 android:layout_below="@+id/view_score"
                 android:gravity="center"
                 android:textColor="@color/colorBlack"
+                android:textStyle="bold"
                 android:paddingBottom="4dp"
                 android:paddingTop="4dp"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:text="本次成绩：120s  当前最佳：56秒" />
 
             <TextView
@@ -85,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_label"
                 android:maxWidth="180dp"
-                android:gravity="center"
+                android:gravity="start"
                 android:textColor="@color/colorGary"
                 android:paddingBottom="4dp"
                 android:paddingTop="4dp"

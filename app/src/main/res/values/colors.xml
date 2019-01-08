@@ -12,8 +12,14 @@
     <color name="colorBg">#F0F1F5</color>
 
     <color name="colorGary">#888888</color>
+    <color name="colorGary_S">#666666</color>
     <color name="colorRed">#d81e06</color>
     <color name="colorDivider">#cdcdcd</color>
     <color name="colorDivider_n">#dbdbdb</color>
     <color name="colorBlue">#1296db</color>
+
+    <color name="scoreS">#FF8800</color>
+    <color name="scoreB">#77AFC3</color>
+    <color name="scoreA">#F7827A</color>
+    <color name="scoreC">#C67644</color>
 </resources>

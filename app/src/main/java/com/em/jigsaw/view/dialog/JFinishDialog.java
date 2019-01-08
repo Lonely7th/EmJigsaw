@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -22,7 +23,7 @@ public class JFinishDialog extends Dialog {
     private Context context;
     private OnFinishDialogListener onFinishDialogListener = null;
 
-    private TextView tvScore,tvLabel,tvContent;
+    private TextView tvScore,tvLabel,tvContent,tvBest,tvStatus;
     private ImageView ivScore;
     private JNoteBean JNoteBean;
     private int currentScore;
@@ -45,12 +46,60 @@ public class JFinishDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_finish);
         tvScore = findViewById(R.id.tv_score);
+        tvStatus = findViewById(R.id.tv_status);
+        tvBest = findViewById(R.id.tv_best);
         tvLabel = findViewById(R.id.tv_label);
         tvContent = findViewById(R.id.tv_content);
         ivScore = findViewById(R.id.iv_score);
 
         setCanceledOnTouchOutside(false);
         getWindow().setGravity(Gravity.CENTER);
+
+        initUI();
+    }
+
+    private void initUI(){
+        int score = Integer.parseInt(JNoteBean.getLimitNum()) - currentScore;
+        if(score <= 0){
+            tvScore.setTextColor(context.getResources().getColor(R.color.scoreC));
+            tvStatus.setTextColor(context.getResources().getColor(R.color.scoreC));
+            tvStatus.setText("(未完成)");
+            ivScore.setImageDrawable(context.getResources().getDrawable(R.mipmap.score_c));
+        }else if(score < 10){ // B
+            tvScore.setTextColor(context.getResources().getColor(R.color.scoreB));
+            tvStatus.setTextColor(context.getResources().getColor(R.color.scoreB));
+            ivScore.setImageDrawable(context.getResources().getDrawable(R.mipmap.score_b));
+        }else if(score < 15){ // A
+            tvScore.setTextColor(context.getResources().getColor(R.color.scoreA));
+            tvStatus.setTextColor(context.getResources().getColor(R.color.scoreA));
+            ivScore.setImageDrawable(context.getResources().getDrawable(R.mipmap.score_a));
+        }else if(score < 20){ // S
+            tvScore.setTextColor(context.getResources().getColor(R.color.scoreS));
+            tvStatus.setTextColor(context.getResources().getColor(R.color.scoreS));
+            ivScore.setImageDrawable(context.getResources().getDrawable(R.mipmap.score_s));
+        }else if(score < 30){ // SS
+            tvScore.setTextColor(context.getResources().getColor(R.color.scoreS));
+            tvStatus.setTextColor(context.getResources().getColor(R.color.scoreS));
+            ivScore.setImageDrawable(context.getResources().getDrawable(R.mipmap.score_ss));
+        }else{ // SSS
+            tvScore.setTextColor(context.getResources().getColor(R.color.scoreS));
+            tvStatus.setTextColor(context.getResources().getColor(R.color.scoreS));
+            ivScore.setImageDrawable(context.getResources().getDrawable(R.mipmap.score_sss));
+        }
+
+        tvBest.setText("本次成绩：" + currentScore + "  当前最佳：" + JNoteBean.getBestResults());
+        StringBuilder stringBuilderLabel = new StringBuilder("标签：");
+        if(!TextUtils.isEmpty(JNoteBean.getLabelTitle1())){
+            stringBuilderLabel.append("#").append(JNoteBean.getLabelTitle1());
+        }
+        if(!TextUtils.isEmpty(JNoteBean.getLabelTitle2())){
+            stringBuilderLabel.append("#").append(JNoteBean.getLabelTitle2());
+        }
+        if(!TextUtils.isEmpty(JNoteBean.getLabelTitle3())){
+            stringBuilderLabel.append("#").append(JNoteBean.getLabelTitle3());
+        }
+        tvLabel.setText(stringBuilderLabel.toString());
+        tvContent.setText("简介：" + JNoteBean.getContent());
 
         findViewById(R.id.btn_neg).setOnClickListener(new View.OnClickListener() {
             @Override

@@ -12,8 +12,8 @@ public class JNoteBean {
     private String UserName;
     private String UserHead;
     private long CreatTime;
-    private String ResPath;
-    private String GsResPath;
+    private String ResPath = "";
+    private String GsResPath = "";
     private String DisplayNum;
     private String CompleteNum;
     private String JType;

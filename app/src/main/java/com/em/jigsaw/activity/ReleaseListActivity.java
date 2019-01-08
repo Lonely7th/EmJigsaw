@@ -88,7 +88,7 @@ public class ReleaseListActivity extends AppCompatActivity {
                                     JNoteBean.setLimitNum(obj.getString("LimitNum"));
                                     JNoteBean.setNoteId(obj.getString("NoteId"));
                                     JNoteBean.setResPath(obj.getString("ResPath"));
-                                    JNoteBean.setResPath(obj.getString("GsResPath"));
+                                    JNoteBean.setGsResPath(obj.getString("GsResPath"));
 
                                     JSONObject userObj = obj.getJSONObject("Releaser");
                                     JNoteBean.setUserHead(userObj.getString("NameHead"));

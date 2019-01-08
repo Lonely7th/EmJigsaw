@@ -93,6 +93,7 @@
             android:layout_centerVertical="true"
             android:textSize="14sp"
             android:textStyle="bold"
+            android:layout_alignParentRight="true"
             android:maxLines="1"/>
         <TextView
             android:id="@+id/tv_more"
@@ -102,15 +103,7 @@
             android:layout_centerVertical="true"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:layout_toLeftOf="@+id/iv_right_arrow"
-            android:text="查看详细"
             android:maxLines="1"/>
-        <ImageView
-            android:id="@+id/iv_right_arrow"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_alignParentRight="true"
-            android:src="@mipmap/icon_arrow_drop_down"/>
     </RelativeLayout>
 
     <TextView

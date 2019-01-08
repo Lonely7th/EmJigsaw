@@ -35,7 +35,7 @@ public class JigsawListAdapter extends YBaseAdapter<JNoteBean> {
     private class MyHolder extends YBaseHolder<JNoteBean> {
 
         ImageView ivJigsaw,ivHead;
-        TextView tvUserName,tvCreatTime,tvContent,tvCropFormat,tvResult;
+        TextView tvUserName,tvCreatTime,tvContent,tvCropFormat;
         TextView tvLabel1,tvLabel2,tvLabel3;
 
         public MyHolder(Context mContext, List<JNoteBean> mLists) {
@@ -51,7 +51,6 @@ public class JigsawListAdapter extends YBaseAdapter<JNoteBean> {
             tvCreatTime = view.findViewById(R.id.tv_creat_time);
             tvContent = view.findViewById(R.id.tv_content);
             tvCropFormat = view.findViewById(R.id.tv_crop_format);
-            tvResult = view.findViewById(R.id.tv_zan_status);
 
             tvLabel1 = view.findViewById(R.id.tv_label_1);
             tvLabel2 = view.findViewById(R.id.tv_label_2);
@@ -71,14 +70,21 @@ public class JigsawListAdapter extends YBaseAdapter<JNoteBean> {
             }
 
             tvCreatTime.setText(TimerUtil.timeStamp2Date(baen.getCreatTime()));
-            tvContent.setText(baen.getContent());
 
             StringBuilder sbLimit = new StringBuilder();
             switch (baen.getJType()){
+                case "0":
+                    tvContent.setText(baen.getContent());
+//                    tvContent.setTextColor(mContext.getResources().getColor(R.color.colorGary_S));
+                    break;
                 case "1":
+                    tvContent.setText("当前最佳：" + baen.getBestResults() + " 秒");
+//                    tvContent.setTextColor(mContext.getResources().getColor(R.color.scoreS));
                     sbLimit.append("时间限制：").append(baen.getLimitNum()).append("秒");
                     break;
                 case "2":
+                    tvContent.setText("当前最佳 " + baen.getBestResults() + " 次");
+//                    tvContent.setTextColor(mContext.getResources().getColor(R.color.scoreS));
                     sbLimit.append("次数限制：").append(baen.getLimitNum()).append("次");
                     break;
             }
@@ -105,8 +111,6 @@ public class JigsawListAdapter extends YBaseAdapter<JNoteBean> {
                 tvLabel3.setText(baen.getLabelTitle3());
             }
 
-            //展示次数
-            tvResult.setText(baen.getDisplayNum() + "次挑战/" + baen.getCompleteNum() + "成功");
         }
     }
 }

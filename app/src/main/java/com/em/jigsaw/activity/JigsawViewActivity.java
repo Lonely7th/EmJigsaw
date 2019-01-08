@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -153,6 +154,18 @@ public class JigsawViewActivity extends AppCompatActivity {
                                     CropFormat[i] = Integer.parseInt(cropFormatArray[i]);
                                 }
 
+                                StringBuilder stringBuilderLabel = new StringBuilder("标签：");
+                                if(!TextUtils.isEmpty(JNoteBean.getLabelTitle1())){
+                                    stringBuilderLabel.append("#").append(JNoteBean.getLabelTitle1());
+                                }
+                                if(!TextUtils.isEmpty(JNoteBean.getLabelTitle2())){
+                                    stringBuilderLabel.append("#").append(JNoteBean.getLabelTitle2());
+                                }
+                                if(!TextUtils.isEmpty(JNoteBean.getLabelTitle3())){
+                                    stringBuilderLabel.append("#").append(JNoteBean.getLabelTitle3());
+                                }
+                                tvMore.setText(stringBuilderLabel.toString());
+
                                 limitType = Integer.parseInt(JNoteBean.getJType());
                                 baseLimit = Integer.parseInt(JNoteBean.getLimitNum());
 
@@ -168,7 +181,7 @@ public class JigsawViewActivity extends AppCompatActivity {
                                         tvContent.setText(JNoteBean.getContent());
                                         StringBuilder sb = new StringBuilder();
                                         if (!JNoteBean.getJType().equals("0")) {
-                                            sb.append("当前最佳：").append(JNoteBean.getBestResults());
+                                            sb.append("当前最佳：").append(JNoteBean.getBestResults()).append(JNoteBean.getJType().equals("1")?"秒":"次");
                                         } else {
                                             sb.append("当前最佳：-");
                                         }
@@ -197,8 +210,9 @@ public class JigsawViewActivity extends AppCompatActivity {
                 if (imgUtil.jigsawSuccess(arrayList)) { // 完成拼图
                     JigsawSuccess = true;
                     viewJigsaw.setViewTouched(false);
+                    int currentScore = baseLimit - currentLimit;
 
-                    jFinishDialog = new JFinishDialog(JigsawViewActivity.this, JNoteBean,10, new JFinishDialog.OnFinishDialogListener() {
+                    jFinishDialog = new JFinishDialog(JigsawViewActivity.this, JNoteBean,currentScore, new JFinishDialog.OnFinishDialogListener() {
                         @Override
                         public void onCloseDialog() {
 
@@ -215,7 +229,6 @@ public class JigsawViewActivity extends AppCompatActivity {
                     viewJigsaw.setVisibility(View.GONE);
 
                     if(!JNoteBean.getJType().equals("0")){ // 如果有时间/次数限制则提交结果
-                        int currentScore = baseLimit - currentLimit;
                         postJResult(currentScore<Integer.parseInt(JNoteBean.getBestResults())?2:1,currentScore);
                     }
                 }
@@ -415,18 +428,6 @@ public class JigsawViewActivity extends AppCompatActivity {
                 starNote();
                 break;
             case R.id.tv_more:
-                jFinishDialog = new JFinishDialog(JigsawViewActivity.this, JNoteBean,10, new JFinishDialog.OnFinishDialogListener() {
-                    @Override
-                    public void onCloseDialog() {
-
-                    }
-
-                    @Override
-                    public void onClosePager() {
-                        finish();
-                    }
-                });
-                jFinishDialog.show();
                 break;
         }
     }
