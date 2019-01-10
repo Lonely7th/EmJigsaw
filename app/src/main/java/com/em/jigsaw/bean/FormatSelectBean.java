@@ -51,6 +51,9 @@ public class FormatSelectBean {
             case "6-4":
                 formatArray = ContentKey.Format_6_4;
                 break;
+            case "6-6":
+                formatArray = ContentKey.Format_6_6;
+                break;
         }
         return formatArray;
     }

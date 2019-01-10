@@ -75,7 +75,7 @@ public class SelectLabelActivity extends AppCompatActivity {
                                 for (int i = 0; i < array.length(); i++) {
                                     JSONObject obj = array.getJSONObject(i);
                                     LabelBean bean = new LabelBean();
-                                    bean.setId(obj.getString("Lid"));
+                                    bean.setId(obj.getString("Id"));
                                     bean.setTitle(obj.getString("Title"));
                                     if(!tabIds.contains(bean.getTitle())){
                                         baseList.add(bean);

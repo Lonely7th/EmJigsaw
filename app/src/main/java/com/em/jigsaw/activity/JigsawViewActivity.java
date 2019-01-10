@@ -214,7 +214,8 @@ public class JigsawViewActivity extends AppCompatActivity {
                     viewJigsaw.setViewTouched(false);
                     int currentScore = baseLimit - currentLimit;
 
-                    jFinishDialog = new JFinishDialog(JigsawViewActivity.this, JNoteBean,currentScore, new JFinishDialog.OnFinishDialogListener() {
+                    jFinishDialog = new JFinishDialog(JigsawViewActivity.this, JNoteBean,
+                            JNoteBean.getJType().equals("0")?0:currentScore, new JFinishDialog.OnFinishDialogListener() {
                         @Override
                         public void onCloseDialog() {
 
