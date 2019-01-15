@@ -115,7 +115,7 @@
             android:background="@drawable/alert_dialog_left_shape"
             android:gravity="center"
             android:textColor="@color/colorBlack"
-            android:text="退出页面"
+            android:text="保存图片"
             android:textSize="14sp" />
 
         <ImageView

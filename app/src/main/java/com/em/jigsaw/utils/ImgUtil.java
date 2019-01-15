@@ -1,11 +1,15 @@
 package com.em.jigsaw.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 
 import com.em.jigsaw.bean.JigsawImgBean;
 
@@ -149,7 +153,7 @@ public class ImgUtil {
     /**
      * 保存图片到本地
      */
-    private String ImgSave(Bitmap bm, String picName){
+    public String ImgSave(Bitmap bm, String picName){
         try {
             File f = new File(ImgDirPath, picName);
             if (f.exists()) {
@@ -166,6 +170,13 @@ public class ImgUtil {
             e.printStackTrace();
         }
         return "";
+    }
+
+    /**
+     * 保存图片到相册
+     */
+    public void saveImageToGallery(Bitmap bmp) {
+
     }
 
 }

@@ -323,6 +323,7 @@ public class MainFragment extends Fragment {
                                     }
                                 }else{
                                     tvBarCenter.setText("发现");
+                                    jigsawListAdapter.notifyDataSetChanged();
                                 }
                             }
                         } catch (Exception e) {
@@ -333,6 +334,7 @@ public class MainFragment extends Fragment {
                     @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
+                        hasMoreData = false;
                         loadFinish(isRefresh);
                     }
 

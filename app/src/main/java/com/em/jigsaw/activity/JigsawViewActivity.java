@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -223,7 +225,7 @@ public class JigsawViewActivity extends AppCompatActivity {
 
                         @Override
                         public void onClosePager() {
-                            finish();
+                            ToastUtil.show(JigsawViewActivity.this,"保存图片成功");
                         }
                     });
                     jFinishDialog.show();
