@@ -99,7 +99,7 @@ public class PersonalFragment extends Fragment {
             UserBean userBean = LoginUtil.getUserInfo();
             tvUserName.setText(userBean.getUserName());
             StringBuilder stringBuilder = new StringBuilder();
-            tvUserId.setText(stringBuilder.append("user_id：").append(userBean.getUserNo()).toString());
+            tvUserId.setText(stringBuilder.append("用户Id：").append(userBean.getUserNo()).toString());
             if(!TextUtils.isEmpty(userBean.getNameHead())){
                 Glide.with(getActivity()).load(userBean.getNameHead()).into(ivHead);
             }

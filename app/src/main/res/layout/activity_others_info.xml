@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBg"
+    android:orientation="vertical">
+
+    <!--个人信息-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:padding="8dp">
+        <ImageView
+            android:id="@+id/btn_close"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="4dp"
+            android:src="@mipmap/icon_keyboard_arrow_left_b"/>
+        <TextView
+            android:id="@+id/btn_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:textColor="@color/colorBlue"
+            android:textSize="12sp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_border_blue"
+            android:gravity="center"
+            android:layout_marginTop="4dp"
+            android:text="+点击关注"/>
+        <com.em.jigsaw.view.RoundImageView
+            android:id="@+id/iv_head"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_below="@+id/btn_close"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@mipmap/icon_account_circle"/>
+        <TextView
+            android:id="@+id/tv_nick_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textSize="14sp"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/iv_head"
+            android:layout_alignTop="@+id/iv_head"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/tv_user_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGary_S"
+            android:textSize="14sp"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/iv_head"
+            android:layout_below="@+id/tv_nick_name"
+            android:layout_marginTop="6dp"/>
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGary_S"
+            android:textSize="14sp"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/iv_head"
+            android:layout_below="@+id/tv_user_id"
+            android:layout_marginTop="6dp"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_release_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorGary"
+        android:textSize="13sp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <ListView
+        android:id="@+id/lv_release"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:divider="@color/colorDivider_n"
+        android:dividerHeight="0.5dp"/>
+
+</LinearLayout>

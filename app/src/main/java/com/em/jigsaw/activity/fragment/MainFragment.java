@@ -22,12 +22,14 @@ import android.widget.TextView;
 
 import com.em.jigsaw.R;
 import com.em.jigsaw.activity.JigsawViewActivity;
+import com.em.jigsaw.activity.OthersInfoActivity;
 import com.em.jigsaw.activity.SearchActivity;
 import com.em.jigsaw.adapter.JigsawListAdapter;
 import com.em.jigsaw.adapter.TopBarAdapter;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.JNoteBean;
 import com.em.jigsaw.bean.MainTopBarBean;
+import com.em.jigsaw.callback.OnJListHeadClickListener;
 import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.TouchListView;
@@ -98,7 +100,12 @@ public class MainFragment extends Fragment {
     }
 
     private void initData() {
-        jigsawListAdapter = new JigsawListAdapter(list, getActivity());
+        jigsawListAdapter = new JigsawListAdapter(list, getActivity(), new OnJListHeadClickListener() {
+            @Override
+            public void onClick(int position) {
+                startActivity(new Intent(getActivity(), OthersInfoActivity.class).putExtra("user_id",list.get(position).getUserNo()));
+            }
+        });
         mainListview.setAdapter(jigsawListAdapter);
         mainListview.addFooterView(listFootView);
         mainListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -119,7 +126,7 @@ public class MainFragment extends Fragment {
     private void initUI() {
         backBtn.setVisibility(View.GONE);
         ivRightIcon.setVisibility(View.VISIBLE);
-        ivRightIcon.setImageDrawable(getResources().getDrawable(R.mipmap.icon_search_x));
+        ivRightIcon.setImageDrawable(getResources().getDrawable(R.mipmap.icon_search));
 
         mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorBlue));
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -322,6 +329,7 @@ public class MainFragment extends Fragment {
                                         tvBarCenter.setText("发现 " + array.length() + " 条新内容");
                                     }
                                 }else{
+                                    hasMoreData = false;
                                     tvBarCenter.setText("发现");
                                     jigsawListAdapter.notifyDataSetChanged();
                                 }

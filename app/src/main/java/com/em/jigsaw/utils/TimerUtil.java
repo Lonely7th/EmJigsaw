@@ -16,7 +16,7 @@ public class TimerUtil {
 
     public static String timeStamp2Date(long time) {
         String res;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date date = new Date(time);
         res = simpleDateFormat.format(date);
         return res;

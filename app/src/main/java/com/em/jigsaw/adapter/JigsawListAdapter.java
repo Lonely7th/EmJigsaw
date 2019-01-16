@@ -1,6 +1,7 @@
 package com.em.jigsaw.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.base.YBaseAdapter;
 import com.em.jigsaw.base.YBaseHolder;
 import com.em.jigsaw.bean.JNoteBean;
+import com.em.jigsaw.callback.OnJListHeadClickListener;
 import com.em.jigsaw.utils.TimerUtil;
 
 import java.util.List;
@@ -23,8 +25,11 @@ import java.util.List;
  */
 public class JigsawListAdapter extends YBaseAdapter<JNoteBean> {
 
-    public JigsawListAdapter(List<JNoteBean> list, Context mContext) {
+    private OnJListHeadClickListener onJListHeadClickListener;
+
+    public JigsawListAdapter(List<JNoteBean> list, Context mContext, @NonNull OnJListHeadClickListener onJListHeadClickListener) {
         super(list, mContext);
+        this.onJListHeadClickListener = onJListHeadClickListener;
     }
 
     @Override
@@ -80,12 +85,12 @@ public class JigsawListAdapter extends YBaseAdapter<JNoteBean> {
                 case "1":
                     tvContent.setText("当前最佳：" + baen.getBestResults() + " 秒");
 //                    tvContent.setTextColor(mContext.getResources().getColor(R.color.scoreS));
-                    sbLimit.append("时间限制：").append(baen.getLimitNum()).append("秒");
+                    sbLimit.append("限制：").append(baen.getLimitNum()).append("秒");
                     break;
                 case "2":
-                    tvContent.setText("当前最佳 " + baen.getBestResults() + " 次");
+                    tvContent.setText("当前最佳： " + baen.getBestResults() + " 次");
 //                    tvContent.setTextColor(mContext.getResources().getColor(R.color.scoreS));
-                    sbLimit.append("次数限制：").append(baen.getLimitNum()).append("次");
+                    sbLimit.append("限制：").append(baen.getLimitNum()).append("次");
                     break;
             }
             tvCropFormat.setText("格式：" + baen.getCropFormat() + "    " + sbLimit.toString());
@@ -110,6 +115,13 @@ public class JigsawListAdapter extends YBaseAdapter<JNoteBean> {
                 tvLabel3.setVisibility(View.VISIBLE);
                 tvLabel3.setText(baen.getLabelTitle3());
             }
+
+            ivHead.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onJListHeadClickListener.onClick(position);
+                }
+            });
 
         }
     }
