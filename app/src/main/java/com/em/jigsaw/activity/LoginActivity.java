@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -43,9 +44,7 @@ import okhttp3.Response;
 public class LoginActivity extends AppCompatActivity {
 
     @BindView(R.id.back_btn)
-    RelativeLayout backBtn;
-    @BindView(R.id.tv_bar_center)
-    TextView tvBarCenter;
+    ImageView backBtn;
     @BindView(R.id.edt_phone)
     EditText edtPhone;
     @BindView(R.id.edt_password)
@@ -97,7 +96,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        tvBarCenter.setText("快捷登陆");
         edtPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -110,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                     btnGetCode.setAlpha(1.0f);
                     getVerCode = true;
                 }else{
-                    btnGetCode.setAlpha(0.4f);
+                    btnGetCode.setAlpha(0.6f);
                     getVerCode = false;
                 }
             }
@@ -129,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(TextUtils.isEmpty(s)){
-                    btnLogin.setAlpha(0.4f);
+                    btnLogin.setAlpha(0.6f);
                     toLogin = false;
                 }else{
                     btnLogin.setAlpha(1.0f);

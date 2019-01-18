@@ -126,7 +126,7 @@ public class MainFragment extends Fragment {
     private void initUI() {
         backBtn.setVisibility(View.GONE);
         ivRightIcon.setVisibility(View.VISIBLE);
-        ivRightIcon.setImageDrawable(getResources().getDrawable(R.mipmap.icon_search));
+        ivRightIcon.setImageDrawable(getResources().getDrawable(R.mipmap.icon_search_b));
 
         mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorBlue));
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -265,7 +265,10 @@ public class MainFragment extends Fragment {
         if(isLoading){ // 避免重复加载
            return ;
         }
-        isLoading = true;
+        if(topBarBeanList.size() == 0){ // 避免数组越界
+            return ;
+        }
+        isLoading = true; // 开始加载
         if(isRefresh){
             currentPager = 1;
         }else{

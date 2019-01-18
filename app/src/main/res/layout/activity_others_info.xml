@@ -28,6 +28,7 @@
             android:background="@drawable/bg_border_blue"
             android:gravity="center"
             android:layout_marginTop="4dp"
+            android:visibility="gone"
             android:text="+点击关注"/>
         <com.em.jigsaw.view.RoundImageView
             android:id="@+id/iv_head"
@@ -36,6 +37,7 @@
             android:layout_below="@+id/btn_close"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
             android:background="@mipmap/icon_account_circle"/>
         <TextView
             android:id="@+id/tv_nick_name"
@@ -84,7 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
-        android:divider="@color/colorDivider_n"
+        android:divider="@color/colorBg"
         android:dividerHeight="0.5dp"/>
 
 </LinearLayout>

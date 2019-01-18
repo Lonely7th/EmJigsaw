@@ -16,6 +16,7 @@ import com.em.jigsaw.adapter.StarListAdapter;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.JNoteBean;
 import com.em.jigsaw.bean.NoteStarBean;
+import com.em.jigsaw.callback.OnJListHeadClickListener;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.SignUtil;
 import com.lzy.okgo.OkGo;
@@ -123,7 +124,12 @@ public class StarListActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        starListAdapter = new StarListAdapter(list,StarListActivity.this);
+        starListAdapter = new StarListAdapter(list, StarListActivity.this, new OnJListHeadClickListener() {
+            @Override
+            public void onClick(int position) {
+                startActivity(new Intent(StarListActivity.this, OthersInfoActivity.class).putExtra("user_id",list.get(position).getjNoteBean().getUserNo()));
+            }
+        });
         listview.setAdapter(starListAdapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

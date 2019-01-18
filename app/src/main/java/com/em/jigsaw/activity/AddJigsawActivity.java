@@ -39,8 +39,6 @@ public class AddJigsawActivity extends AppCompatActivity {
     RelativeLayout backBtn;
     @BindView(R.id.tv_bar_center)
     TextView tvBarCenter;
-    @BindView(R.id.iv_right_icon)
-    ImageView ivRightIcon;
     @BindView(R.id.tv_bar_right)
     TextView tvBarRight;
     @BindView(R.id.right_btn)

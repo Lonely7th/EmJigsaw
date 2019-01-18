@@ -7,10 +7,11 @@
 
     <include layout="@layout/view_common_bar"/>
 
-    <!--个人信息-->
+    <!--清空缓存-->
     <RelativeLayout
+        android:id="@+id/btn_clear"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="48dp"
         android:background="@color/colorWhite"
         android:padding="8dp"
         android:layout_marginTop="20dp">
@@ -21,16 +22,8 @@
             android:textSize="14sp"
             android:layout_marginLeft="8dp"
             android:layout_centerVertical="true"
-            android:text="头像"/>
-        <com.em.jigsaw.view.RoundImageView
-            android:id="@+id/iv_head"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/iv_rigth_0"
-            android:background="@mipmap/icon_account_circle"/>
+            android:text="清空缓存"/>
         <ImageView
-            android:id="@+id/iv_rigth_0"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerVertical="true"
@@ -38,14 +31,14 @@
             android:background="@mipmap/icon_chevron_right"/>
     </RelativeLayout>
 
-    <!--用户名-->
+    <!--反馈与建议-->
     <RelativeLayout
-        android:id="@+id/btn_user_name"
+        android:id="@+id/btn_feedback"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorWhite"
         android:padding="8dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="0.5dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,19 +46,8 @@
             android:textSize="14sp"
             android:layout_marginLeft="8dp"
             android:layout_centerVertical="true"
-            android:text="用户昵称"/>
-        <TextView
-            android:id="@+id/tv_user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorGary"
-            android:textSize="14sp"
-            android:layout_toLeftOf="@+id/iv_rigth_2"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="8dp"
-            android:text="user_name"/>
+            android:text="反馈与建议"/>
         <ImageView
-            android:id="@+id/iv_rigth_2"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerVertical="true"
@@ -73,13 +55,13 @@
             android:background="@mipmap/icon_chevron_right"/>
     </RelativeLayout>
 
-    <!--用户id-->
+    <!--版本号-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorWhite"
         android:padding="8dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="12dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,44 +69,18 @@
             android:textSize="14sp"
             android:layout_marginLeft="8dp"
             android:layout_centerVertical="true"
-            android:text="用户 ID"/>
+            android:text="版本号"/>
         <TextView
-            android:id="@+id/tv_user_id"
+            android:id="@+id/tv_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorGary"
-            android:textSize="14sp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="8dp"
-            android:text="user_id"/>
-    </RelativeLayout>
-
-    <!--用户手机号-->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/colorWhite"
-        android:padding="8dp"
-        android:layout_marginTop="1dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack"
-            android:textSize="14sp"
-            android:layout_marginLeft="8dp"
-            android:layout_centerVertical="true"
-            android:text="手机号码"/>
-        <TextView
-            android:id="@+id/tv_user_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorGary"
-            android:textSize="14sp"
-            android:layout_centerVertical="true"
+            android:textColor="@color/colorBlue"
+            android:textStyle="bold"
             android:layout_alignParentRight="true"
             android:layout_marginRight="8dp"
-            android:text="phone_number"/>
+            android:textSize="14sp"
+            android:layout_centerVertical="true"
+            android:text="V1.0.0"/>
     </RelativeLayout>
 
     <!--注销登录-->
@@ -134,7 +90,6 @@
         android:layout_height="48dp"
         android:background="@color/colorWhite"
         android:padding="8dp"
-        android:visibility="gone"
         android:layout_marginTop="28dp">
         <TextView
             android:layout_width="wrap_content"

@@ -20,7 +20,7 @@ public class SignUtil {
         //添加时间戳
         String timeStamp = System.currentTimeMillis()+"";
         params.put("timeStamp",timeStamp);
-        params.put("token",need_token?LoginUtil.getUserInfo().getUserToken():"");
+        params.put("token",(need_token?LoginUtil.getUserInfo().getUserToken():""));
         //添加签名
         String sign = sign(timeStamp, need_token);
         params.put("sign",sign);

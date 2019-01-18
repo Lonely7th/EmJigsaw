@@ -6,14 +6,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.em.jigsaw.R;
+import com.em.jigsaw.adapter.SelectCropFormatAdapter;
 import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
+import com.em.jigsaw.bean.SelectCropFormatBean;
 import com.em.jigsaw.bean.event.ReleaseEvent;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.SignUtil;
@@ -32,6 +36,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,10 +59,6 @@ public class SelectJStatusActivity extends AppCompatActivity {
     TextView tvBarRight;
     @BindView(R.id.right_btn)
     RelativeLayout rightBtn;
-    @BindView(R.id.tv_crop_format)
-    TextView tvCropFormat;
-    @BindView(R.id.btn_crop_format)
-    RelativeLayout btnCropFormat;
     @BindView(R.id.btn_hide_name)
     RelativeLayout btnHideName;
     @BindView(R.id.tv_limit_type)
@@ -86,10 +87,12 @@ public class SelectJStatusActivity extends AppCompatActivity {
     ImageView ivTabClose2;
     @BindView(R.id.iv_tab_close_3)
     ImageView ivTabClose3;
+    @BindView(R.id.gv_crop_format)
+    GridView gvCropFormat;
 
     Uri imageUri;
     File ResFile;
-    String cropFormat;
+    String cropFormat = ContentKey.Format_Array[0];
     boolean isHideName = false;
 
     String tabId1, tabId2, tabId3;
@@ -102,6 +105,9 @@ public class SelectJStatusActivity extends AppCompatActivity {
     ArrayList<String> selectCountList = new ArrayList<>();
 
     LoadingDialog loadingDialog;
+
+    SelectCropFormatAdapter selectCropFormatAdapter;
+    ArrayList<SelectCropFormatBean> selectCropFormatList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +125,31 @@ public class SelectJStatusActivity extends AppCompatActivity {
         tvBarRight.setText("发布");
         tvBarRight.setVisibility(View.VISIBLE);
 
-        tvCropFormat.setText(cropFormat);
+        for(int i = 0;i < ContentKey.Format_Array.length;i++){
+            SelectCropFormatBean bean = new SelectCropFormatBean();
+            bean.setContent(ContentKey.Format_Array[i]);
+            if(i == 0){
+                bean.setSelect(true);
+            }
+            selectCropFormatList.add(bean);
+        }
+        selectCropFormatAdapter = new SelectCropFormatAdapter(selectCropFormatList, SelectJStatusActivity.this);
+        gvCropFormat.setAdapter(selectCropFormatAdapter);
+
+        gvCropFormat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                for (int i = 0; i < selectCropFormatList.size(); i++) {
+                    cropFormat = selectCropFormatList.get(position).getContent();
+                    if (i == position) {
+                        selectCropFormatList.get(i).setSelect(true);
+                    } else {
+                        selectCropFormatList.get(i).setSelect(false);
+                    }
+                }
+                selectCropFormatAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void initData() {
@@ -135,21 +165,21 @@ public class SelectJStatusActivity extends AppCompatActivity {
         }
 
         //将标签前移，确保已经填写的标签处于最前端
-        if(TextUtils.isEmpty(tabId1)){
-            if(!TextUtils.isEmpty(tabId2)){
+        if (TextUtils.isEmpty(tabId1)) {
+            if (!TextUtils.isEmpty(tabId2)) {
                 tabId1 = tabId2;
                 tabTitle1 = tabTitle2;
                 tabId2 = "";
                 tabTitle2 = "";
-            }else{
+            } else {
                 tabId1 = tabId3;
                 tabTitle1 = tabTitle3;
                 tabId3 = "";
                 tabTitle3 = "";
             }
         }
-        if(TextUtils.isEmpty(tabId2)){
-            if(!TextUtils.isEmpty(tabId3)){
+        if (TextUtils.isEmpty(tabId2)) {
+            if (!TextUtils.isEmpty(tabId3)) {
                 tabId2 = tabId3;
                 tabTitle2 = tabTitle3;
                 tabId3 = "";
@@ -203,24 +233,21 @@ public class SelectJStatusActivity extends AppCompatActivity {
                 });
     }
 
-    @OnClick({R.id.back_btn, R.id.right_btn, R.id.btn_crop_format, R.id.btn_hide_name, R.id.btn_limit_type, R.id.btn_limit_count, R.id.tv_label_1,
-            R.id.tv_label_2, R.id.tv_label_3,R.id.iv_tab_close_1, R.id.iv_tab_close_2, R.id.iv_tab_close_3})
+    @OnClick({R.id.back_btn, R.id.right_btn, R.id.btn_hide_name, R.id.btn_limit_type, R.id.btn_limit_count, R.id.tv_label_1,
+            R.id.tv_label_2, R.id.tv_label_3, R.id.iv_tab_close_1, R.id.iv_tab_close_2, R.id.iv_tab_close_3})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back_btn:
                 finish();
                 break;
             case R.id.right_btn:
-                if(TextUtils.isEmpty(tabId1) && TextUtils.isEmpty(tabId2) && TextUtils.isEmpty(tabId3)){
-                    ToastUtil.show(SelectJStatusActivity.this,"请添加至少一个标签");
-                    return ;
+                if (TextUtils.isEmpty(tabId1) && TextUtils.isEmpty(tabId2) && TextUtils.isEmpty(tabId3)) {
+                    ToastUtil.show(SelectJStatusActivity.this, "请添加至少一个标签");
+                    return;
                 }
                 release();
                 loadingDialog = new LoadingDialog(SelectJStatusActivity.this);
                 loadingDialog.show();
-                break;
-            case R.id.btn_crop_format:
-                finish();
                 break;
             case R.id.btn_hide_name:
                 isHideName = !isHideName;

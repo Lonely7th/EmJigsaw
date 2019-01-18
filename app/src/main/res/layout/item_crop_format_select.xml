@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:textColor="@color/colorGary"
+            android:layout_margin="4dp"
+            android:background="@drawable/bg_border_gray"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="未添加"/>
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

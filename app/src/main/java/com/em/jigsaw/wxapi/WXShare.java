@@ -87,7 +87,7 @@ public class WXShare {
         WXMediaMessage msg = new WXMediaMessage(webpage);
         msg.title = title; //网页标题
         msg.description = content; //网页描述
-        Bitmap thumb = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        Bitmap thumb = BitmapFactory.decodeResource(context.getResources(), R.mipmap.icon_account_circle);
         msg.thumbData = Bitmap2Bytes(thumb);
 
         SendMessageToWX.Req req = new SendMessageToWX.Req();

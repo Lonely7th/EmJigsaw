@@ -5,11 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -21,6 +22,8 @@ import com.em.jigsaw.R;
 import com.em.jigsaw.adapter.SearchAdapter;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.JNoteBean;
+import com.em.jigsaw.callback.OnJListHeadClickListener;
+import com.em.jigsaw.utils.KeyBoardUtils;
 import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.dialog.LoadingDialog;
@@ -44,6 +47,8 @@ public class SearchActivity extends AppCompatActivity {
     EditText edtContent;
     @BindView(R.id.btn_search)
     TextView btnSearch;
+    @BindView(R.id.btn_close)
+    ImageView btnClose;
     @BindView(R.id.listview)
     ListView listview;
 
@@ -75,15 +80,20 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        searchAdapter = new SearchAdapter(list,this);
+        searchAdapter = new SearchAdapter(list, this, new OnJListHeadClickListener() {
+            @Override
+            public void onClick(int position) {
+                startActivity(new Intent(SearchActivity.this, OthersInfoActivity.class).putExtra("user_id",list.get(position).getUserNo()));
+            }
+        });
         listview.addFooterView(listFootView);
         listview.setAdapter(searchAdapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i == list.size()){
+                if (i == list.size()) {
                     startLoadMore();
-                }else{
+                } else {
                     startActivity(new Intent(SearchActivity.this, JigsawViewActivity.class).putExtra("id", list.get(i).getNoteId()));
                 }
             }
@@ -101,25 +111,47 @@ public class SearchActivity extends AppCompatActivity {
                     //滚动到顶部
                 } else if ((i + i1) == i2) {
                     //滚动到底部
-                    if(!isLoading && hasMoreData){
+                    if (!isLoading && hasMoreData) {
                         startLoadMore();
                     }
                 }
             }
         });
+
+        edtContent.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                /*判断是否是“搜索”键*/
+                if(actionId == EditorInfo.IME_ACTION_SEARCH){
+                    key = edtContent.getText().toString().trim();
+                    if (TextUtils.isEmpty(key)) {
+                        ToastUtil.show(SearchActivity.this, "关键字不能为空");
+                    } else {
+                        loadingDialog = new LoadingDialog(SearchActivity.this);
+                        loadingDialog.show();
+                        loadItemData(true);
+                    }
+                    KeyBoardUtils.closeKeybord(edtContent, SearchActivity.this);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        KeyBoardUtils.openKeybord(edtContent, SearchActivity.this);
     }
 
     /**
      * 加载Data
      */
     private void loadItemData(final boolean isRefresh) {
-        if(isLoading || TextUtils.isEmpty(key)){ // 避免重复加载
-            return ;
+        if (isLoading || TextUtils.isEmpty(key)) { // 避免重复加载
+            return;
         }
         isLoading = true;
-        if(isRefresh){
+        if (isRefresh) {
             currentPager = 1;
-        }else{
+        } else {
             currentPager++; // 当前页+1
         }
 
@@ -133,11 +165,11 @@ public class SearchActivity extends AppCompatActivity {
                         try {
                             JSONObject body = new JSONObject(response.body());
                             if (body.getInt("ResultCode") == ServiceAPI.HttpSuccess) {
-                                if(isRefresh){
+                                if (isRefresh) {
                                     list.clear();
                                 }
 
-                                if(!body.getString("ResultData").equals("null")){
+                                if (!body.getString("ResultData").equals("null")) {
                                     JSONArray array = body.getJSONArray("ResultData");
                                     for (int i = 0; i < array.length(); i++) {
                                         JSONObject obj = array.getJSONObject(i);
@@ -170,10 +202,10 @@ public class SearchActivity extends AppCompatActivity {
                                     }
                                     searchAdapter.notifyDataSetChanged();
 
-                                    if(array.length() == 0){
+                                    if (array.length() == 0) {
                                         hasMoreData = false;
-                                        ToastUtil.show(SearchActivity.this,"暂无更多内容");
-                                    }else{
+                                        ToastUtil.show(SearchActivity.this, "暂无更多内容");
+                                    } else {
                                         hasMoreData = true;
                                     }
                                 }
@@ -200,7 +232,7 @@ public class SearchActivity extends AppCompatActivity {
     /**
      * 开始加载更多
      */
-    private void startLoadMore(){
+    private void startLoadMore() {
         tvLoadMore.setText("加载更多...");
         loadItemData(false);
         ivLoadMore.setVisibility(View.VISIBLE);
@@ -214,30 +246,18 @@ public class SearchActivity extends AppCompatActivity {
     /**
      * 结束加载更多
      */
-    private void endLoadMore(){
+    private void endLoadMore() {
         tvLoadMore.setText("点击加载更多");
         ivLoadMore.setVisibility(View.GONE);
         ivLoadMore.clearAnimation();
         isLoading = false;
-        if(list.size() > 0){
+        if (list.size() > 0) {
             listview.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             listview.setVisibility(View.GONE);
         }
         if (loadingDialog != null) {
             loadingDialog.dismiss();
-        }
-    }
-
-    @OnClick(R.id.btn_search)
-    public void onViewClicked() {
-        key = edtContent.getText().toString();
-        if(TextUtils.isEmpty(key)){
-            ToastUtil.show(SearchActivity.this,"关键字不能为空");
-        }else{
-            loadingDialog = new LoadingDialog(SearchActivity.this);
-            loadingDialog.show();
-            loadItemData(true);
         }
     }
 
@@ -246,6 +266,26 @@ public class SearchActivity extends AppCompatActivity {
         super.onDestroy();
         if (loadingDialog != null) {
             loadingDialog.dismiss();
+        }
+    }
+
+    @OnClick({R.id.btn_close, R.id.btn_search})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_close:
+                KeyBoardUtils.closeKeybord(edtContent, SearchActivity.this);
+                finish();
+                break;
+            case R.id.btn_search:
+                key = edtContent.getText().toString().trim();
+                if (TextUtils.isEmpty(key)) {
+                    ToastUtil.show(SearchActivity.this, "关键字不能为空");
+                } else {
+                    loadingDialog = new LoadingDialog(SearchActivity.this);
+                    loadingDialog.show();
+                    loadItemData(true);
+                }
+                break;
         }
     }
 }

@@ -220,4 +220,41 @@ public class ImgUtil {
         });
     }
 
+    public void saveImageToGallery(Bitmap bitmap) {
+        Glide.get(mContext).clearMemory();
+        Glide.with(mContext).load(bitmap).into(new SimpleTarget<Drawable>() {
+            @Override
+            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+                // 首先保存图片
+                File appDir = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath(), "pic");
+                if (!appDir.exists()) {
+                    appDir.mkdir();
+                }
+                String fileName = System.currentTimeMillis() + ".jpg";
+                File file = new File(appDir, fileName);
+                try {
+                    FileOutputStream fos = new FileOutputStream(file);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                    fos.flush();
+                    fos.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // 其次把文件插入到系统图库
+                try {
+                    MediaStore.Images.Media.insertImage(mContext.getContentResolver(),
+                            file.getAbsolutePath(), fileName, null);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                // 最后通知图库更新
+                mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file.getPath())));
+            }
+        });
+    }
+
 }

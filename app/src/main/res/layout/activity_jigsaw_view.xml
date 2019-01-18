@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="56dp"
         android:paddingLeft="4dp"
         android:paddingRight="4dp">
         <ImageView
@@ -19,12 +19,13 @@
             android:padding="4dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@mipmap/icon_refresh"/>
+            android:src="@mipmap/icon_refresh"
+            android:layout_alignParentEnd="true" />
         <LinearLayout
             android:id="@+id/view_cneter_bar"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:orientation="horizontal">
             <TextView
                 android:id="@+id/tv_limit_start"
@@ -53,6 +54,15 @@
                 android:textStyle="bold"
                 android:gravity="center"/>
         </LinearLayout>
+        <TextView
+            android:id="@+id/tv_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGary"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/view_cneter_bar"/>
         <ImageView
             android:id="@+id/btn_close"
             android:layout_width="36dp"
@@ -75,6 +85,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingRight="8dp"
+        android:visibility="gone"
         android:paddingLeft="8dp">
         <TextView
             android:id="@+id/tv_content"
@@ -86,7 +97,6 @@
             android:layout_toLeftOf="@+id/tv_top"
             android:maxLines="2"/>
         <TextView
-            android:id="@+id/tv_top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorHint"

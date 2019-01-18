@@ -15,38 +15,29 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorGary"
+                android:textSize="14sp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="8dp"
+                android:layout_centerVertical="true"
+                android:text="裁剪格式"/>
+
             <!--裁剪格式-->
             <RelativeLayout
-                android:id="@+id/btn_crop_format"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@color/colorWhite"
+                android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:layout_marginTop="20dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="14sp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_centerVertical="true"
-                    android:text="裁剪格式"/>
-                <TextView
-                    android:id="@+id/tv_crop_format"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorGary"
-                    android:textSize="14sp"
-                    android:layout_toLeftOf="@+id/iv_rigth_0"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="4dp"/>
-                <ImageView
-                    android:id="@+id/iv_rigth_0"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:background="@mipmap/icon_chevron_right"/>
+                android:background="@color/colorWhite">
+
+                <GridView
+                    android:id="@+id/gv_crop_format"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:numColumns="4"/>
             </RelativeLayout>
 
             <TextView

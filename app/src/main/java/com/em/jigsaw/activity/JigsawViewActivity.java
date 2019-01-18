@@ -1,14 +1,13 @@
 package com.em.jigsaw.activity;
 
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -31,11 +30,13 @@ import com.em.jigsaw.callback.OnAlterDialogListener;
 import com.em.jigsaw.callback.OnJigsawChangedListener;
 import com.em.jigsaw.utils.ImgUtil;
 import com.em.jigsaw.utils.LoginUtil;
+import com.em.jigsaw.utils.PermissionUtil;
 import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.JigsawView;
 import com.em.jigsaw.view.dialog.AlertDialog;
 import com.em.jigsaw.view.dialog.JFinishDialog;
+import com.em.jigsaw.view.dialog.SelectDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -49,6 +50,8 @@ import java.util.TimerTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.em.jigsaw.utils.PermissionUtil.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 
 public class JigsawViewActivity extends AppCompatActivity {
     @BindView(R.id.btn_replay)
@@ -80,6 +83,7 @@ public class JigsawViewActivity extends AppCompatActivity {
     private Bitmap resBitmap;
     private JNoteBean JNoteBean;
     private ArrayList<JigsawImgBean> list = new ArrayList<>();
+    private ArrayList<String> savePicMenu = new ArrayList<>();
 
     private String NoteId;
     private int[] ImgFormat = new int[2];// 宽/高
@@ -93,6 +97,7 @@ public class JigsawViewActivity extends AppCompatActivity {
     private boolean fristTouch = true;// 是否首次滑动
     private boolean JigsawSuccess = false;// 是否拼图成功
 
+    private SelectDialog selectDialog;
     private AlertDialog alertDialog;
     private JFinishDialog jFinishDialog;
 
@@ -185,9 +190,9 @@ public class JigsawViewActivity extends AppCompatActivity {
                                         tvContent.setText(JNoteBean.getContent());
                                         StringBuilder sb = new StringBuilder();
                                         if (!JNoteBean.getJType().equals("0")) {
-                                            sb.append("当前最佳：").append(JNoteBean.getBestResults()).append(JNoteBean.getJType().equals("1")?"秒":"次");
+                                            sb.append("(当前最佳：").append(JNoteBean.getBestResults()).append(JNoteBean.getJType().equals("1")?" 秒)":" 次)");
                                         } else {
-                                            sb.append("当前最佳：-");
+                                            sb.append("(当前最佳：- )");
                                         }
                                         tvTop.setText(sb.toString());
                                         updateJigsawList();
@@ -225,7 +230,10 @@ public class JigsawViewActivity extends AppCompatActivity {
 
                         @Override
                         public void onClosePager() {
-                            ToastUtil.show(JigsawViewActivity.this,"保存图片成功");
+                            if (PermissionUtil.checkPermissionREAD_EXTERNAL_STORAGE(JigsawViewActivity.this)) {
+                                imgUtil.saveImageToGallery(resBitmap);
+                                ToastUtil.show(JigsawViewActivity.this,"保存到相册成功");
+                            }
                         }
                     });
                     jFinishDialog.show();
@@ -251,6 +259,28 @@ public class JigsawViewActivity extends AppCompatActivity {
                         timer.schedule(timerTask, 0, 1000);
                     }
                 }
+            }
+        });
+
+        savePicMenu.add("保存图片到相册");
+        ivContent.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                selectDialog = new SelectDialog(JigsawViewActivity.this, savePicMenu, new SelectDialog.OnSelectListener() {
+                    @Override
+                    public void onItemSelect(View view, int position, long id) {
+                        switch (position){
+                            case 0:
+                                if (PermissionUtil.checkPermissionREAD_EXTERNAL_STORAGE(JigsawViewActivity.this)) {
+                                    imgUtil.saveImageToGallery(resBitmap);
+                                    ToastUtil.show(JigsawViewActivity.this,"保存到相册成功");
+                                }
+                                break;
+                        }
+                    }
+                });
+                selectDialog.show();
+                return true;
             }
         });
     }
@@ -340,7 +370,7 @@ public class JigsawViewActivity extends AppCompatActivity {
             return ;
         }
         if(!LoginUtil.isLogin()){
-            ToastUtil.show(JigsawViewActivity.this,"未登录");
+            ToastUtil.show(JigsawViewActivity.this,"请登录后收藏");
             return ;
         }
         isFavorite = true;
@@ -476,6 +506,22 @@ public class JigsawViewActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    imgUtil.saveImageToGallery(resBitmap);
+                    ToastUtil.show(JigsawViewActivity.this,"保存到相册成功");
+                } else {
+                    ToastUtil.show(JigsawViewActivity.this,"暂无权限");
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (timer != null) {
@@ -489,6 +535,9 @@ public class JigsawViewActivity extends AppCompatActivity {
         }
         if(alertDialog != null){
             alertDialog.dismiss();
+        }
+        if(selectDialog != null){
+            selectDialog.dismiss();
         }
     }
 }

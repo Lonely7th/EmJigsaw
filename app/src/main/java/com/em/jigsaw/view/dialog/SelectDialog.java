@@ -7,6 +7,7 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -70,13 +71,20 @@ public class SelectDialog extends Dialog {
         });
 
         setCanceledOnTouchOutside(false);
-        getWindow().setGravity(Gravity.BOTTOM);
 
-        WindowManager windowManager = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
-        display = windowManager.getDefaultDisplay();
-        findViewById(R.id.bg_dialog_select).setLayoutParams(new FrameLayout.LayoutParams((int) (display
-                .getWidth() * 1.0), LinearLayout.LayoutParams.WRAP_CONTENT));
+        Window window = getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+        wlp.gravity = Gravity.BOTTOM;
+        wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(wlp);
+
+//        getWindow().setGravity(Gravity.BOTTOM);
+//
+//        WindowManager windowManager = (WindowManager) context
+//                .getSystemService(Context.WINDOW_SERVICE);
+//        display = windowManager.getDefaultDisplay();
+//        findViewById(R.id.bg_dialog_select).setLayoutParams(new FrameLayout.LayoutParams((int) (display
+//                .getWidth() * 1.0), LinearLayout.LayoutParams.WRAP_CONTENT));
     }
 
     public interface OnSelectListener{

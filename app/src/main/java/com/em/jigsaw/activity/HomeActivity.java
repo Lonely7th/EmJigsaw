@@ -19,9 +19,13 @@ import com.em.jigsaw.activity.fragment.PersonalFragment;
 import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.UserBean;
+import com.em.jigsaw.callback.OnAlterDialogListener;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.SignUtil;
+import com.em.jigsaw.utils.SystemUtil;
 import com.em.jigsaw.utils.ToastUtil;
+import com.em.jigsaw.utils.UpdateApkUtil;
+import com.em.jigsaw.view.dialog.AlertDialog;
 import com.em.jigsaw.view.dialog.SelectDialog;
 import com.google.gson.Gson;
 import com.linchaolong.android.imagepicker.ImagePicker;
@@ -81,6 +85,8 @@ public class HomeActivity extends AppCompatActivity {
         initView();
         initData();
         initImagePicker();
+
+        checkVersion();
     }
 
     @Override
@@ -175,13 +181,13 @@ public class HomeActivity extends AppCompatActivity {
         clearBottomIcon(); //先清空
         switch (currentTabIndex){
             case 0:
-                tab1Tv.setTextColor(getResources().getColor(R.color.colorBlack));
+                tab1Tv.setTextColor(getResources().getColor(R.color.colorBlue));
                 tab1Iv.setImageDrawable(getResources().getDrawable(R.mipmap.icon_dashboard_s));
                 break;
             case 1:
                 break;
             case 2:
-                tab3Tv.setTextColor(getResources().getColor(R.color.colorBlack));
+                tab3Tv.setTextColor(getResources().getColor(R.color.colorBlue));
                 tab3Iv.setImageDrawable(getResources().getDrawable(R.mipmap.icon_explore_s));
                 break;
 
@@ -241,7 +247,7 @@ public class HomeActivity extends AppCompatActivity {
                     // 裁剪图片回调
                     @Override
                     public void onCropImage(Uri imageUri) {
-                        startActivity(new Intent(HomeActivity.this, AddJigsawActivity.class)
+                        startActivity(new Intent(HomeActivity.this, SelectJStatusActivity.class)
                                 .putExtra("ImageUri",imageUri.toString())
                                 .putExtra("ImgFormat",ImgFormat));
                     }
@@ -273,7 +279,7 @@ public class HomeActivity extends AppCompatActivity {
                     // 裁剪图片回调
                     @Override
                     public void onCropImage(Uri imageUri) {
-                        startActivity(new Intent(HomeActivity.this, AddJigsawActivity.class)
+                        startActivity(new Intent(HomeActivity.this, SelectJStatusActivity.class)
                                 .putExtra("ImageUri",imageUri.toString())
                                 .putExtra("ImgFormat",ImgFormat));
                     }
@@ -295,6 +301,41 @@ public class HomeActivity extends AppCompatActivity {
                 });
                 break;
         }
+    }
+
+    /**
+     * 获取版本更新信息
+     */
+    private void checkVersion() {
+        OkGo.<String>get(ServiceAPI.GetVerisonCode).tag(this)
+                .params(SignUtil.getParams(false))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<String> response) {
+                        try {
+                            JSONObject body = new JSONObject(response.body());
+                            if(body.getInt("ResultCode") == ServiceAPI.HttpSuccess){
+                                JSONObject resultData = body.getJSONObject("ResultData");
+                                String code = resultData.getString("Code");
+                                final String url = resultData.getString("ApkPath");
+                                if(!code.equals(SystemUtil.getVersionName(HomeActivity.this))){ // 需要升级
+                                    new AlertDialog(HomeActivity.this, resultData.getString("UpdateContent"), "更新", new OnAlterDialogListener() {
+                                        @Override
+                                        public void onRightClick() {
+                                            UpdateApkUtil.downLoadFile(HomeActivity.this,url);
+                                        }
+
+                                        @Override
+                                        public void onLeftClick() {
+                                        }
+                                    }).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     @Override

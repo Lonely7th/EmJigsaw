@@ -33,6 +33,7 @@ public class LoginUtil {
         //清空登录状态
         SharedPreferences.Editor editor = BaseApplication.sf.edit();
         editor.putBoolean(ContentKey.LOGIN_STATUS, false);
+        editor.putString(ContentKey.LOGIN_JSONSTR,"");
         editor.apply();
     }
 

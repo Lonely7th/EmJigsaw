@@ -126,7 +126,7 @@ public class OthersInfoActivity extends AppCompatActivity {
                                     JNoteBean.setUserNo(userObj.getString("UserNo"));
                                     list.add(JNoteBean);
                                 }
-                                tvReleaseNum.setText(nickName + " 的发布" + "(" + list.size() + ")");
+                                tvReleaseNum.setText(nickName + " 的发布" + " (" + list.size() + ")");
                                 releaseListAdapter.notifyDataSetChanged();
                             }
                         } catch (Exception e) {
@@ -159,7 +159,7 @@ public class OthersInfoActivity extends AppCompatActivity {
                                 headPath = data.getString("NameHead").startsWith("http")?data.getString("NameHead"): ServiceAPI.IMAGE_URL + data.getString("NameHead");
                                 Glide.with(OthersInfoActivity.this).load(headPath).into(ivHead);
 
-                                tvReleaseNum.setText(nickName + " 的发布" + "(" + list.size() + ")");
+                                tvReleaseNum.setText(nickName + " 的发布" + " (" + list.size() + ")");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

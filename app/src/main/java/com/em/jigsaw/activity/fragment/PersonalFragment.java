@@ -17,6 +17,7 @@ import com.em.jigsaw.R;
 import com.em.jigsaw.activity.LoginActivity;
 import com.em.jigsaw.activity.PersonalActivity;
 import com.em.jigsaw.activity.ReleaseListActivity;
+import com.em.jigsaw.activity.SettingActivity;
 import com.em.jigsaw.activity.StarListActivity;
 import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.bean.UserBean;
@@ -64,9 +65,14 @@ public class PersonalFragment extends Fragment {
     @BindView(R.id.btn_share)
     RelativeLayout btnShare;
 
+    List<String> shareTypeList = new ArrayList<>();
+    @BindView(R.id.iv_right_icon)
+    ImageView ivRightIcon;
+    @BindView(R.id.tv_bar_right)
+    TextView tvBarRight;
+
     WXShare wxShare;
     SelectDialog selectDialog;
-    List<String> shareTypeList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -86,6 +92,8 @@ public class PersonalFragment extends Fragment {
 
     private void initUI() {
         backBtn.setVisibility(View.GONE);
+        ivRightIcon.setImageDrawable(getResources().getDrawable(R.mipmap.icon_settings));
+        ivRightIcon.setVisibility(View.VISIBLE);
         tvBarCenter.setText("个人主页");
     }
 
@@ -94,16 +102,16 @@ public class PersonalFragment extends Fragment {
         shareTypeList.add("分享给好友");
     }
 
-    private void updateUserInfo(){
-        if(LoginUtil.isLogin()){
+    private void updateUserInfo() {
+        if (LoginUtil.isLogin()) {
             UserBean userBean = LoginUtil.getUserInfo();
             tvUserName.setText(userBean.getUserName());
             StringBuilder stringBuilder = new StringBuilder();
             tvUserId.setText(stringBuilder.append("用户Id：").append(userBean.getUserNo()).toString());
-            if(!TextUtils.isEmpty(userBean.getNameHead())){
+            if (!TextUtils.isEmpty(userBean.getNameHead())) {
                 Glide.with(getActivity()).load(userBean.getNameHead()).into(ivHead);
             }
-        }else{
+        } else {
             tvUserName.setText("未登录");
             tvUserId.setText("点击登录");
             Glide.with(getActivity()).load("").into(ivHead);
@@ -117,19 +125,19 @@ public class PersonalFragment extends Fragment {
             @Override
             public void onSuccess() {
                 // 分享成功
-                ToastUtil.show(getActivity(),"分享成功");
+                ToastUtil.show(getActivity(), "分享成功");
             }
 
             @Override
             public void onCancel() {
                 // 分享取消
-                ToastUtil.show(getActivity(),"分享取消");
+                ToastUtil.show(getActivity(), "分享取消");
             }
 
             @Override
             public void onFail(String message) {
                 // 分享失败
-                ToastUtil.show(getActivity(),"分享失败");
+                ToastUtil.show(getActivity(), "分享失败");
             }
         });
     }
@@ -139,26 +147,26 @@ public class PersonalFragment extends Fragment {
         super.onDestroyView();
     }
 
-    @OnClick({R.id.btn_user_info, R.id.btn_release, R.id.btn_star, R.id.btn_share})
+    @OnClick({R.id.btn_user_info, R.id.btn_release, R.id.btn_star, R.id.btn_share, R.id.right_btn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_user_info:
-                if(LoginUtil.isLogin()){
-                    startActivity(new Intent(getActivity(),PersonalActivity.class));
-                }else {
-                    startActivity(new Intent(getActivity(),LoginActivity.class));
+                if (LoginUtil.isLogin()) {
+                    startActivity(new Intent(getActivity(), PersonalActivity.class));
+                } else {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
                 }
                 break;
             case R.id.btn_share:
                 selectDialog = new SelectDialog(getActivity(), shareTypeList, new SelectDialog.OnSelectListener() {
                     @Override
                     public void onItemSelect(View view, int position, long id) {
-                        switch (position){
+                        switch (position) {
                             case 0:
-                                wxShare.share(getActivity(),ContentKey.SHARE_URL,ContentKey.SHARE_TITLE,ContentKey.SHARE_CONTENT,0);
+                                wxShare.share(getActivity(), ContentKey.SHARE_URL, ContentKey.SHARE_TITLE, ContentKey.SHARE_CONTENT, 0);
                                 break;
                             case 1:
-                                wxShare.share(getActivity(),ContentKey.SHARE_URL,ContentKey.SHARE_TITLE,ContentKey.SHARE_CONTENT,1);
+                                wxShare.share(getActivity(), ContentKey.SHARE_URL, ContentKey.SHARE_TITLE, ContentKey.SHARE_CONTENT, 1);
                                 break;
                         }
                     }
@@ -166,14 +174,17 @@ public class PersonalFragment extends Fragment {
                 selectDialog.show();
                 break;
             case R.id.btn_release:
-                if(LoginUtil.isLogin()){
-                    startActivity(new Intent(getActivity(),ReleaseListActivity.class));
+                if (LoginUtil.isLogin()) {
+                    startActivity(new Intent(getActivity(), ReleaseListActivity.class));
                 }
                 break;
             case R.id.btn_star:
-                if(LoginUtil.isLogin()){
-                    startActivity(new Intent(getActivity(),StarListActivity.class));
+                if (LoginUtil.isLogin()) {
+                    startActivity(new Intent(getActivity(), StarListActivity.class));
                 }
+                break;
+            case R.id.right_btn:
+                startActivity(new Intent(getActivity(), SettingActivity.class));
                 break;
         }
     }

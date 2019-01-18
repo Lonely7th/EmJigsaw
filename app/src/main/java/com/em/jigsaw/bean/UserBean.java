@@ -9,7 +9,7 @@ public class UserBean {
     private String Id;
     private String UserNo;
     private String UserName;
-    private String UserToken;
+    private String UserToken = "";
     private String UserPhone;
     private String NameHead = "";
     private String NameCity;

@@ -35,4 +35,10 @@ public class ServiceAPI {
     public static final String StarJNote = BASE_URL + "api/v3/starJNote";
     public static final String SearchJNote = BASE_URL + "api/v3/searchJNoteList";
     public static final String PostJResult = BASE_URL + "api/v3/postJNoteResult";
+
+    /**
+     * 系统相关
+     */
+    public static final String AddFeedBack = BASE_URL + "api/v4/addFeedBack";
+    public static final String GetVerisonCode = BASE_URL + "api/v4/getVersionCode";
 }

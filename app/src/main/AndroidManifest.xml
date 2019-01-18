@@ -42,7 +42,11 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activity.SearchActivity" />
         <activity android:name=".activity.OthersInfoActivity" />
-        <activity android:name=".activity.ShowPicActivity"></activity>
+        <activity android:name=".activity.ShowPicActivity" >
+
+        </activity>
+        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.FeedbackActivity" />
     </application>
 
 </manifest>

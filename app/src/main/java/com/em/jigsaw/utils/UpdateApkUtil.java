@@ -23,10 +23,10 @@ import okhttp3.Response;
  * Description ： .
  */
 public class UpdateApkUtil {
-    private ProgressDialog proDialog = null;    //下载进度条
-    private String ApkPath,ApkName = "emjigsw.apk";
+    private static ProgressDialog proDialog = null;    //下载进度条
+    private static String ApkPath,ApkName = "emjigsw.apk";
 
-    public void downLoadFile(final Activity context, String fileUrl) {
+    public static void downLoadFile(final Activity context, String fileUrl) {
         // 创建文件夹
         ApkPath = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/apk/";
         //创建文件夹

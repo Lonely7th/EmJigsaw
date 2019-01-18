@@ -1,6 +1,7 @@
 package com.em.jigsaw.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import com.em.jigsaw.base.YBaseAdapter;
 import com.em.jigsaw.base.YBaseHolder;
 import com.em.jigsaw.bean.JNoteBean;
 import com.em.jigsaw.bean.NoteStarBean;
+import com.em.jigsaw.callback.OnJListHeadClickListener;
 import com.em.jigsaw.utils.TimerUtil;
 
 import java.util.List;
@@ -24,8 +26,11 @@ import java.util.List;
  */
 public class StarListAdapter extends YBaseAdapter<NoteStarBean> {
 
-    public StarListAdapter(List<NoteStarBean> list, Context mContext) {
+    private OnJListHeadClickListener onJListHeadClickListener;
+
+    public StarListAdapter(List<NoteStarBean> list, Context mContext, @NonNull OnJListHeadClickListener onJListHeadClickListener) {
         super(list, mContext);
+        this.onJListHeadClickListener = onJListHeadClickListener;
     }
 
     @Override
@@ -112,6 +117,13 @@ public class StarListAdapter extends YBaseAdapter<NoteStarBean> {
                 tvLabel3.setVisibility(View.VISIBLE);
                 tvLabel3.setText(baen.getLabelTitle3());
             }
+
+            ivHead.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onJListHeadClickListener.onClick(position);
+                }
+            });
         }
     }
 }

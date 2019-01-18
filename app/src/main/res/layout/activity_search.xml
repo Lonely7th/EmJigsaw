@@ -8,14 +8,14 @@
     <RelativeLayout android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="vertical"
-        android:background="@color/colorMain">
+        android:background="@color/colorWhite">
         <ImageView
-            android:id="@+id/iv_search_icon"
+            android:id="@+id/btn_close"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_centerVertical="true"
             android:padding="12dp"
-            android:src="@mipmap/icon_search"/>
+            android:src="@mipmap/icon_keyboard_arrow_left_b"/>
         <TextView
             android:id="@+id/btn_search"
             android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
             android:paddingLeft="12dp"
             android:text="搜索"
             android:textStyle="bold"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorBlack"
             android:gravity="center"
             android:layout_alignParentRight="true"/>
         <EditText
@@ -32,31 +32,30 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
-            android:layout_marginRight="12dp"
-            android:layout_toRightOf="@+id/iv_search_icon"
+            android:layout_toRightOf="@+id/btn_close"
             android:layout_toLeftOf="@+id/btn_search"
-            android:textSize="12sp"
+            android:textSize="13sp"
+            android:layout_margin="4dp"
             android:hint="请输入您要查找的关键字"
-            android:textColor="@color/colorWhite"
-            android:textColorHint="@color/colorWhite" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorWhite"
-            android:layout_toRightOf="@+id/iv_search_icon"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="12dp"
-            android:layout_marginBottom="4dp"/>
+            android:textColor="@color/colorBlack"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
+            android:textColorHint="@color/colorGary" />
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/listview"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorWhite"
-        android:divider="@color/colorDivider_n"
-        android:dividerHeight="0.5dp"
-        android:layout_marginTop="1dp"
-        android:visibility="gone"/>
+        android:layout_marginTop="20dp">
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite"
+            android:divider="@color/colorDivider_n"
+            android:dividerHeight="0.5dp"
+            android:visibility="gone"/>
+    </RelativeLayout>
 
 </LinearLayout>
