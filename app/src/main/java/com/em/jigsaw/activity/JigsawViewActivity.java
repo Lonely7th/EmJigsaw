@@ -216,7 +216,7 @@ public class JigsawViewActivity extends AppCompatActivity {
         viewJigsaw.setOnChangedListener(new OnJigsawChangedListener() {
             @Override
             public void onChanged(ArrayList<JigsawImgBean> arrayList) {
-                if (imgUtil.jigsawSuccess(arrayList)) { // 完成拼图
+                if (!imgUtil.jigsawSuccess(arrayList)) { // 完成拼图
                     JigsawSuccess = true;
                     viewJigsaw.setViewTouched(false);
                     int currentScore = baseLimit - currentLimit;
@@ -236,10 +236,15 @@ public class JigsawViewActivity extends AppCompatActivity {
                             }
                         }
                     });
-                    jFinishDialog.show();
 
                     ivContent.setVisibility(View.VISIBLE);
                     viewJigsaw.setVisibility(View.GONE);
+
+                    new Handler().postDelayed(new Runnable(){
+                        public void run() {
+                            jFinishDialog.show();
+                        }
+                    }, 1500);
 
                     if(!JNoteBean.getJType().equals("0")){ // 如果有时间/次数限制则提交结果
                         postJResult(currentScore<Integer.parseInt(JNoteBean.getBestResults())?2:1,currentScore);

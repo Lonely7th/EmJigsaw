@@ -94,7 +94,6 @@
             android:textColor="@color/colorWhite"
             android:textSize="14sp"
             android:visibility="gone"
-            android:layout_toLeftOf="@+id/tv_top"
             android:maxLines="2"/>
         <TextView
             android:layout_width="wrap_content"
