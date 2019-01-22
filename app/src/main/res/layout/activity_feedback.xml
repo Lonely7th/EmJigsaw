@@ -17,7 +17,7 @@
         android:gravity="start"
         android:textSize="14sp"
         android:layout_marginTop="16dp"
-        android:textColor="@color/colorGary"
+        android:textColor="@color/colorBlack"
         android:hint="请填写您要反馈的内容..."/>
 
 </LinearLayout>

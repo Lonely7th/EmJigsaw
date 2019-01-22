@@ -208,6 +208,7 @@ public class SearchActivity extends AppCompatActivity {
                                     } else {
                                         hasMoreData = true;
                                     }
+                                    KeyBoardUtils.closeKeybord(edtContent, SearchActivity.this);
                                 }
                             }
                         } catch (Exception e) {

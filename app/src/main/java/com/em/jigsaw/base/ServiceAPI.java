@@ -21,6 +21,8 @@ public class ServiceAPI {
     public static final String ChangeInfo = BASE_URL + "api/v1/changeInfo";
     public static final String GetUserInfo = BASE_URL + "api/v1/getUserInfo";
     public static final String GetUserHead = BASE_URL + "api/v1/changeHead";
+    public static final String AddFollow = BASE_URL + "api/v1/addFollower";
+    public static final String GetFollowList = BASE_URL + "api/v1/getFollowList";
 
     /**
      * 发布相关

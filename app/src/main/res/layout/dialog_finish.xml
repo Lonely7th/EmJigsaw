@@ -26,11 +26,11 @@
 
         <ImageView
             android:id="@+id/iv_score"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_toRightOf="@+id/tv_score"
             android:scaleType="centerInside"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="10dp"
             android:src="@mipmap/score_sss"/>
 
         <TextView
@@ -43,9 +43,9 @@
             android:paddingTop="8dp"
             android:gravity="center"
             android:textColor="#FF8800"
-            android:textStyle="bold"
+            android:textStyle="bold|italic"
             android:textSize="13sp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
             android:text="(完成)" />
 
         <LinearLayout

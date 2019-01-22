@@ -29,6 +29,8 @@ import com.em.jigsaw.adapter.TopBarAdapter;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.JNoteBean;
 import com.em.jigsaw.bean.MainTopBarBean;
+import com.em.jigsaw.bean.event.RefreshMainFEvent;
+import com.em.jigsaw.bean.event.ReleaseEvent;
 import com.em.jigsaw.callback.OnJListHeadClickListener;
 import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
@@ -38,6 +40,8 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -92,6 +96,7 @@ public class MainFragment extends Fragment {
         tvLoadMore = listFootView.findViewById(R.id.tv_content);
         ivLoadMore = listFootView.findViewById(R.id.iv_loading);
         ButterKnife.bind(this, rootView);
+        EventBus.getDefault().register(this);
 
         initUI();
         initData();
@@ -271,6 +276,10 @@ public class MainFragment extends Fragment {
         isLoading = true; // 开始加载
         if(isRefresh){
             currentPager = 1;
+            mainListview.smoothScrollToPosition(0);
+            if(!mSwipeRefreshLayout.isRefreshing()){
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
         }else{
             currentPager++; // 当前页+1
         }
@@ -390,6 +399,11 @@ public class MainFragment extends Fragment {
             endLoadMore();
         }
         isLoading = false;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(RefreshMainFEvent event) {
+        loadItemData(true);
     }
 
     @Override

@@ -114,7 +114,6 @@ public class SelectJStatusActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_jstatus);
         ButterKnife.bind(this);
-        cropFormat = getIntent().getStringExtra("CropFormat");
         imageUri = Uri.parse(getIntent().getStringExtra("ImageUri"));
         initUI();
         initData();

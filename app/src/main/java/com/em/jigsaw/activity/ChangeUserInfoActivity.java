@@ -15,8 +15,10 @@ import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
+import com.em.jigsaw.view.dialog.LoadingDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.request.base.Request;
 
 import org.json.JSONObject;
 
@@ -40,6 +42,7 @@ public class ChangeUserInfoActivity extends AppCompatActivity {
     EditText edtContent;
 
     private String cType = "0";
+    private LoadingDialog loadingDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,8 @@ public class ChangeUserInfoActivity extends AppCompatActivity {
         tvBarCenter.setText("修改用户信息");
         tvBarRight.setText("保存");
         tvBarRight.setVisibility(View.VISIBLE);
+
+        loadingDialog = new LoadingDialog(ChangeUserInfoActivity.this);
     }
 
     private void changeUserInfo(){
@@ -84,8 +89,21 @@ public class ChangeUserInfoActivity extends AppCompatActivity {
                     }
 
                     @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        super.onStart(request);
+                        loadingDialog.show();
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        loadingDialog.dismiss();
+                    }
+
+                    @Override
                     public void onError(com.lzy.okgo.model.Response<String> response) {
                         super.onError(response);
+                        loadingDialog.dismiss();
                     }
                 });
     }
@@ -103,6 +121,14 @@ public class ChangeUserInfoActivity extends AppCompatActivity {
                     changeUserInfo();
                 }
                 break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(loadingDialog != null){
+            loadingDialog.dismiss();
         }
     }
 }

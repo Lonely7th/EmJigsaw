@@ -27,11 +27,10 @@ import com.em.jigsaw.adapter.SelectDialogAdapter;
  */
 public class LoadingDialog extends Dialog {
 
-    private ImageView spaceshipImage;
     private Context context;
 
     public LoadingDialog(@NonNull Context context) {
-        super(context);
+        super(context, R.style.LoadingDialogStyle);
         this.context = context;
     }
 
@@ -40,24 +39,7 @@ public class LoadingDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_loading);
 
-        spaceshipImage = findViewById(R.id.img_loading);
-
         setCanceledOnTouchOutside(false);
         getWindow().setGravity(Gravity.CENTER);
-
-//        WindowManager windowManager = (WindowManager) context
-//                .getSystemService(Context.WINDOW_SERVICE);
-//        display = windowManager.getDefaultDisplay();
-//        findViewById(R.id.bg_dialog_select).setLayoutParams(new FrameLayout.LayoutParams((int) (display
-//                .getWidth() * 1.0), LinearLayout.LayoutParams.WRAP_CONTENT));
-
-    }
-
-    @Override
-    public void show() {
-        super.show();
-        // 加载动画
-        Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(context, R.anim.loading_animation); // 使用ImageView显示动画
-        spaceshipImage.startAnimation(hyperspaceJumpAnimation);
     }
 }

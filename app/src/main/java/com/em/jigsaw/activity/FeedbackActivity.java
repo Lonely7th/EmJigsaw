@@ -14,8 +14,10 @@ import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
+import com.em.jigsaw.view.dialog.LoadingDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.request.base.Request;
 
 import org.json.JSONObject;
 
@@ -38,6 +40,8 @@ public class FeedbackActivity extends AppCompatActivity {
     @BindView(R.id.edt_content)
     EditText edtContent;
 
+    private LoadingDialog loadingDialog = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +55,8 @@ public class FeedbackActivity extends AppCompatActivity {
         tvBarCenter.setText("反馈与建议");
         tvBarRight.setText("提交");
         tvBarRight.setVisibility(View.VISIBLE);
+
+        loadingDialog = new LoadingDialog(FeedbackActivity.this);
     }
 
     private void toFeedBack(final String content){
@@ -63,7 +69,7 @@ public class FeedbackActivity extends AppCompatActivity {
                     public void onSuccess(com.lzy.okgo.model.Response<String> response) {
                         try {
                             JSONObject body = new JSONObject(response.body());
-                            ToastUtil.show(FeedbackActivity.this, "感谢您的反馈！");
+                            ToastUtil.show(FeedbackActivity.this, "感谢您的反馈");
                             finish();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -71,9 +77,22 @@ public class FeedbackActivity extends AppCompatActivity {
                     }
 
                     @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        super.onStart(request);
+                        loadingDialog.show();
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        loadingDialog.dismiss();
+                    }
+
+                    @Override
                     public void onError(com.lzy.okgo.model.Response<String> response) {
                         super.onError(response);
                         ToastUtil.show(FeedbackActivity.this,"网络异常");
+                        loadingDialog.dismiss();
                     }
                 });
     }
@@ -92,6 +111,14 @@ public class FeedbackActivity extends AppCompatActivity {
                 }
                 toFeedBack(content);
                 break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(loadingDialog != null){
+            loadingDialog.dismiss();
         }
     }
 }

@@ -18,10 +18,13 @@ import com.em.jigsaw.bean.JNoteBean;
 import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.SignUtil;
+import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.RoundImageView;
+import com.em.jigsaw.view.dialog.LoadingDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -53,9 +56,13 @@ public class OthersInfoActivity extends AppCompatActivity {
     ListView lvRelease;
 
     private String userNo,nickName,headPath;
+    private boolean isFollower = false;// 是否已经关注该用户
 
     private ReleaseListAdapter releaseListAdapter;
     private List<JNoteBean> list = new ArrayList<>();
+
+    private boolean isFollowing = false;// 正在处理关注相关的事务
+    private LoadingDialog loadingDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +85,8 @@ public class OthersInfoActivity extends AppCompatActivity {
                 startActivity(new Intent(OthersInfoActivity.this, JigsawViewActivity.class).putExtra("id", list.get(i).getNoteId()));
             }
         });
-        ivHead.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(OthersInfoActivity.this, ShowPicActivity.class).putExtra("uri", headPath));
-            }
-        });
+
+        loadingDialog = new LoadingDialog(OthersInfoActivity.this);
     }
 
     private void initReleaseList() {
@@ -144,6 +147,7 @@ public class OthersInfoActivity extends AppCompatActivity {
     private void initUserInfo() {
         OkGo.<String>get(ServiceAPI.GetUserInfo).tag(this)
                 .params("user_no", userNo)
+                .params("follow_no", LoginUtil.getUserInfo().getUserNo())
                 .params(SignUtil.getParams(true))
                 .execute(new StringCallback() {
                     @Override
@@ -160,12 +164,100 @@ public class OthersInfoActivity extends AppCompatActivity {
                                 Glide.with(OthersInfoActivity.this).load(headPath).into(ivHead);
 
                                 tvReleaseNum.setText(nickName + " 的发布" + " (" + list.size() + ")");
+                                isFollower = data.getBoolean("IsFollow");
+
+                                updateFavoriteStatus();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
+
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        super.onStart(request);
+                        loadingDialog.show();
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        loadingDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        loadingDialog.dismiss();
+                    }
                 });
+    }
+
+    /**
+     * 添加关注
+     */
+    private void addFollow(){
+        if(isFollowing){
+            return ;
+        }
+        if(!LoginUtil.isLogin()){
+            ToastUtil.show(OthersInfoActivity.this,"请登录后关注");
+            return ;
+        }
+        isFollowing = true;
+
+        OkGo.<String>post(ServiceAPI.AddFollow).tag(this)
+                .params("user_no", LoginUtil.getUserInfo().getUserNo())
+                .params("follow_id", userNo)
+                .params("type", isFollower?"1":"0")
+                .params(SignUtil.getParams(true))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(com.lzy.okgo.model.Response<String> response) {
+                        try {
+                            JSONObject body = new JSONObject(response.body());
+                            if(body.getInt("ResultCode") == ServiceAPI.HttpSuccess){
+                                if(isFollower){
+                                    ToastUtil.show(OthersInfoActivity.this,"关注取消");
+                                    isFollower = false;
+                                }else{
+                                    ToastUtil.show(OthersInfoActivity.this,"关注成功");
+                                    isFollower = true;
+                                }
+                                updateFavoriteStatus();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(com.lzy.okgo.model.Response<String> response) {
+                        super.onError(response);
+                        ToastUtil.show(OthersInfoActivity.this,"网络异常");
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        isFollowing = false;
+                    }
+                });
+    }
+
+    /**
+     * 刷新关注状态
+     */
+    private void updateFavoriteStatus() {
+        if(isFollower){
+            btnStar.setText("已关注");
+            btnStar.setTextColor(getResources().getColor(R.color.colorWhite));
+            btnStar.setBackgroundResource(R.drawable.bg_shape_blue);
+        }else{
+            btnStar.setText("+ 关注");
+            btnStar.setTextColor(getResources().getColor(R.color.colorBlue));
+            btnStar.setBackgroundResource(R.drawable.bg_border_blue);
+        }
     }
 
     @OnClick({R.id.btn_close, R.id.btn_star, R.id.iv_head})
@@ -175,9 +267,19 @@ public class OthersInfoActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.btn_star:
+                addFollow();
                 break;
             case R.id.iv_head:
+                startActivity(new Intent(OthersInfoActivity.this, ShowPicActivity.class).putExtra("uri", headPath));
                 break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(loadingDialog != null){
+            loadingDialog.dismiss();
         }
     }
 }

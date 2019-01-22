@@ -68,7 +68,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="4dp"
             android:background="@mipmap/icon_turned_in_not"/>
         <TextView
             android:layout_width="wrap_content"
@@ -95,13 +95,13 @@
         android:layout_height="48dp"
         android:background="@color/colorWhite"
         android:padding="8dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="0.5dp">
         <ImageView
             android:id="@+id/iv_star_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="4dp"
             android:background="@mipmap/icon_star_half"/>
         <TextView
             android:layout_width="wrap_content"
@@ -121,6 +121,39 @@
             android:background="@mipmap/icon_chevron_right"/>
     </RelativeLayout>
 
+    <!--我的关注-->
+    <RelativeLayout
+        android:id="@+id/btn_follow"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorWhite"
+        android:padding="8dp"
+        android:layout_marginTop="0.5dp">
+        <ImageView
+            android:id="@+id/iv_follow_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:background="@mipmap/icon_whatshot"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/iv_follow_icon"
+            android:textSize="14sp"
+            android:text="我的关注"/>
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@mipmap/icon_chevron_right"/>
+    </RelativeLayout>
+
     <!--分享给好友-->
     <RelativeLayout
         android:id="@+id/btn_share"
@@ -128,13 +161,13 @@
         android:layout_height="48dp"
         android:background="@color/colorWhite"
         android:padding="8dp"
-        android:layout_marginTop="0.5dp">
+        android:layout_marginTop="20dp">
         <ImageView
             android:id="@+id/iv_share_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="4dp"
             android:background="@mipmap/icon_share"/>
         <TextView
             android:layout_width="wrap_content"

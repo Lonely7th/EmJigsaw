@@ -23,9 +23,11 @@ import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.PhoneFormatCheckUtil;
 import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
+import com.em.jigsaw.view.dialog.LoadingDialog;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.request.base.Request;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,6 +63,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private int countDown = 0;
     private Timer timer = new Timer();
+
+    private LoadingDialog loadingDialog = null;
 
     EventHandler eh = new EventHandler() {
         @Override
@@ -142,6 +146,8 @@ public class LoginActivity extends AppCompatActivity {
         });
         //开启定时器
         timer.schedule(timerTask, 1000, 1000);
+
+        loadingDialog = new LoadingDialog(LoginActivity.this);
     }
 
     /**
@@ -183,9 +189,22 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        super.onStart(request);
+                        loadingDialog.show();
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        loadingDialog.dismiss();
+                    }
+
+                    @Override
                     public void onError(com.lzy.okgo.model.Response<String> response) {
                         super.onError(response);
                         ToastUtil.show(LoginActivity.this,"网络异常");
+                        loadingDialog.dismiss();
                     }
                 });
     }
@@ -233,6 +252,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onDestroy();
         if (timer != null) {
             timer.cancel();
+        }
+        if(loadingDialog != null){
+            loadingDialog.dismiss();
         }
     }
 

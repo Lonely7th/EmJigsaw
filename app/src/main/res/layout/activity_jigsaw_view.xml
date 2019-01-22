@@ -74,10 +74,10 @@
             android:id="@+id/btn_star"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:padding="6dp"
-            android:layout_toLeftOf="@+id/btn_replay"
+            android:padding="8dp"
+            android:layout_toRightOf="@+id/view_cneter_bar"
             android:layout_centerVertical="true"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
             android:src="@mipmap/icon_favorite_border"/>
     </RelativeLayout>
 

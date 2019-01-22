@@ -59,29 +59,30 @@ public class JFinishDialog extends Dialog {
     }
 
     private void initUI(){
-        int score = Integer.parseInt(JNoteBean.getLimitNum()) - currentScore;
-        if(score <= 0){
+        int numScore = Integer.parseInt(JNoteBean.getLimitNum());
+        int score = numScore - currentScore;
+        if(score <= 0){ // C =0%
             tvScore.setTextColor(context.getResources().getColor(R.color.scoreC));
             tvStatus.setTextColor(context.getResources().getColor(R.color.scoreC));
             tvStatus.setText("(未完成)");
             ivScore.setImageDrawable(context.getResources().getDrawable(R.mipmap.score_c));
-        }else if(score < 10){ // B
+        }else if(score < numScore*0.2){ // B <20%
             tvScore.setTextColor(context.getResources().getColor(R.color.scoreB));
             tvStatus.setTextColor(context.getResources().getColor(R.color.scoreB));
             ivScore.setImageDrawable(context.getResources().getDrawable(R.mipmap.score_b));
-        }else if(score < 15){ // A
+        }else if(score < numScore*0.4){ // A 40%
             tvScore.setTextColor(context.getResources().getColor(R.color.scoreA));
             tvStatus.setTextColor(context.getResources().getColor(R.color.scoreA));
             ivScore.setImageDrawable(context.getResources().getDrawable(R.mipmap.score_a));
-        }else if(score < 20){ // S
+        }else if(score < numScore*0.6){ // S 60%
             tvScore.setTextColor(context.getResources().getColor(R.color.scoreS));
             tvStatus.setTextColor(context.getResources().getColor(R.color.scoreS));
             ivScore.setImageDrawable(context.getResources().getDrawable(R.mipmap.score_s));
-        }else if(score < 30){ // SS
+        }else if(score < numScore*0.8){ // SS 80%
             tvScore.setTextColor(context.getResources().getColor(R.color.scoreS));
             tvStatus.setTextColor(context.getResources().getColor(R.color.scoreS));
             ivScore.setImageDrawable(context.getResources().getDrawable(R.mipmap.score_ss));
-        }else{ // SSS
+        }else{ // SSS >80%
             tvScore.setTextColor(context.getResources().getColor(R.color.scoreS));
             tvStatus.setTextColor(context.getResources().getColor(R.color.scoreS));
             ivScore.setImageDrawable(context.getResources().getDrawable(R.mipmap.score_sss));

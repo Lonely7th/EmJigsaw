@@ -1,8 +1,8 @@
 package com.em.jigsaw.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -11,9 +11,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.em.jigsaw.R;
-import com.em.jigsaw.adapter.ReleaseListAdapter;
+import com.em.jigsaw.adapter.FollowListAdapter;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.JNoteBean;
+import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.view.dialog.LoadingDialog;
@@ -32,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ReleaseListActivity extends AppCompatActivity {
+public class FollowListActivity extends AppCompatActivity {
 
     @BindView(R.id.back_btn)
     RelativeLayout backBtn;
@@ -47,23 +48,24 @@ public class ReleaseListActivity extends AppCompatActivity {
     @BindView(R.id.listview)
     ListView listview;
 
-    private ReleaseListAdapter releaseListAdapter;
-    private List<JNoteBean> list = new ArrayList<>();
+    private FollowListAdapter followListAdapter;
+    private List<UserBean> list = new ArrayList<>();
 
     private LoadingDialog loadingDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_release_list);
+        setContentView(R.layout.activity_follow_list);
+
         ButterKnife.bind(this);
-        
+
         initUI();
         initData();
     }
 
     private void initData() {
-        OkGo.<String>get(ServiceAPI.GetReleaseList).tag(this)
+        OkGo.<String>get(ServiceAPI.GetFollowList).tag(this)
                 .params("user_no", LoginUtil.getUserInfo().getUserNo())
                 .params(SignUtil.getParams(true))
                 .execute(new StringCallback() {
@@ -74,36 +76,17 @@ public class ReleaseListActivity extends AppCompatActivity {
                             if (body.getInt("ResultCode") == ServiceAPI.HttpSuccess) {
                                 JSONArray array = body.getJSONArray("ResultData");
                                 for (int i = 0; i < array.length(); i++) {
-                                    JSONObject obj = array.getJSONObject(i);
-                                    JNoteBean JNoteBean = new JNoteBean();
-
-                                    JNoteBean.setBestResults(obj.getString("BestResults"));
-                                    JNoteBean.setCompleteNum(obj.getString("CompleteNum"));
-                                    JNoteBean.setContent(obj.getString("Content"));
-                                    JNoteBean.setCreatTime(obj.getLong("CreatTime"));
-                                    JNoteBean.setCropFormat(obj.getString("CropFormat"));
-                                    JNoteBean.setDisplayNum(obj.getString("DisplayNum"));
-                                    JNoteBean.setHideUser(obj.getBoolean("HideUser"));
-                                    JNoteBean.setJType(obj.getString("JType"));
-                                    JNoteBean.setLabel1(obj.getString("Label1"));
-                                    JNoteBean.setLabel2(obj.getString("Label2"));
-                                    JNoteBean.setLabel3(obj.getString("Label3"));
-                                    JNoteBean.setLabelTitle1(obj.getString("LabelTitle1"));
-                                    JNoteBean.setLabelTitle2(obj.getString("LabelTitle2"));
-                                    JNoteBean.setLabelTitle3(obj.getString("LabelTitle3"));
-                                    JNoteBean.setLimitNum(obj.getString("LimitNum"));
-                                    JNoteBean.setNoteId(obj.getString("NoteId"));
-                                    JNoteBean.setResPath(obj.getString("ResPath"));
-                                    JNoteBean.setGsResPath(obj.getString("GsResPath"));
-
-                                    JSONObject userObj = obj.getJSONObject("Releaser");
-                                    JNoteBean.setUserHead(userObj.getString("NameHead"));
-                                    JNoteBean.setUserName(userObj.getString("UserName"));
-                                    JNoteBean.setUserNo(userObj.getString("UserNo"));
-                                    list.add(JNoteBean);
+                                    JSONObject obj = array.getJSONObject(i).getJSONObject("Follower");
+                                    UserBean userBean = new UserBean();
+                                    userBean.setNameHead(obj.getString("NameHead"));
+                                    userBean.setUserName(obj.getString("UserName"));
+                                    userBean.setNameCity(obj.getString("NameCity"));
+                                    userBean.setUserNo(obj.getString("UserNo"));
+                                    userBean.setUserPhone(obj.getString("UserPhone"));
+                                    list.add(userBean);
                                 }
-                                tvBarCenter.setText("我的发布" + "(" + array.length() + ")");
-                                releaseListAdapter.notifyDataSetChanged();
+                                tvBarCenter.setText("我的关注" + "(" + array.length() + ")");
+                                followListAdapter.notifyDataSetChanged();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -131,15 +114,16 @@ public class ReleaseListActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        releaseListAdapter = new ReleaseListAdapter(list,ReleaseListActivity.this);
-        listview.setAdapter(releaseListAdapter);
+        followListAdapter = new FollowListAdapter(list,FollowListActivity.this);
+        listview.setAdapter(followListAdapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                startActivity(new Intent(ReleaseListActivity.this, JigsawViewActivity.class).putExtra("id", list.get(i).getNoteId()));
+                startActivity(new Intent(FollowListActivity.this, OthersInfoActivity.class).putExtra("user_id", list.get(i).getUserNo()));
             }
         });
-        loadingDialog = new LoadingDialog(ReleaseListActivity.this);
+
+        loadingDialog = new LoadingDialog(FollowListActivity.this);
     }
 
     @OnClick(R.id.back_btn)

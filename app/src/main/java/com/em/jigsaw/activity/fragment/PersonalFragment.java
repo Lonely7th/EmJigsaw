@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.em.jigsaw.R;
+import com.em.jigsaw.activity.FollowListActivity;
 import com.em.jigsaw.activity.LoginActivity;
 import com.em.jigsaw.activity.PersonalActivity;
 import com.em.jigsaw.activity.ReleaseListActivity;
@@ -147,7 +148,7 @@ public class PersonalFragment extends Fragment {
         super.onDestroyView();
     }
 
-    @OnClick({R.id.btn_user_info, R.id.btn_release, R.id.btn_star, R.id.btn_share, R.id.right_btn})
+    @OnClick({R.id.btn_user_info, R.id.btn_release, R.id.btn_star, R.id.btn_share, R.id.right_btn, R.id.btn_follow})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_user_info:
@@ -185,6 +186,11 @@ public class PersonalFragment extends Fragment {
                 break;
             case R.id.right_btn:
                 startActivity(new Intent(getActivity(), SettingActivity.class));
+                break;
+            case R.id.btn_follow:
+                if (LoginUtil.isLogin()) {
+                    startActivity(new Intent(getActivity(), FollowListActivity.class));
+                }
                 break;
         }
     }

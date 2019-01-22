@@ -20,14 +20,18 @@ import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.LabelBean;
 import com.em.jigsaw.utils.KeyBoardUtils;
 import com.em.jigsaw.utils.SignUtil;
+import com.em.jigsaw.utils.SystemUtil;
+import com.em.jigsaw.view.dialog.LoadingDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -43,12 +47,14 @@ public class SelectLabelActivity extends AppCompatActivity {
     GridView labelGridview;
 
     String tabIds, curKey;
-    int hotNum = 6; // 热门搜索数量
+    int hotNum = 9; // 热门搜索数量
     LabelSelectAdapter labelSelectAdapter;
     HotLabelAdapter hotLabelAdapter;
     List<LabelBean> baseList = new ArrayList<>();
     List<LabelBean> labelBeanList = new ArrayList<>();
     List<LabelBean> labelHotsList = new ArrayList<>();
+
+    LoadingDialog loadingDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,18 +85,44 @@ public class SelectLabelActivity extends AppCompatActivity {
                                     bean.setTitle(obj.getString("Title"));
                                     if(!tabIds.contains(bean.getTitle())){
                                         baseList.add(bean);
-                                        if(labelHotsList.size() < hotNum){
-                                            labelHotsList.add(bean);
-                                        }
                                     }
                                 }
-                                hotLabelAdapter.notifyDataSetChanged();
+                                initHotLabels();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
+
+                    @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        super.onStart(request);
+                        loadingDialog.show();
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        loadingDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        loadingDialog.dismiss();
+                    }
                 });
+    }
+
+    private void initHotLabels(){
+        HashSet<Integer> hotIndexArray = new HashSet<>();
+        SystemUtil.randomSet(0,baseList.size()-1,hotNum,hotIndexArray);
+        for(int i = 0;i < baseList.size();i++){
+            if(hotIndexArray.contains(i)){
+                labelHotsList.add(baseList.get(i));
+            }
+        }
+        hotLabelAdapter.notifyDataSetChanged();
     }
 
     private void initUI() {
@@ -150,5 +182,21 @@ public class SelectLabelActivity extends AppCompatActivity {
 
             }
         });
+
+        findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        loadingDialog = new LoadingDialog(SelectLabelActivity.this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(loadingDialog != null){
+            loadingDialog.dismiss();
+        }
     }
 }

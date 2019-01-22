@@ -65,10 +65,12 @@ public class SettingActivity extends AppCompatActivity {
                 //遍历crash文件夹
                 String path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/pic0/";
                 File dir = new File(path);
-                File[] files = dir.listFiles();
-                for (File item : files) {
-                    if (!item.isDirectory()) {
-                        item.delete();
+                if(dir.exists()){
+                    File[] files = dir.listFiles();
+                    for (File item : files) {
+                        if (!item.isDirectory()) {
+                            item.delete();
+                        }
                     }
                 }
             }

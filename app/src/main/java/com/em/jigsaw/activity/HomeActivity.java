@@ -19,6 +19,8 @@ import com.em.jigsaw.activity.fragment.PersonalFragment;
 import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.UserBean;
+import com.em.jigsaw.bean.event.RefreshMainFEvent;
+import com.em.jigsaw.bean.event.ReleaseEvent;
 import com.em.jigsaw.callback.OnAlterDialogListener;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.SignUtil;
@@ -34,6 +36,7 @@ import com.linchaolong.android.imagepicker.cropper.CropImageView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -120,6 +123,7 @@ public class HomeActivity extends AppCompatActivity {
         if(LoginUtil.isLogin()){
             OkGo.<String>get(ServiceAPI.GetUserInfo).tag(this)
                     .params("user_no", LoginUtil.getUserInfo().getUserNo())
+                    .params("follow_no", LoginUtil.getUserInfo().getUserNo())
                     .params(SignUtil.getParams(true))
                     .execute(new StringCallback() {
                         @Override
@@ -198,9 +202,13 @@ public class HomeActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl_tab1:
-                currentTabIndex = 0;
-                changeBottomStatus();
-                switchFragment(mainFragment);
+                if(currentTabIndex == 0){// 刷新
+                    EventBus.getDefault().post(new RefreshMainFEvent());
+                }else{
+                    currentTabIndex = 0;
+                    changeBottomStatus();
+                    switchFragment(mainFragment);
+                }
                 break;
             case R.id.rl_tab2:
                 if(!LoginUtil.isLogin()){

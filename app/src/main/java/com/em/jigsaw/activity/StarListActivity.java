@@ -19,9 +19,11 @@ import com.em.jigsaw.bean.NoteStarBean;
 import com.em.jigsaw.callback.OnJListHeadClickListener;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.SignUtil;
+import com.em.jigsaw.view.dialog.LoadingDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -50,6 +52,8 @@ public class StarListActivity extends AppCompatActivity {
 
     private StarListAdapter starListAdapter;
     private List<NoteStarBean> list = new ArrayList<>();
+
+    private LoadingDialog loadingDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,8 +121,21 @@ public class StarListActivity extends AppCompatActivity {
                     }
 
                     @Override
+                    public void onStart(Request<String, ? extends Request> request) {
+                        super.onStart(request);
+                        loadingDialog.show();
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        loadingDialog.dismiss();
+                    }
+
+                    @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
+                        loadingDialog.dismiss();
                     }
                 });
     }
@@ -137,10 +154,20 @@ public class StarListActivity extends AppCompatActivity {
                 startActivity(new Intent(StarListActivity.this, JigsawViewActivity.class).putExtra("id", list.get(i).getjNoteBean().getNoteId()));
             }
         });
+
+        loadingDialog = new LoadingDialog(StarListActivity.this);
     }
 
     @OnClick(R.id.back_btn)
     public void onViewClicked() {
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(loadingDialog != null){
+            loadingDialog.dismiss();
+        }
     }
 }

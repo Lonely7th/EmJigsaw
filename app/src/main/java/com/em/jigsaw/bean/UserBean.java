@@ -14,6 +14,7 @@ public class UserBean {
     private String NameHead = "";
     private String NameCity;
     private String CreatTime;
+    private boolean isFollow;
 
     public String getId() {
         return Id;
@@ -77,5 +78,13 @@ public class UserBean {
 
     public void setCreatTime(String creatTime) {
         CreatTime = creatTime;
+    }
+
+    public boolean isFollow() {
+        return isFollow;
+    }
+
+    public void setFollow(boolean follow) {
+        isFollow = follow;
     }
 }
