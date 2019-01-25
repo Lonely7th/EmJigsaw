@@ -86,6 +86,10 @@ public class OthersInfoActivity extends AppCompatActivity {
             }
         });
 
+        if(userNo.equals(LoginUtil.getUserInfo().getUserNo())){
+            btnStar.setVisibility(View.GONE);
+        }
+
         loadingDialog = new LoadingDialog(OthersInfoActivity.this);
     }
 
