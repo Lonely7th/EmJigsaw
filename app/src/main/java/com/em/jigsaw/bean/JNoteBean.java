@@ -27,6 +27,15 @@ public class JNoteBean {
     private String LabelTitle3;
     private boolean HideUser;
     private String CropFormat;
+    private String SuccessRate;
+
+    public String getSuccessRate() {
+        return SuccessRate;
+    }
+
+    public void setSuccessRate(String successRate) {
+        SuccessRate = successRate;
+    }
 
     private int FavoriteId; // 0.未收藏 1.已收藏
 

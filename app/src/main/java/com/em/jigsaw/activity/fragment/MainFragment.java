@@ -33,6 +33,7 @@ import com.em.jigsaw.bean.event.RefreshMainFEvent;
 import com.em.jigsaw.bean.event.ReleaseEvent;
 import com.em.jigsaw.callback.OnJListHeadClickListener;
 import com.em.jigsaw.utils.SignUtil;
+import com.em.jigsaw.utils.SystemUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.TouchListView;
 import com.lzy.okgo.OkGo;
@@ -84,7 +85,7 @@ public class MainFragment extends Fragment {
     private ArrayList<MainTopBarBean> topBarBeanList = new ArrayList<>();
     private TopBarAdapter topBarAdapter;
 
-    private int currentTopBar = 0; // 当前分类
+    private int currentTopBar = 1; // 当前分类
     private int currentPager = 1; // 当前加载页
     private boolean isLoading = false; // 正在加载
     private boolean hasMoreData = true; // 可以加载更多数据
@@ -246,7 +247,7 @@ public class MainFragment extends Fragment {
                                     MainTopBarBean barBean = new MainTopBarBean();
                                     barBean.setTitle(obj.getString("Title"));
                                     barBean.setID(obj.getString("Cid"));
-                                    if (i == 0) {
+                                    if (i == currentTopBar) {
                                         barBean.setSelect(true);
                                     }
                                     topBarBeanList.add(barBean);
@@ -288,6 +289,7 @@ public class MainFragment extends Fragment {
         OkGo.<String>get(ServiceAPI.GetJList).tag(this)
                 .params("categroy", topBarBeanList.get(currentTopBar).getID())
                 .params("page", "" + currentPager)
+                .params("phoneSign", "" + SystemUtil.getPhoneSign(getActivity()))
                 .params(SignUtil.getParams(false))
                 .execute(new StringCallback() {
                     @Override
@@ -323,6 +325,7 @@ public class MainFragment extends Fragment {
                                         JNoteBean.setNoteId(obj.getString("NoteId"));
                                         JNoteBean.setResPath(obj.getString("ResPath"));
                                         JNoteBean.setGsResPath(obj.getString("GsResPath"));
+                                        JNoteBean.setSuccessRate(obj.getString("SuccessRate"));
 
                                         JSONObject userObj = obj.getJSONObject("Releaser");
                                         JNoteBean.setUserHead(userObj.getString("NameHead"));

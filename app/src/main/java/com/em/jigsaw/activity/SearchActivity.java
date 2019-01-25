@@ -193,6 +193,7 @@ public class SearchActivity extends AppCompatActivity {
                                         JNoteBean.setNoteId(obj.getString("NoteId"));
                                         JNoteBean.setResPath(obj.getString("ResPath"));
                                         JNoteBean.setGsResPath(obj.getString("GsResPath"));
+                                        JNoteBean.setSuccessRate(obj.getString("SuccessRate"));
 
                                         JSONObject userObj = obj.getJSONObject("Releaser");
                                         JNoteBean.setUserHead(userObj.getString("NameHead"));

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.em.jigsaw">
 
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
@@ -12,9 +13,8 @@
 
     <application
         android:name=".BaseApplication"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icon_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.HomeActivity">
@@ -42,10 +42,10 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activity.SearchActivity" />
         <activity android:name=".activity.OthersInfoActivity" />
-        <activity android:name=".activity.ShowPicActivity"></activity>
+        <activity android:name=".activity.ShowPicActivity" />
         <activity android:name=".activity.SettingActivity" />
         <activity android:name=".activity.FeedbackActivity" />
-        <activity android:name=".activity.FollowListActivity"></activity>
+        <activity android:name=".activity.FollowListActivity" />
     </application>
 
 </manifest>

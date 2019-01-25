@@ -85,12 +85,12 @@ public class JigsawListAdapter extends YBaseAdapter<JNoteBean> {
                 case "1":
                     tvContent.setText("当前最佳：" + baen.getBestResults() + " 秒");
 //                    tvContent.setTextColor(mContext.getResources().getColor(R.color.scoreS));
-                    sbLimit.append("限制：").append(baen.getLimitNum()).append("秒");
+                    sbLimit.append("成功率：").append(baen.getSuccessRate()).append("%");
                     break;
                 case "2":
                     tvContent.setText("当前最佳： " + baen.getBestResults() + " 次");
 //                    tvContent.setTextColor(mContext.getResources().getColor(R.color.scoreS));
-                    sbLimit.append("限制：").append(baen.getLimitNum()).append("次");
+                    sbLimit.append("成功率：").append(baen.getSuccessRate()).append("%");
                     break;
             }
             tvCropFormat.setText("格式：" + baen.getCropFormat() + "    " + sbLimit.toString());
