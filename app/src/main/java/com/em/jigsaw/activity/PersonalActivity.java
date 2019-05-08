@@ -21,9 +21,6 @@ import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.dialog.LoadingDialog;
 import com.em.jigsaw.view.dialog.SelectDialog;
-import com.linchaolong.android.imagepicker.ImagePicker;
-import com.linchaolong.android.imagepicker.cropper.CropImage;
-import com.linchaolong.android.imagepicker.cropper.CropImageView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -60,7 +57,6 @@ public class PersonalActivity extends AppCompatActivity {
     @BindView(R.id.tv_user_phone)
     TextView tvUserPhone;
 
-    ImagePicker imagePicker;
     SelectDialog selectDialog = null;
     List<String> selectList = new ArrayList<>();
 
@@ -75,7 +71,6 @@ public class PersonalActivity extends AppCompatActivity {
 
         initUI();
         initData();
-        initImagePicker();
     }
 
     @Override
@@ -105,17 +100,6 @@ public class PersonalActivity extends AppCompatActivity {
     private void initData() {
         selectList.add("相册选择");
         selectList.add("拍照选择");
-    }
-
-    /**
-     * 初始化图片选择器
-     */
-    private void initImagePicker() {
-        imagePicker = new ImagePicker();
-        // 设置标题
-        imagePicker.setTitle("选择图片");
-        // 设置是否裁剪图片
-        imagePicker.setCropImage(true);
     }
 
     /**
@@ -201,72 +185,10 @@ public class PersonalActivity extends AppCompatActivity {
     private void startImagePicker(int type) {
         switch (type) {
             case ContentKey.SelectPic_Camera:
-                imagePicker.startCamera(PersonalActivity.this, new ImagePicker.Callback() {
-                    // 选择图片回调
-                    @Override
-                    public void onPickImage(Uri imageUri) {
 
-                    }
-
-                    // 裁剪图片回调
-                    @Override
-                    public void onCropImage(Uri imageUri) {
-                        try {
-                            changeUserHead(new File(new URI(imageUri.toString())));
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    // 自定义裁剪配置
-                    @Override
-                    public void cropConfig(CropImage.ActivityBuilder builder) {
-                        builder.setMultiTouchEnabled(false)// 是否启动多点触摸
-                                .setGuidelines(CropImageView.Guidelines.OFF)// 设置网格显示模式
-                                .setCropShape(CropImageView.CropShape.RECTANGLE)// 圆形/矩形
-                                .setRequestedSize(256, 256)// 调整裁剪后的图片最终大小
-                                .setAspectRatio(1, 1);// 宽高比
-                    }
-
-                    // 用户拒绝授权回调
-                    @Override
-                    public void onPermissionDenied(int requestCode, String[] permissions, int[] grantResults) {
-                    }
-                });
                 break;
             case ContentKey.SelectPic_Gallery:
-                imagePicker.startGallery(PersonalActivity.this, new ImagePicker.Callback() {
-                    // 选择图片回调
-                    @Override
-                    public void onPickImage(Uri imageUri) {
 
-                    }
-
-                    // 裁剪图片回调
-                    @Override
-                    public void onCropImage(Uri imageUri) {
-                        try {
-                            changeUserHead(new File(new URI(imageUri.toString())));
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    // 自定义裁剪配置
-                    @Override
-                    public void cropConfig(CropImage.ActivityBuilder builder) {
-                        builder.setMultiTouchEnabled(false)// 是否启动多点触摸
-                                .setGuidelines(CropImageView.Guidelines.OFF)// 设置网格显示模式
-                                .setCropShape(CropImageView.CropShape.RECTANGLE)// 圆形/矩形
-                                .setRequestedSize(256, 256)// 调整裁剪后的图片最终大小
-                                .setAspectRatio(1, 1);// 宽高比
-                    }
-
-                    // 用户拒绝授权回调
-                    @Override
-                    public void onPermissionDenied(int requestCode, String[] permissions, int[] grantResults) {
-                    }
-                });
                 break;
         }
     }
@@ -274,13 +196,11 @@ public class PersonalActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        imagePicker.onActivityResult(this, requestCode, resultCode, data);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        imagePicker.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
     @Override

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.jakewharton.butterknife'
+//apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'com.mob.sdk'
 
 android {
@@ -18,6 +18,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -30,16 +35,15 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    implementation 'com.jakewharton:butterknife:9.0.0-rc2'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc2'
     implementation 'org.greenrobot:eventbus:3.0.0'
-    implementation 'com.linchaolong.android:imagepicker:1.5'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
-
+    //图片选择框架
+    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'
     //网络请求框架
     implementation 'com.lzy.net:okgo:3.0.4'
     implementation 'com.lzy.net:okrx2:2.0.2'
-
     //微信分享
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
     //加载动画

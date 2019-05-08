@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +19,6 @@ import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.bean.event.RefreshMainFEvent;
-import com.em.jigsaw.bean.event.ReleaseEvent;
 import com.em.jigsaw.callback.OnAlterDialogListener;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.SignUtil;
@@ -30,9 +28,10 @@ import com.em.jigsaw.utils.UpdateApkUtil;
 import com.em.jigsaw.view.dialog.AlertDialog;
 import com.em.jigsaw.view.dialog.SelectDialog;
 import com.google.gson.Gson;
-import com.linchaolong.android.imagepicker.ImagePicker;
-import com.linchaolong.android.imagepicker.cropper.CropImage;
-import com.linchaolong.android.imagepicker.cropper.CropImageView;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
@@ -76,9 +75,6 @@ public class HomeActivity extends AppCompatActivity {
     SelectDialog selectDialog = null;
     List<String> selectList = new ArrayList<>();
 
-    ImagePicker imagePicker;
-    int[] ImgFormat = ContentKey.ImgFormat_9_16;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,8 +83,6 @@ public class HomeActivity extends AppCompatActivity {
 
         initView();
         initData();
-        initImagePicker();
-
         checkVersion();
     }
 
@@ -139,17 +133,6 @@ public class HomeActivity extends AppCompatActivity {
                         }
                     });
         }
-    }
-
-    /**
-     * 初始化图片选择器
-     */
-    private void initImagePicker() {
-        imagePicker = new ImagePicker();
-        // 设置标题
-        imagePicker.setTitle("选择图片");
-        // 设置是否裁剪图片
-        imagePicker.setCropImage(true);
     }
 
     /**
@@ -245,68 +228,21 @@ public class HomeActivity extends AppCompatActivity {
     private void startImagePicker(int type) {
         switch (type) {
             case ContentKey.SelectPic_Camera:
-                imagePicker.startCamera(HomeActivity.this, new ImagePicker.Callback() {
-                    // 选择图片回调
-                    @Override
-                    public void onPickImage(Uri imageUri) {
-
-                    }
-
-                    // 裁剪图片回调
-                    @Override
-                    public void onCropImage(Uri imageUri) {
-                        startActivity(new Intent(HomeActivity.this, SelectJStatusActivity.class)
-                                .putExtra("ImageUri",imageUri.toString())
-                                .putExtra("ImgFormat",ImgFormat));
-                    }
-
-                    // 自定义裁剪配置
-                    @Override
-                    public void cropConfig(CropImage.ActivityBuilder builder) {
-                        builder.setMultiTouchEnabled(false)// 是否启动多点触摸
-                                .setGuidelines(CropImageView.Guidelines.OFF)// 设置网格显示模式
-                                .setCropShape(CropImageView.CropShape.RECTANGLE)// 圆形/矩形
-                                .setRequestedSize(ImgFormat[2], ImgFormat[3])// 调整裁剪后的图片最终大小
-                                .setAspectRatio(ImgFormat[0], ImgFormat[1]);// 宽高比
-                    }
-
-                    // 用户拒绝授权回调
-                    @Override
-                    public void onPermissionDenied(int requestCode, String[] permissions, int[] grantResults) {
-                    }
-                });
+                PictureSelector.create(HomeActivity.this)
+                        .openCamera(PictureMimeType.ofImage())
+                        .forResult(PictureConfig.CHOOSE_REQUEST);
                 break;
             case ContentKey.SelectPic_Gallery:
-                imagePicker.startGallery(HomeActivity.this, new ImagePicker.Callback() {
-                    // 选择图片回调
-                    @Override
-                    public void onPickImage(Uri imageUri) {
-
-                    }
-
-                    // 裁剪图片回调
-                    @Override
-                    public void onCropImage(Uri imageUri) {
-                        startActivity(new Intent(HomeActivity.this, SelectJStatusActivity.class)
-                                .putExtra("ImageUri",imageUri.toString())
-                                .putExtra("ImgFormat",ImgFormat));
-                    }
-
-                    // 自定义裁剪配置
-                    @Override
-                    public void cropConfig(CropImage.ActivityBuilder builder) {
-                        builder.setMultiTouchEnabled(false)// 是否启动多点触摸
-                                .setGuidelines(CropImageView.Guidelines.OFF)// 设置网格显示模式
-                                .setCropShape(CropImageView.CropShape.RECTANGLE)// 圆形/矩形
-                                .setRequestedSize(ImgFormat[2], ImgFormat[3])// 调整裁剪后的图片最终大小
-                                .setAspectRatio(ImgFormat[0], ImgFormat[1]);// 宽高比
-                    }
-
-                    // 用户拒绝授权回调
-                    @Override
-                    public void onPermissionDenied(int requestCode, String[] permissions, int[] grantResults) {
-                    }
-                });
+                PictureSelector.create(HomeActivity.this)
+                        .openGallery(PictureMimeType.ofImage())
+                        .selectionMode(PictureConfig.SINGLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
+                        .isCamera(false)// 是否显示拍照按钮 true or false
+                        .enableCrop(true)// 是否裁剪 true or false
+                        .compress(true)// 是否压缩 true or false
+                        .withAspectRatio(9,16)// int 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                        .rotateEnabled(false) // 裁剪是否可旋转图片 true or false
+                        .previewImage(false)// 是否可预览图片 true or false
+                        .forResult(PictureConfig.CHOOSE_REQUEST);
                 break;
         }
     }
@@ -349,12 +285,23 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        imagePicker.onActivityResult(this, requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case PictureConfig.CHOOSE_REQUEST:
+                    // 图片、视频、音频选择结果回调
+                    List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
+                    // 例如 LocalMedia 里面返回三种path
+                    // 1.media.getPath(); 为原图path
+                    // 2.media.getCutPath();为裁剪后path，需判断media.isCut();是否为true  注意：音视频除外
+                    // 3.media.getCompressPath();为压缩后path，需判断media.isCompressed();是否为true  注意：音视频除外
+                    // 如果裁剪并压缩了，以取压缩路径为准，因为是先裁剪后压缩的
+                    break;
+            }
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        imagePicker.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 }
