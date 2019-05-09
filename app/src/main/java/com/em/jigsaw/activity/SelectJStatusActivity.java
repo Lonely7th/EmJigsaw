@@ -94,8 +94,7 @@ public class SelectJStatusActivity extends AppCompatActivity {
     @BindView(R.id.gv_crop_format)
     GridView gvCropFormat;
 
-    File ResFile;
-    String cropFormat = ContentKey.Format_Array[0];
+    String cropFormat = ContentKey.Format_Array[2];
     boolean isHideName = false;
 
     String FilePath;
@@ -128,6 +127,7 @@ public class SelectJStatusActivity extends AppCompatActivity {
         tvBarCenter.setText("高级选项");
         tvBarRight.setText("下一步");
         tvBarRight.setVisibility(View.VISIBLE);
+        tvLimitType.setText(ContentKey.Limit_Type_Array[curSelectType]);
 
         for(int i = 0;i < ContentKey.Format_Array.length;i++){
             SelectCropFormatBean bean = new SelectCropFormatBean();
@@ -212,6 +212,10 @@ public class SelectJStatusActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.right_btn:
+                if(curSelectCount == 0){
+                    ToastUtil.show(SelectJStatusActivity.this, "请选择限制数值");
+                    return;
+                }
                 if (TextUtils.isEmpty(tabId1) && TextUtils.isEmpty(tabId2) && TextUtils.isEmpty(tabId3)) {
                     ToastUtil.show(SelectJStatusActivity.this, "请添加至少一个标签");
                     return;
@@ -233,6 +237,7 @@ public class SelectJStatusActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelect(View view, int position, long id) {
                         curSelectType = position;
+                        curSelectCount = 0;
                         tvLimitType.setText(selectTypeList.get(position));
                         tvLimitCount.setText("选择数值");
                     }
@@ -241,12 +246,10 @@ public class SelectJStatusActivity extends AppCompatActivity {
                 break;
             case R.id.btn_limit_count:
                 selectCountList.clear();
-                if (curSelectType == 2) {
+                if (curSelectType == 1) {
                     selectCountList.addAll(Arrays.asList(ContentKey.Limit_Count_Array));
-                } else if (curSelectType == 1) {
+                } else if (curSelectType == 0) {
                     selectCountList.addAll(Arrays.asList(ContentKey.Limit_Time_Array));
-                } else {
-                    break;
                 }
                 selectDialog = new SelectDialog(SelectJStatusActivity.this, selectCountList, new SelectDialog.OnSelectListener() {
                     @Override

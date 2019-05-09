@@ -267,6 +267,9 @@ public class ImgUtil {
     public int[] getCropFormatByFlag(String flag){
         int[] result = new int[2];
         switch (flag){
+            case "3-3":
+                result = ContentKey.Format_3_3;
+                break;
             case "4-3":
                 result = ContentKey.Format_4_3;
                 break;
@@ -278,6 +281,9 @@ public class ImgUtil {
                 break;
             case "6-6":
                 result = ContentKey.Format_6_6;
+                break;
+            case "8-6":
+                result = ContentKey.Format_8_6;
                 break;
         }
         return result;

@@ -24,8 +24,9 @@ public class ContentKey {
     public static final int[] Format_4_4 = {4,4};
     public static final int[] Format_6_4 = {6,4};
     public static final int[] Format_6_6 = {6,6};
+    public static final int[] Format_8_6 = {8,6};
 
-    public static final String[] Format_Array = {"4-3","4-4","6-4","6-6"};
+    public static final String[] Format_Array = {"4-4","6-4","6-6","8-6"};
 
     /**
      * 选择图片方式
@@ -36,9 +37,9 @@ public class ContentKey {
     /**
      * 高级选项相关
      */
-    public static final String[] Limit_Type_Array = {"无限制","时间限制","次数限制"};
-    public static final String[] Limit_Time_Array = {"30","45","60","90","120","200","300","500"};
-    public static final String[] Limit_Count_Array = {"30","60","100","150","200","300","500"};
+    public static final String[] Limit_Type_Array = {"时间限制","次数限制"};
+    public static final String[] Limit_Time_Array = {"60","90","120","180","300","500"};
+    public static final String[] Limit_Count_Array = {"60","100","150","200","300","500"};
 
     /**
      * 页面限制模式

@@ -194,7 +194,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.rl_tab2:
-                if(!LoginUtil.isLogin()){
+                if(LoginUtil.isLogin()){
                     ToastUtil.show(HomeActivity.this,"登录后即可发布新动态");
                     startActivity(new Intent(HomeActivity.this,LoginActivity.class));
                     return ;
@@ -230,6 +230,10 @@ public class HomeActivity extends AppCompatActivity {
             case ContentKey.SelectPic_Camera:
                 PictureSelector.create(HomeActivity.this)
                         .openCamera(PictureMimeType.ofImage())
+                        .enableCrop(true)// 是否裁剪 true or false
+                        .compress(true)// 是否压缩 true or false
+                        .withAspectRatio(9,16)// int 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                        .rotateEnabled(false) // 裁剪是否可旋转图片 true or false
                         .forResult(PictureConfig.CHOOSE_REQUEST);
                 break;
             case ContentKey.SelectPic_Gallery:
@@ -305,10 +309,5 @@ public class HomeActivity extends AppCompatActivity {
                     break;
             }
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
