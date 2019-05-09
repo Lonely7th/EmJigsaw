@@ -290,6 +290,13 @@ public class HomeActivity extends AppCompatActivity {
                 case PictureConfig.CHOOSE_REQUEST:
                     // 图片、视频、音频选择结果回调
                     List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
+                    if(selectList.size() > 0){
+                        LocalMedia localMedia = selectList.get(0);
+                        if(localMedia.isCut()){
+                            startActivity(new Intent(HomeActivity.this,SelectJStatusActivity.class)
+                                    .putExtra("ImageUri",localMedia.getCutPath()));
+                        }
+                    }
                     // 例如 LocalMedia 里面返回三种path
                     // 1.media.getPath(); 为原图path
                     // 2.media.getCutPath();为裁剪后path，需判断media.isCut();是否为true  注意：音视频除外

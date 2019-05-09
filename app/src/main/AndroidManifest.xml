@@ -24,9 +24,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.linchaolong.android.imagepicker.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".activity.JigsawViewActivity" />
         <activity android:name=".activity.AddJigsawActivity" />
         <activity android:name=".activity.PersonalActivity" />

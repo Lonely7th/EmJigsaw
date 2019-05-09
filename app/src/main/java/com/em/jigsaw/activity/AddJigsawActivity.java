@@ -16,16 +16,30 @@ import android.widget.TextView;
 import com.em.jigsaw.R;
 import com.em.jigsaw.adapter.FormatSelectAdapter;
 import com.em.jigsaw.base.ContentKey;
+import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.FormatSelectBean;
+import com.em.jigsaw.bean.JNoteBean;
 import com.em.jigsaw.bean.JigsawImgBean;
 import com.em.jigsaw.bean.event.ReleaseEvent;
 import com.em.jigsaw.utils.ImgUtil;
+import com.em.jigsaw.utils.LoginUtil;
+import com.em.jigsaw.utils.SignUtil;
+import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.JigsawView;
+import com.em.jigsaw.view.dialog.LoadingDialog;
+import com.google.gson.Gson;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,9 +62,9 @@ public class AddJigsawActivity extends AppCompatActivity {
     @BindView(R.id.gv_format_select)
     GridView gvFormatSelect;
 
+    private File ResFile;
     private ImgUtil imgUtil;
-    private Uri imageUri;
-    private int[] ImgFormat;
+    private JNoteBean jNoteBean;
     private boolean fristLoad = true;
 
     private ArrayList<JigsawImgBean> list = new ArrayList<>();
@@ -59,16 +73,16 @@ public class AddJigsawActivity extends AppCompatActivity {
     private FormatSelectAdapter formatSelectAdapter;
     private List<FormatSelectBean> formatSelectBeans = new ArrayList<>();
 
+    private LoadingDialog loadingDialog;
+    private Gson gson = new Gson();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_jigsaw_view);
         ButterKnife.bind(this);
-        EventBus.getDefault().register(this);
         imgUtil = new ImgUtil(AddJigsawActivity.this);
-
-        imageUri = Uri.parse(getIntent().getStringExtra("ImageUri"));
-        ImgFormat = getIntent().getIntArrayExtra("ImgFormat");
+        jNoteBean = gson.fromJson(getIntent().getStringExtra("jNoteBean"),JNoteBean.class);
 
         initData();
         initUI();
@@ -79,14 +93,16 @@ public class AddJigsawActivity extends AppCompatActivity {
         super.onWindowFocusChanged(hasFocus);
         if(fristLoad){
             fristLoad = false;
-            updateJigsawList(imgUtil.getBitmap(imageUri));
+            updateJigsawList(imgUtil.getBitmap(jNoteBean.getResPath()));
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
     }
 
     private void initData() {
@@ -103,8 +119,8 @@ public class AddJigsawActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        tvBarCenter.setText("选择裁剪格式");
-        tvBarRight.setText("下一步");
+        tvBarCenter.setText("预览");
+        tvBarRight.setText("发布");
         tvBarRight.setVisibility(View.VISIBLE);
 
         formatSelectAdapter = new FormatSelectAdapter(formatSelectBeans,AddJigsawActivity.this);
@@ -122,7 +138,7 @@ public class AddJigsawActivity extends AppCompatActivity {
                     }
                 }
                 formatSelectAdapter.notifyDataSetChanged();
-                updateJigsawList(imgUtil.getBitmap(imageUri));
+                updateJigsawList(imgUtil.getBitmap(jNoteBean.getResPath()));
             }
         });
 
@@ -130,11 +146,69 @@ public class AddJigsawActivity extends AppCompatActivity {
     }
 
     /**
+     * 发布
+     */
+    private void release() {
+        loadingDialog = new LoadingDialog(AddJigsawActivity.this);
+        loadingDialog.show();
+        try {
+            ResFile = new File(jNoteBean.getResPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        OkGo.<String>post(ServiceAPI.AddJDetails).tag(this)
+                .params("content", jNoteBean.getContent())
+                .params("releaser", LoginUtil.getUserInfo().getUserNo())
+                .params("res", ResFile)
+                .params("jtype", jNoteBean.getJType())
+                .params("limitNum", "" + jNoteBean.getLimitNum())
+                .params("hideUser", jNoteBean.getUserHead())
+                .params("cropFormat", jNoteBean.getCropFormat())
+                .params("label1", jNoteBean.getLabel1())
+                .params("labelTitle1", jNoteBean.getLabelTitle1())
+                .params("label2", jNoteBean.getLabel2())
+                .params("labelTitle2", jNoteBean.getLabelTitle2())
+                .params("label3", jNoteBean.getLabel3())
+                .params("labelTitle3", jNoteBean.getLabelTitle3())
+                .params(SignUtil.getParams(true))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            JSONObject body = new JSONObject(response.body());
+                            if (body.getInt("ResultCode") == ServiceAPI.HttpSuccess) {
+                                JSONObject ResultData = body.getJSONObject("ResultData");
+                                if (loadingDialog != null) {
+                                    loadingDialog.dismiss();
+                                }
+                                ToastUtil.show(AddJigsawActivity.this, "发布成功");
+                                startActivity(new Intent(AddJigsawActivity.this, JigsawViewActivity.class)
+                                        .putExtra("id", ResultData.getString("NoteId")));
+                                EventBus.getDefault().post(new ReleaseEvent(0));
+                                finish();
+                            } else {
+                                ToastUtil.show(AddJigsawActivity.this, "网络异常");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        ToastUtil.show(AddJigsawActivity.this, "网络异常");
+                    }
+                });
+    }
+
+    /**
      * 刷新jigsawAdapter
      */
     private void updateJigsawList(Bitmap bitmap) {
         list.clear();
-        list.addAll(imgUtil.sortImgArray(imgUtil.getImgArray(bitmap, formatSelectBeans.get(currentFormat).getFormat(), ImgFormat)));
+        list.addAll(imgUtil.sortImgArray(imgUtil.getImgArray(bitmap, imgUtil.getCropFormatByFlag(jNoteBean.getCropFormat()), ContentKey.ImgFormat_9_16)));
         viewJigsaw.setLabels(list);
     }
 
@@ -145,16 +219,8 @@ public class AddJigsawActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.right_btn:
-                startActivity(new Intent(AddJigsawActivity.this,SelectJStatusActivity.class)
-                        .putExtra("ImageUri",imageUri.toString()).putExtra("CropFormat",formatSelectBeans.get(currentFormat).getTitle()));
+                release();
                 break;
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(ReleaseEvent event) {
-        if(event.getEvent() == 0){
-            finish();
         }
     }
 }

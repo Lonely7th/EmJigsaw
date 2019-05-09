@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.em.jigsaw.activity.JigsawViewActivity;
+import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.bean.JigsawImgBean;
 
 import java.io.BufferedInputStream;
@@ -58,10 +59,13 @@ public class ImgUtil {
         }
     }
 
-    public Bitmap getBitmap(Uri uri){
+    /**
+     * 根据文件路径获取Bitmap
+     * @param pathName 文件路径
+     */
+    public Bitmap getBitmap(String pathName){
         try {
-            // 读取uri所在的图片
-            return MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), uri);
+            return BitmapFactory.decodeFile(pathName);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -255,6 +259,28 @@ public class ImgUtil {
                 mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file.getPath())));
             }
         });
+    }
+
+    /**
+     * 根据标识获取裁剪尺寸
+     */
+    public int[] getCropFormatByFlag(String flag){
+        int[] result = new int[2];
+        switch (flag){
+            case "4-3":
+                result = ContentKey.Format_4_3;
+                break;
+            case "4-4":
+                result = ContentKey.Format_4_4;
+                break;
+            case "6-4":
+                result = ContentKey.Format_6_4;
+                break;
+            case "6-6":
+                result = ContentKey.Format_6_6;
+                break;
+        }
+        return result;
     }
 
 }

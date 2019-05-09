@@ -17,6 +17,7 @@ import com.em.jigsaw.R;
 import com.em.jigsaw.adapter.SelectCropFormatAdapter;
 import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
+import com.em.jigsaw.bean.JNoteBean;
 import com.em.jigsaw.bean.SelectCropFormatBean;
 import com.em.jigsaw.bean.event.ReleaseEvent;
 import com.em.jigsaw.utils.LoginUtil;
@@ -24,11 +25,14 @@ import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.dialog.LoadingDialog;
 import com.em.jigsaw.view.dialog.SelectDialog;
+import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -90,11 +94,11 @@ public class SelectJStatusActivity extends AppCompatActivity {
     @BindView(R.id.gv_crop_format)
     GridView gvCropFormat;
 
-    Uri imageUri;
     File ResFile;
     String cropFormat = ContentKey.Format_Array[0];
     boolean isHideName = false;
 
+    String FilePath;
     String tabId1, tabId2, tabId3;
     String tabTitle1, tabTitle2, tabTitle3;
 
@@ -104,24 +108,25 @@ public class SelectJStatusActivity extends AppCompatActivity {
     int curSelectCount = 0;
     ArrayList<String> selectCountList = new ArrayList<>();
 
-    LoadingDialog loadingDialog;
-
     SelectCropFormatAdapter selectCropFormatAdapter;
     ArrayList<SelectCropFormatBean> selectCropFormatList = new ArrayList<>();
+
+    Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_jstatus);
+        EventBus.getDefault().register(this);
         ButterKnife.bind(this);
-        imageUri = Uri.parse(getIntent().getStringExtra("ImageUri"));
+        FilePath = getIntent().getStringExtra("ImageUri");
         initUI();
         initData();
     }
 
     private void initUI() {
         tvBarCenter.setText("高级选项");
-        tvBarRight.setText("发布");
+        tvBarRight.setText("下一步");
         tvBarRight.setVisibility(View.VISIBLE);
 
         for(int i = 0;i < ContentKey.Format_Array.length;i++){
@@ -157,11 +162,6 @@ public class SelectJStatusActivity extends AppCompatActivity {
 
     private void release() {
         String content = TextUtils.isEmpty(edtContent.getText().toString()) ? "我发布了一条新动态，快来点击看看吧~" : edtContent.getText().toString();
-        try {
-            ResFile = new File(new URI(imageUri.toString()));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
 
         //将标签前移，确保已经填写的标签处于最前端
         if (TextUtils.isEmpty(tabId1)) {
@@ -186,50 +186,22 @@ public class SelectJStatusActivity extends AppCompatActivity {
             }
         }
 
-        OkGo.<String>post(ServiceAPI.AddJDetails).tag(this)
-                .params("content", content)
-                .params("releaser", LoginUtil.getUserInfo().getUserNo())
-                .params("res", ResFile)
-                .params("jtype", "" + curSelectType)
-                .params("limitNum", "" + curSelectCount)
-                .params("hideUser", isHideName)
-                .params("cropFormat", cropFormat)
-                .params("label1", tabId1)
-                .params("labelTitle1", tabTitle1)
-                .params("label2", tabId2)
-                .params("labelTitle2", tabTitle2)
-                .params("label3", tabId3)
-                .params("labelTitle3", tabTitle3)
-                .params(SignUtil.getParams(true))
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        try {
-                            JSONObject body = new JSONObject(response.body());
-                            if (body.getInt("ResultCode") == ServiceAPI.HttpSuccess) {
-                                JSONObject ResultData = body.getJSONObject("ResultData");
-                                if (loadingDialog != null) {
-                                    loadingDialog.dismiss();
-                                }
-                                ToastUtil.show(SelectJStatusActivity.this, "发布成功");
-                                startActivity(new Intent(SelectJStatusActivity.this, JigsawViewActivity.class)
-                                        .putExtra("id", ResultData.getString("NoteId")));
-                                EventBus.getDefault().post(new ReleaseEvent(0));
-                                finish();
-                            } else {
-                                ToastUtil.show(SelectJStatusActivity.this, "网络异常");
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
+        JNoteBean jNoteBean = new JNoteBean();
+        jNoteBean.setContent(content);
+        jNoteBean.setCropFormat(cropFormat);
+        jNoteBean.setJType(""+curSelectType);
+        jNoteBean.setHideUser(isHideName);
+        jNoteBean.setLimitNum(""+curSelectCount);
+        jNoteBean.setResPath(FilePath);
+        jNoteBean.setLabel1(tabId1);
+        jNoteBean.setLabelTitle1(tabTitle1);
+        jNoteBean.setLabel2(tabId2);
+        jNoteBean.setLabelTitle2(tabTitle2);
+        jNoteBean.setLabel3(tabId3);
+        jNoteBean.setLabelTitle3(tabTitle3);
 
-                    @Override
-                    public void onError(Response<String> response) {
-                        super.onError(response);
-                        ToastUtil.show(SelectJStatusActivity.this, "网络异常");
-                    }
-                });
+        startActivity(new Intent(SelectJStatusActivity.this, AddJigsawActivity.class)
+                .putExtra("jNoteBean", gson.toJson(jNoteBean)));
     }
 
     @OnClick({R.id.back_btn, R.id.right_btn, R.id.btn_hide_name, R.id.btn_limit_type, R.id.btn_limit_count, R.id.tv_label_1,
@@ -245,8 +217,6 @@ public class SelectJStatusActivity extends AppCompatActivity {
                     return;
                 }
                 release();
-                loadingDialog = new LoadingDialog(SelectJStatusActivity.this);
-                loadingDialog.show();
                 break;
             case R.id.btn_hide_name:
                 isHideName = !isHideName;
@@ -363,11 +333,16 @@ public class SelectJStatusActivity extends AppCompatActivity {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ReleaseEvent event) {
+        if(event.getEvent() == 0){
+            finish();
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (loadingDialog != null) {
-            loadingDialog.dismiss();
-        }
+        EventBus.getDefault().unregister(this);
     }
 }
