@@ -296,9 +296,9 @@ public class HomeActivity extends AppCompatActivity {
                     List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
                     if(selectList.size() > 0){
                         LocalMedia localMedia = selectList.get(0);
-                        if(localMedia.isCut()){
+                        if(localMedia.isCut() && localMedia.isCompressed()){
                             startActivity(new Intent(HomeActivity.this,SelectJStatusActivity.class)
-                                    .putExtra("ImageUri",localMedia.getCutPath()));
+                                    .putExtra("ImageUri",localMedia.getCompressPath()));
                         }
                     }
                     // 例如 LocalMedia 里面返回三种path

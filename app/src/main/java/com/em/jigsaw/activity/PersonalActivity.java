@@ -1,9 +1,7 @@
 package com.em.jigsaw.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,6 +19,10 @@ import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.dialog.LoadingDialog;
 import com.em.jigsaw.view.dialog.SelectDialog;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -29,8 +31,6 @@ import com.lzy.okgo.request.base.Request;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +80,7 @@ public class PersonalActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        tvBarCenter.setText("个人主页");
+        tvBarCenter.setText("个人资料");
         loadingDialog = new LoadingDialog(PersonalActivity.this);
     }
 
@@ -156,17 +156,14 @@ public class PersonalActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.iv_head:
-                selectDialog = new SelectDialog(PersonalActivity.this, selectList, new SelectDialog.OnSelectListener() {
-                    @Override
-                    public void onItemSelect(View view, int position, long id) {
-                        switch (position){
-                            case 0:
-                                startImagePicker(ContentKey.SelectPic_Gallery);
-                                break;
-                            case 1:
-                                startImagePicker(ContentKey.SelectPic_Camera);
-                                break;
-                        }
+                selectDialog = new SelectDialog(PersonalActivity.this, selectList, (view1, position, id) -> {
+                    switch (position){
+                        case 0:
+                            startImagePicker(ContentKey.SelectPic_Gallery);
+                            break;
+                        case 1:
+                            startImagePicker(ContentKey.SelectPic_Camera);
+                            break;
                     }
                 });
                 selectDialog.show();
@@ -185,10 +182,25 @@ public class PersonalActivity extends AppCompatActivity {
     private void startImagePicker(int type) {
         switch (type) {
             case ContentKey.SelectPic_Camera:
-
+                PictureSelector.create(PersonalActivity.this)
+                        .openCamera(PictureMimeType.ofImage())
+                        .enableCrop(true)// 是否裁剪 true or false
+                        .compress(true)// 是否压缩 true or false
+                        .withAspectRatio(1,1)// int 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                        .rotateEnabled(false) // 裁剪是否可旋转图片 true or false
+                        .forResult(PictureConfig.CHOOSE_REQUEST);
                 break;
             case ContentKey.SelectPic_Gallery:
-
+                PictureSelector.create(PersonalActivity.this)
+                        .openGallery(PictureMimeType.ofImage())
+                        .selectionMode(PictureConfig.SINGLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
+                        .isCamera(false)// 是否显示拍照按钮 true or false
+                        .enableCrop(true)// 是否裁剪 true or false
+                        .compress(true)// 是否压缩 true or false
+                        .withAspectRatio(1,1)// int 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                        .rotateEnabled(false) // 裁剪是否可旋转图片 true or false
+                        .previewImage(false)// 是否可预览图片 true or false
+                        .forResult(PictureConfig.CHOOSE_REQUEST);
                 break;
         }
     }
@@ -196,11 +208,20 @@ public class PersonalActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case PictureConfig.CHOOSE_REQUEST:
+                    // 图片、视频、音频选择结果回调
+                    List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
+                    if(selectList.size() > 0){
+                        LocalMedia localMedia = selectList.get(0);
+                        if(localMedia.isCut() && localMedia.isCompressed()){
+                            changeUserHead(new File(localMedia.getCompressPath()));
+                        }
+                    }
+                    break;
+            }
+        }
     }
 
     @Override

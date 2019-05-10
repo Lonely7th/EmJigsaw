@@ -5,16 +5,51 @@
     android:background="@color/colorBg"
     android:orientation="vertical">
 
-    <include layout="@layout/view_common_bar"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:background="@color/colorWhite"
+        android:orientation="vertical">
+        <!--页面的头部==返回键+右键-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+            <RelativeLayout
+                android:id="@+id/btn_sign"
+                android:layout_width="48dp"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:background="@mipmap/icon_thumb_up_s"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/btn_setting"
+                android:layout_width="48dp"
+                android:layout_alignParentRight="true"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/icon_settings"/>
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
 
     <!--个人信息-->
     <RelativeLayout
         android:id="@+id/btn_user_info"
         android:layout_width="match_parent"
-        android:layout_height="88dp"
+        android:layout_height="84dp"
         android:background="@color/colorWhite"
-        android:padding="8dp"
-        android:layout_marginTop="20dp">
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
         <com.em.jigsaw.view.RoundImageView
             android:id="@+id/iv_head"
             android:layout_width="50dp"
@@ -34,18 +69,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorBlack"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 android:text="user_name"/>
             <TextView
-                android:id="@+id/tv_user_id"
+                android:id="@+id/tv_user_vip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_user_name"
                 android:textColor="@color/colorHint"
                 android:textSize="13sp"
+                android:textStyle="bold"
                 android:layout_marginTop="4dp"
-                android:text="user_iduser_iduser_id"/>
+                android:text="等级：lv1"/>
         </LinearLayout>
         <ImageView
             android:layout_width="24dp"
@@ -54,6 +90,84 @@
             android:layout_alignParentRight="true"
             android:background="@mipmap/icon_chevron_right"/>
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/colorWhite"
+        android:orientation="horizontal"
+        android:layout_marginTop="0.5dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/tv_coin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/scoreS"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="10210"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorGary"
+                android:textSize="12sp"
+                android:text="我的贝壳"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btn_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/tv_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/scoreC"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="0"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorGary"
+                android:textSize="12sp"
+                android:text="我的消息"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btn_shop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/scoreB"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="商城"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorGary"
+                android:textSize="12sp"
+                android:text="限时折扣"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <!--我的发布-->
     <RelativeLayout

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.ToastUtil;
+import com.em.jigsaw.view.RoundImageView;
 import com.em.jigsaw.view.dialog.SelectDialog;
 import com.em.jigsaw.wxapi.OnResponseListener;
 import com.em.jigsaw.wxapi.WXShare;
@@ -41,18 +43,26 @@ import butterknife.OnClick;
  * Description ： .
  */
 public class PersonalFragment extends Fragment {
-    @BindView(R.id.back_btn)
-    RelativeLayout backBtn;
-    @BindView(R.id.tv_bar_center)
-    TextView tvBarCenter;
+    @BindView(R.id.btn_sign)
+    RelativeLayout btnSign;
+    @BindView(R.id.btn_setting)
+    RelativeLayout btnSetting;
     @BindView(R.id.iv_head)
-    ImageView ivHead;
+    RoundImageView ivHead;
     @BindView(R.id.tv_user_name)
     TextView tvUserName;
-    @BindView(R.id.tv_user_id)
-    TextView tvUserId;
+    @BindView(R.id.tv_user_vip)
+    TextView tvUserVip;
     @BindView(R.id.btn_user_info)
     RelativeLayout btnUserInfo;
+    @BindView(R.id.tv_coin)
+    TextView tvCoin;
+    @BindView(R.id.tv_message)
+    TextView tvMessage;
+    @BindView(R.id.btn_message)
+    LinearLayout btnMessage;
+    @BindView(R.id.btn_shop)
+    LinearLayout btnShop;
     @BindView(R.id.iv_release_icon)
     ImageView ivReleaseIcon;
     @BindView(R.id.btn_release)
@@ -61,26 +71,23 @@ public class PersonalFragment extends Fragment {
     ImageView ivStarIcon;
     @BindView(R.id.btn_star)
     RelativeLayout btnStar;
+    @BindView(R.id.iv_follow_icon)
+    ImageView ivFollowIcon;
+    @BindView(R.id.btn_follow)
+    RelativeLayout btnFollow;
     @BindView(R.id.iv_share_icon)
     ImageView ivShareIcon;
     @BindView(R.id.btn_share)
     RelativeLayout btnShare;
 
-    List<String> shareTypeList = new ArrayList<>();
-    @BindView(R.id.iv_right_icon)
-    ImageView ivRightIcon;
-    @BindView(R.id.tv_bar_right)
-    TextView tvBarRight;
-
-    WXShare wxShare;
-    SelectDialog selectDialog;
+    private List<String> shareTypeList = new ArrayList<>();
+    private WXShare wxShare;
+    private SelectDialog selectDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_personal, container, false);
         ButterKnife.bind(this, rootView);
-        initUI();
-        initData();
         initWxShare();
         return rootView;
     }
@@ -91,35 +98,25 @@ public class PersonalFragment extends Fragment {
         updateUserInfo();
     }
 
-    private void initUI() {
-        backBtn.setVisibility(View.GONE);
-        ivRightIcon.setImageDrawable(getResources().getDrawable(R.mipmap.icon_settings));
-        ivRightIcon.setVisibility(View.VISIBLE);
-        tvBarCenter.setText("个人主页");
-    }
-
-    private void initData() {
-        shareTypeList.add("分享到朋友圈");
-        shareTypeList.add("分享给好友");
-    }
-
     private void updateUserInfo() {
         if (LoginUtil.isLogin()) {
             UserBean userBean = LoginUtil.getUserInfo();
             tvUserName.setText(userBean.getUserName());
             StringBuilder stringBuilder = new StringBuilder();
-            tvUserId.setText(stringBuilder.append("用户Id：").append(userBean.getUserNo()).toString());
+            tvUserVip.setText(stringBuilder.append("等级：").append(userBean.getUserNo()).toString());
             if (!TextUtils.isEmpty(userBean.getNameHead())) {
                 Glide.with(getActivity()).load(userBean.getNameHead()).into(ivHead);
             }
         } else {
             tvUserName.setText("未登录");
-            tvUserId.setText("点击登录");
+            tvUserVip.setText("点击登录");
             Glide.with(getActivity()).load("").into(ivHead);
         }
     }
 
     private void initWxShare() {
+        shareTypeList.add("分享到朋友圈");
+        shareTypeList.add("分享给好友");
         //微信分享相关
         wxShare = new WXShare(getActivity());
         wxShare.setListener(new OnResponseListener() {
@@ -143,19 +140,38 @@ public class PersonalFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    @OnClick({R.id.btn_user_info, R.id.btn_release, R.id.btn_star, R.id.btn_share, R.id.right_btn, R.id.btn_follow})
+    @OnClick({R.id.btn_sign, R.id.btn_setting, R.id.btn_user_info, R.id.btn_message, R.id.btn_shop, R.id.btn_release, R.id.btn_star, R.id.btn_follow, R.id.btn_share})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_sign:
+                break;
+            case R.id.btn_setting:
+                startActivity(new Intent(getActivity(), SettingActivity.class));
+                break;
             case R.id.btn_user_info:
                 if (LoginUtil.isLogin()) {
                     startActivity(new Intent(getActivity(), PersonalActivity.class));
                 } else {
                     startActivity(new Intent(getActivity(), LoginActivity.class));
+                }
+                break;
+            case R.id.btn_message:
+                break;
+            case R.id.btn_shop:
+                break;
+            case R.id.btn_release:
+                if (LoginUtil.isLogin()) {
+                    startActivity(new Intent(getActivity(), ReleaseListActivity.class));
+                }
+                break;
+            case R.id.btn_star:
+                if (LoginUtil.isLogin()) {
+                    startActivity(new Intent(getActivity(), StarListActivity.class));
+                }
+                break;
+            case R.id.btn_follow:
+                if (LoginUtil.isLogin()) {
+                    startActivity(new Intent(getActivity(), FollowListActivity.class));
                 }
                 break;
             case R.id.btn_share:
@@ -173,24 +189,6 @@ public class PersonalFragment extends Fragment {
                     }
                 });
                 selectDialog.show();
-                break;
-            case R.id.btn_release:
-                if (LoginUtil.isLogin()) {
-                    startActivity(new Intent(getActivity(), ReleaseListActivity.class));
-                }
-                break;
-            case R.id.btn_star:
-                if (LoginUtil.isLogin()) {
-                    startActivity(new Intent(getActivity(), StarListActivity.class));
-                }
-                break;
-            case R.id.right_btn:
-                startActivity(new Intent(getActivity(), SettingActivity.class));
-                break;
-            case R.id.btn_follow:
-                if (LoginUtil.isLogin()) {
-                    startActivity(new Intent(getActivity(), FollowListActivity.class));
-                }
                 break;
         }
     }
