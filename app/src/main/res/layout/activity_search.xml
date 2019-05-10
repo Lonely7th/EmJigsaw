@@ -56,6 +56,12 @@
             android:divider="@color/colorDivider_n"
             android:dividerHeight="0.5dp"
             android:visibility="gone"/>
+        <GridView
+            android:id="@+id/label_gridview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="3"
+            android:background="@color/colorWhite" />
     </RelativeLayout>
 
 </LinearLayout>

@@ -132,7 +132,7 @@ public class SelectJStatusActivity extends AppCompatActivity {
         for(int i = 0;i < ContentKey.Format_Array.length;i++){
             SelectCropFormatBean bean = new SelectCropFormatBean();
             bean.setContent(ContentKey.Format_Array[i]);
-            if(i == 0){
+            if(i == 2){
                 bean.setSelect(true);
             }
             selectCropFormatList.add(bean);
@@ -189,7 +189,7 @@ public class SelectJStatusActivity extends AppCompatActivity {
         JNoteBean jNoteBean = new JNoteBean();
         jNoteBean.setContent(content);
         jNoteBean.setCropFormat(cropFormat);
-        jNoteBean.setJType(""+curSelectType);
+        jNoteBean.setJType(""+(curSelectType+1));//这里+1是为了匹配服务端对于Note类型的定义，服务端type0表示无限制
         jNoteBean.setHideUser(isHideName);
         jNoteBean.setLimitNum(""+curSelectCount);
         jNoteBean.setResPath(FilePath);
@@ -255,9 +255,9 @@ public class SelectJStatusActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelect(View view, int position, long id) {
                         curSelectCount = Integer.parseInt(selectCountList.get(position));
-                        if (curSelectType == 2) {
+                        if (curSelectType == 1) {
                             tvLimitCount.setText(selectCountList.get(position) + "次");
-                        } else if (curSelectType == 1) {
+                        } else if (curSelectType == 0) {
                             tvLimitCount.setText(selectCountList.get(position) + "秒");
                         }
                     }

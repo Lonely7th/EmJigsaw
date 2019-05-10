@@ -14,16 +14,21 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.em.jigsaw.R;
+import com.em.jigsaw.adapter.HotLabelAdapter;
 import com.em.jigsaw.adapter.SearchAdapter;
+import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.JNoteBean;
+import com.em.jigsaw.bean.LabelBean;
 import com.em.jigsaw.callback.OnJListHeadClickListener;
-import com.em.jigsaw.utils.KeyBoardUtils;
+import com.em.jigsaw.utils.KeyBoardUtil;
+import com.em.jigsaw.utils.LabelUtil;
 import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.dialog.LoadingDialog;
@@ -51,12 +56,16 @@ public class SearchActivity extends AppCompatActivity {
     ImageView btnClose;
     @BindView(R.id.listview)
     ListView listview;
+    @BindView(R.id.label_gridview)
+    GridView labelGridview;
 
     private View listFootView;
     private TextView tvLoadMore;
     private ImageView ivLoadMore;
     private SearchAdapter searchAdapter;
+    private HotLabelAdapter hotLabelAdapter;
     private List<JNoteBean> list = new ArrayList<>();
+    private List<LabelBean> labelHotsList = new ArrayList<>();
 
     private String key = "";
     private LoadingDialog loadingDialog;
@@ -80,6 +89,21 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void initUI() {
+        labelHotsList.addAll(LabelUtil.getRanLabel(9));
+        hotLabelAdapter = new HotLabelAdapter(labelHotsList,SearchActivity.this);
+        labelGridview.setAdapter(hotLabelAdapter);
+        labelGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                KeyBoardUtil.closeKeybord(edtContent, SearchActivity.this);
+                key = labelHotsList.get(i).getTitle();
+                edtContent.setText(key);
+                loadingDialog = new LoadingDialog(SearchActivity.this);
+                loadingDialog.show();
+                loadItemData(true);
+            }
+        });
+
         searchAdapter = new SearchAdapter(list, this, new OnJListHeadClickListener() {
             @Override
             public void onClick(int position) {
@@ -131,14 +155,14 @@ public class SearchActivity extends AppCompatActivity {
                         loadingDialog.show();
                         loadItemData(true);
                     }
-                    KeyBoardUtils.closeKeybord(edtContent, SearchActivity.this);
+                    KeyBoardUtil.closeKeybord(edtContent, SearchActivity.this);
                     return true;
                 }
                 return false;
             }
         });
 
-        KeyBoardUtils.openKeybord(edtContent, SearchActivity.this);
+        KeyBoardUtil.openKeybord(edtContent, SearchActivity.this);
     }
 
     /**
@@ -209,7 +233,14 @@ public class SearchActivity extends AppCompatActivity {
                                     } else {
                                         hasMoreData = true;
                                     }
-                                    KeyBoardUtils.closeKeybord(edtContent, SearchActivity.this);
+
+                                    if(list.size() > 0){
+                                        listview.setVisibility(View.VISIBLE);
+                                        labelGridview.setVisibility(View.GONE);
+                                    }else{
+                                        listview.setVisibility(View.GONE);
+                                        labelGridview.setVisibility(View.VISIBLE);
+                                    }
                                 }
                             }
                         } catch (Exception e) {
@@ -275,7 +306,7 @@ public class SearchActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_close:
-                KeyBoardUtils.closeKeybord(edtContent, SearchActivity.this);
+                KeyBoardUtil.closeKeybord(edtContent, SearchActivity.this);
                 finish();
                 break;
             case R.id.btn_search:
@@ -283,6 +314,7 @@ public class SearchActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(key)) {
                     ToastUtil.show(SearchActivity.this, "关键字不能为空");
                 } else {
+                    KeyBoardUtil.closeKeybord(edtContent, SearchActivity.this);
                     loadingDialog = new LoadingDialog(SearchActivity.this);
                     loadingDialog.show();
                     loadItemData(true);

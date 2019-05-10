@@ -7,11 +7,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.em.jigsaw.R;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.base.YBaseAdapter;
 import com.em.jigsaw.base.YBaseHolder;
 import com.em.jigsaw.bean.JNoteBean;
+import com.em.jigsaw.utils.ImgUtil;
 import com.em.jigsaw.utils.TimerUtil;
 
 import java.util.List;
@@ -66,8 +68,7 @@ public class ReleaseListAdapter extends YBaseAdapter<JNoteBean> {
             }else{
                 tvUserName.setText(baen.getUserName());
             }
-            Glide.with(mContext).load(baen.getUserHead().startsWith("http")?baen.getUserHead(): ServiceAPI.IMAGE_URL + baen.getUserHead()).into(ivHead);
-
+            ImgUtil.loadImg2Account(mContext,baen.getUserHead().startsWith("http")?baen.getUserHead(): ServiceAPI.IMAGE_URL + baen.getUserHead(),ivHead);
             tvCreatTime.setText(TimerUtil.timeStamp2Date(baen.getCreatTime()));
 
             StringBuilder sbLimit = new StringBuilder();

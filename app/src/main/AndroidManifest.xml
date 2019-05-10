@@ -17,13 +17,14 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.HomeActivity">
+        <activity android:name=".activity.LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.JigsawViewActivity" />
         <activity android:name=".activity.AddJigsawActivity" />
         <activity android:name=".activity.PersonalActivity" />

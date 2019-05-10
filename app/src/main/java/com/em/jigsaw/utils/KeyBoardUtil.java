@@ -9,7 +9,7 @@ import android.widget.EditText;
  * Author ： JN Zhang .
  * Description ： .
  */
-public class KeyBoardUtils {
+public class KeyBoardUtil {
     /**
      * 打卡软键盘
      */

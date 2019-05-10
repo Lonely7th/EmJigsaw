@@ -115,8 +115,8 @@ public class JigsawViewActivity extends AppCompatActivity {
 
         NoteId = getIntent().getStringExtra("id");
 
-        loadData();
         initUI();
+        loadData();
     }
 
     /**
@@ -217,12 +217,6 @@ public class JigsawViewActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        loadingDialog.dismiss();
-                    }
-
-                    @Override
                     public void onError(Response<String> response) {
                         super.onError(response);
                         ToastUtil.show(JigsawViewActivity.this,"网络异常");
@@ -318,9 +312,13 @@ public class JigsawViewActivity extends AppCompatActivity {
      * 刷新UI
      */
     private void updateJigsawList() {
+        if(!loadingDialog.isShowing()){
+            loadingDialog.show();
+        }
         list.clear();
         list.addAll(imgUtil.sortImgArray(imgUtil.getImgArray(resBitmap, CropFormat, ImgFormat)));
         viewJigsaw.setLabels(list);
+        loadingDialog.dismiss();
     }
 
     /**

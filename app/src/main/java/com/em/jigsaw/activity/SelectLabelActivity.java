@@ -18,7 +18,8 @@ import com.em.jigsaw.adapter.LabelSelectAdapter;
 import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.LabelBean;
-import com.em.jigsaw.utils.KeyBoardUtils;
+import com.em.jigsaw.utils.KeyBoardUtil;
+import com.em.jigsaw.utils.LabelUtil;
 import com.em.jigsaw.utils.SignUtil;
 import com.em.jigsaw.utils.SystemUtil;
 import com.em.jigsaw.view.dialog.LoadingDialog;
@@ -47,7 +48,6 @@ public class SelectLabelActivity extends AppCompatActivity {
     GridView labelGridview;
 
     String tabIds, curKey;
-    int hotNum = 9; // 热门搜索数量
     LabelSelectAdapter labelSelectAdapter;
     HotLabelAdapter hotLabelAdapter;
     List<LabelBean> baseList = new ArrayList<>();
@@ -62,70 +62,11 @@ public class SelectLabelActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_label);
         ButterKnife.bind(this);
         tabIds = getIntent().getStringExtra("tabId");
-
         initUI();
-        loadData();
-    }
-
-    private void loadData() {
-        labelBeanList.clear();
-        OkGo.<String>get(ServiceAPI.GetLabelList).tag(this)
-                .params(SignUtil.getParams(false))
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        try {
-                            JSONObject body = new JSONObject(response.body());
-                            if (body.getInt("ResultCode") == ServiceAPI.HttpSuccess) {
-                                JSONArray array = body.getJSONArray("ResultData");
-                                for (int i = 0; i < array.length(); i++) {
-                                    JSONObject obj = array.getJSONObject(i);
-                                    LabelBean bean = new LabelBean();
-                                    bean.setId(obj.getString("Id"));
-                                    bean.setTitle(obj.getString("Title"));
-                                    if(!tabIds.contains(bean.getTitle())){
-                                        baseList.add(bean);
-                                    }
-                                }
-                                initHotLabels();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onStart(Request<String, ? extends Request> request) {
-                        super.onStart(request);
-                        loadingDialog.show();
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        loadingDialog.dismiss();
-                    }
-
-                    @Override
-                    public void onError(Response<String> response) {
-                        super.onError(response);
-                        loadingDialog.dismiss();
-                    }
-                });
-    }
-
-    private void initHotLabels(){
-        HashSet<Integer> hotIndexArray = new HashSet<>();
-        SystemUtil.randomSet(0,baseList.size()-1,hotNum,hotIndexArray);
-        for(int i = 0;i < baseList.size();i++){
-            if(hotIndexArray.contains(i)){
-                labelHotsList.add(baseList.get(i));
-            }
-        }
-        hotLabelAdapter.notifyDataSetChanged();
     }
 
     private void initUI() {
+        baseList.addAll(LabelUtil.getAllLabel());
         labelSelectAdapter = new LabelSelectAdapter(labelBeanList, SelectLabelActivity.this);
         labelListview.setAdapter(labelSelectAdapter);
         labelListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -134,11 +75,12 @@ public class SelectLabelActivity extends AppCompatActivity {
                 setResult(ContentKey.Pager_Complete, new Intent()
                         .putExtra("id", labelBeanList.get(i).getId())
                         .putExtra("title", labelBeanList.get(i).getTitle()));
-                KeyBoardUtils.closeKeybord(edtContent, SelectLabelActivity.this);
+                KeyBoardUtil.closeKeybord(edtContent, SelectLabelActivity.this);
                 finish();
             }
         });
 
+        labelHotsList.addAll(LabelUtil.getRanLabel(9));
         hotLabelAdapter = new HotLabelAdapter(labelHotsList,SelectLabelActivity.this);
         labelGridview.setAdapter(hotLabelAdapter);
         labelGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -147,7 +89,7 @@ public class SelectLabelActivity extends AppCompatActivity {
                 setResult(ContentKey.Pager_Complete, new Intent()
                         .putExtra("id", labelHotsList.get(i).getId())
                         .putExtra("title", labelHotsList.get(i).getTitle()));
-                KeyBoardUtils.closeKeybord(edtContent, SelectLabelActivity.this);
+                KeyBoardUtil.closeKeybord(edtContent, SelectLabelActivity.this);
                 finish();
             }
         });

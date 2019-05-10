@@ -1,5 +1,6 @@
 package com.em.jigsaw.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,10 +15,13 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.em.jigsaw.R;
 import com.em.jigsaw.activity.JigsawViewActivity;
 import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.bean.JigsawImgBean;
@@ -287,6 +291,16 @@ public class ImgUtil {
                 break;
         }
         return result;
+    }
+
+    /**
+     * 封装了Glide加载图片的一些操作
+     */
+    @SuppressLint("CheckResult")
+    public static void loadImg2Account(Context context, String url, ImageView imageView){
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.mipmap.icon_account_circle);
+        Glide.with(context).load(url).apply(requestOptions).into(imageView);
     }
 
 }

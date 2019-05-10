@@ -194,7 +194,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.rl_tab2:
-                if(LoginUtil.isLogin()){
+                if(!LoginUtil.isLogin()){
                     ToastUtil.show(HomeActivity.this,"登录后即可发布新动态");
                     startActivity(new Intent(HomeActivity.this,LoginActivity.class));
                     return ;
