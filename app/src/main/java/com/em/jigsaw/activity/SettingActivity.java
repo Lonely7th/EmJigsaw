@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -13,6 +14,7 @@ import com.em.jigsaw.R;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.SystemUtil;
 import com.em.jigsaw.utils.ToastUtil;
+import com.luck.picture.lib.tools.PictureFileUtils;
 
 import java.io.File;
 
@@ -62,19 +64,25 @@ public class SettingActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //遍历crash文件夹
-                String path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/pic0/";
-                File dir = new File(path);
-                if(dir.exists()){
-                    File[] files = dir.listFiles();
-                    for (File item : files) {
-                        if (!item.isDirectory()) {
-                            item.delete();
-                        }
-                    }
-                }
+                //清空拆分图片的缓存
+                String path = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
+                delFile(new File(path));
             }
         }).start();
+    }
+
+    static void delFile(File file) {
+        if (!file.exists()) {
+            return ;
+        }
+        if (file.isFile()) {
+            file.delete();
+        } else {
+            File[] files = file.listFiles();
+            for (File f : files) {
+                delFile(f);
+            }
+        }
     }
 
     @OnClick({R.id.back_btn, R.id.btn_clear, R.id.btn_feedback, R.id.btn_logout})

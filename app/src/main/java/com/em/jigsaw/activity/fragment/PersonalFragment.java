@@ -13,16 +13,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.em.jigsaw.R;
 import com.em.jigsaw.activity.FollowListActivity;
 import com.em.jigsaw.activity.LoginActivity;
+import com.em.jigsaw.activity.MessageActivity;
 import com.em.jigsaw.activity.PersonalActivity;
 import com.em.jigsaw.activity.ReleaseListActivity;
 import com.em.jigsaw.activity.SettingActivity;
 import com.em.jigsaw.activity.StarListActivity;
 import com.em.jigsaw.base.ContentKey;
 import com.em.jigsaw.bean.UserBean;
+import com.em.jigsaw.utils.ImgUtil;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.RoundImageView;
@@ -43,8 +44,6 @@ import butterknife.OnClick;
  * Description ： .
  */
 public class PersonalFragment extends Fragment {
-    @BindView(R.id.btn_sign)
-    RelativeLayout btnSign;
     @BindView(R.id.btn_setting)
     RelativeLayout btnSetting;
     @BindView(R.id.iv_head)
@@ -62,7 +61,7 @@ public class PersonalFragment extends Fragment {
     @BindView(R.id.btn_message)
     LinearLayout btnMessage;
     @BindView(R.id.btn_shop)
-    LinearLayout btnShop;
+    RelativeLayout btnShop;
     @BindView(R.id.iv_release_icon)
     ImageView ivReleaseIcon;
     @BindView(R.id.btn_release)
@@ -79,6 +78,8 @@ public class PersonalFragment extends Fragment {
     ImageView ivShareIcon;
     @BindView(R.id.btn_share)
     RelativeLayout btnShare;
+    @BindView(R.id.tv_level)
+    TextView tvLevel;
 
     private List<String> shareTypeList = new ArrayList<>();
     private WXShare wxShare;
@@ -103,14 +104,14 @@ public class PersonalFragment extends Fragment {
             UserBean userBean = LoginUtil.getUserInfo();
             tvUserName.setText(userBean.getUserName());
             StringBuilder stringBuilder = new StringBuilder();
-            tvUserVip.setText(stringBuilder.append("等级：").append(userBean.getUserNo()).toString());
+            tvUserVip.setText(stringBuilder.append("地址：").append(userBean.getNameCity()).toString());
             if (!TextUtils.isEmpty(userBean.getNameHead())) {
-                Glide.with(getActivity()).load(userBean.getNameHead()).into(ivHead);
+                ImgUtil.loadImg2Account(getActivity(), userBean.getNameHead(), ivHead);
             }
         } else {
             tvUserName.setText("未登录");
             tvUserVip.setText("点击登录");
-            Glide.with(getActivity()).load("").into(ivHead);
+            ImgUtil.loadImg2Account(getActivity(), "", ivHead);
         }
     }
 
@@ -140,11 +141,9 @@ public class PersonalFragment extends Fragment {
         });
     }
 
-    @OnClick({R.id.btn_sign, R.id.btn_setting, R.id.btn_user_info, R.id.btn_message, R.id.btn_shop, R.id.btn_release, R.id.btn_star, R.id.btn_follow, R.id.btn_share})
+    @OnClick({R.id.btn_setting, R.id.btn_user_info, R.id.btn_message, R.id.btn_shop, R.id.btn_release, R.id.btn_star, R.id.btn_follow, R.id.btn_share})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.btn_sign:
-                break;
             case R.id.btn_setting:
                 startActivity(new Intent(getActivity(), SettingActivity.class));
                 break;
@@ -156,6 +155,7 @@ public class PersonalFragment extends Fragment {
                 }
                 break;
             case R.id.btn_message:
+                startActivity(new Intent(getActivity(), MessageActivity.class));
                 break;
             case R.id.btn_shop:
                 break;
@@ -191,5 +191,10 @@ public class PersonalFragment extends Fragment {
                 selectDialog.show();
                 break;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 }

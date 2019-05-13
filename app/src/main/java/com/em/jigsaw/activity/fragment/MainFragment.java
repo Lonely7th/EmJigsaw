@@ -60,8 +60,6 @@ import butterknife.OnClick;
  */
 public class MainFragment extends Fragment {
     private final static String TAG = "MainFragment";
-    @BindView(R.id.back_btn)
-    RelativeLayout backBtn;
     @BindView(R.id.tv_bar_center)
     TextView tvBarCenter;
     @BindView(R.id.main_listview)
@@ -130,7 +128,6 @@ public class MainFragment extends Fragment {
      * 初始化页面
      */
     private void initUI() {
-        backBtn.setVisibility(View.GONE);
         ivRightIcon.setVisibility(View.VISIBLE);
         ivRightIcon.setImageDrawable(getResources().getDrawable(R.mipmap.icon_search_b));
 

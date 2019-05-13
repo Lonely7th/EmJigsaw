@@ -10,37 +10,33 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.em.jigsaw.R;
 import com.em.jigsaw.adapter.SelectDialogAdapter;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Time ： 2018/12/17 0017 .
+ * Time ： 2019/5/13 .
  * Author ： JN Zhang .
- * Description ：选择弹窗 .
+ * Description ： .
  */
-public class SelectDialog extends Dialog {
+public class ShopDialog extends Dialog {
     private Context context;
     private ListView listView;
     private Display display;
-    private OnSelectListener onSelectListener = null;
+    private SelectDialog.OnSelectListener onSelectListener = null;
 
     private List<String> mlist = new ArrayList<>();
 
-    public SelectDialog(Context context) {
+    public ShopDialog(Context context) {
         super(context);
         this.context = context;
     }
 
-    public SelectDialog(Context context, List<String> mlist, final OnSelectListener onSelectListener) {
+    public ShopDialog(Context context, List<String> mlist, final SelectDialog.OnSelectListener onSelectListener) {
         super(context, R.style.AlertDialogStyle);
         this.context = context;
         this.mlist.addAll(mlist);
@@ -50,7 +46,7 @@ public class SelectDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_select);
+        setContentView(R.layout.dialog_shop);
         listView = findViewById(R.id.list_view);
         SelectDialogAdapter selectDialogAdapter = new SelectDialogAdapter(mlist, context);
         listView.setAdapter(selectDialogAdapter);

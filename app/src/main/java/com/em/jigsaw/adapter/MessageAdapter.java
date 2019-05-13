@@ -1,12 +1,10 @@
 package com.em.jigsaw.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.em.jigsaw.R;
 import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.base.YBaseAdapter;
@@ -17,13 +15,13 @@ import com.em.jigsaw.utils.ImgUtil;
 import java.util.List;
 
 /**
- * Time ： 2019/1/22 .
+ * Time ： 2019/5/13 .
  * Author ： JN Zhang .
  * Description ： .
  */
-public class FollowListAdapter extends YBaseAdapter<UserBean> {
+public class MessageAdapter extends YBaseAdapter<UserBean> {
 
-    public FollowListAdapter(List<UserBean> list, Context mContext) {
+    public MessageAdapter(List<UserBean> list, Context mContext) {
         super(list, mContext);
     }
 
