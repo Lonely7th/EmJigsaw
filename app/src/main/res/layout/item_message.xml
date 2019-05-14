@@ -15,34 +15,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/iv_head"
-            android:layout_centerVertical="true"
             android:textColor="@color/colorBlack"
-            android:textSize="15sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:layout_marginLeft="8dp"
-            android:text="user_name"/>
+            android:text="title"/>
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/iv_head"
-            android:layout_centerVertical="true"
-            android:textColor="@color/colorBlack"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_marginLeft="8dp"
-            android:text="user_name"/>
+            android:textColor="@color/colorGary"
+            android:layout_alignParentRight="true"
+            android:textSize="12sp"
+            android:layout_marginRight="8dp"
+            android:text="time"/>
         <TextView
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/iv_head"
-            android:layout_centerVertical="true"
-            android:textColor="@color/colorBlack"
-            android:textSize="15sp"
-            android:textStyle="bold"
+            android:textColor="@color/colorGary"
+            android:layout_below="@+id/tv_title"
+            android:textSize="14sp"
             android:layout_marginLeft="8dp"
-            android:text="user_name"/>
+            android:layout_marginTop="4dp"
+            android:text="content"/>
     </RelativeLayout>
 
 </LinearLayout>

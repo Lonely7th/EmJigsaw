@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.em.jigsaw.R;
 import com.em.jigsaw.adapter.FollowListAdapter;
+import com.em.jigsaw.adapter.MessageAdapter;
 import com.em.jigsaw.base.ServiceAPI;
+import com.em.jigsaw.bean.MessageBean;
 import com.em.jigsaw.bean.UserBean;
 import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.SignUtil;
@@ -47,8 +49,8 @@ public class MessageActivity extends AppCompatActivity {
     @BindView(R.id.listview)
     ListView listview;
 
-    private FollowListAdapter followListAdapter;
-    private List<UserBean> list = new ArrayList<>();
+    private MessageAdapter messageAdapter;
+    private List<MessageBean> list = new ArrayList<>();
 
     private LoadingDialog loadingDialog = null;
 
@@ -76,16 +78,14 @@ public class MessageActivity extends AppCompatActivity {
                                 JSONArray array = body.getJSONArray("ResultData");
                                 for (int i = 0; i < array.length(); i++) {
                                     JSONObject obj = array.getJSONObject(i).getJSONObject("Follower");
-                                    UserBean userBean = new UserBean();
-                                    userBean.setNameHead(obj.getString("NameHead"));
-                                    userBean.setUserName(obj.getString("UserName"));
-                                    userBean.setNameCity(obj.getString("NameCity"));
-                                    userBean.setUserNo(obj.getString("UserNo"));
-                                    userBean.setUserPhone(obj.getString("UserPhone"));
-                                    list.add(userBean);
+                                    MessageBean messageBean = new MessageBean();
+                                    messageBean.setContent(obj.getString("NameHead"));
+                                    messageBean.setId(obj.getString("UserName"));
+                                    messageBean.setTime(obj.getString("NameCity"));
+                                    messageBean.setTitle(obj.getString("NameCity"));
+                                    list.add(messageBean);
                                 }
-                                tvBarCenter.setText("我的关注" + "(" + array.length() + ")");
-                                followListAdapter.notifyDataSetChanged();
+                                messageAdapter.notifyDataSetChanged();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -113,12 +113,13 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        followListAdapter = new FollowListAdapter(list,MessageActivity.this);
-        listview.setAdapter(followListAdapter);
+        tvBarCenter.setText("我的消息");
+        messageAdapter = new MessageAdapter(list,MessageActivity.this);
+        listview.setAdapter(messageAdapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                startActivity(new Intent(MessageActivity.this, OthersInfoActivity.class).putExtra("user_id", list.get(i).getUserNo()));
+
             }
         });
 

@@ -2,15 +2,12 @@ package com.em.jigsaw.adapter;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.em.jigsaw.R;
-import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.base.YBaseAdapter;
 import com.em.jigsaw.base.YBaseHolder;
-import com.em.jigsaw.bean.UserBean;
-import com.em.jigsaw.utils.ImgUtil;
+import com.em.jigsaw.bean.MessageBean;
 
 import java.util.List;
 
@@ -19,9 +16,9 @@ import java.util.List;
  * Author ： JN Zhang .
  * Description ： .
  */
-public class MessageAdapter extends YBaseAdapter<UserBean> {
+public class MessageAdapter extends YBaseAdapter<MessageBean> {
 
-    public MessageAdapter(List<UserBean> list, Context mContext) {
+    public MessageAdapter(List<MessageBean> list, Context mContext) {
         super(list, mContext);
     }
 
@@ -30,28 +27,29 @@ public class MessageAdapter extends YBaseAdapter<UserBean> {
         return new MyHolder(mContext, mList);
     }
 
-    private class MyHolder extends YBaseHolder<UserBean> {
+    private class MyHolder extends YBaseHolder<MessageBean> {
 
-        ImageView ivHead;
-        TextView tvUserName;
+        TextView tvTitle,tvContent,tvTime;
 
-        public MyHolder(Context mContext, List<UserBean> mLists) {
+        public MyHolder(Context mContext, List<MessageBean> mLists) {
             super(mContext, mLists);
         }
 
         @Override
         public View getInflateView(Context mContext) {
-            View view = View.inflate(mContext, R.layout.item_follow_list, null);
-            ivHead = view.findViewById(R.id.iv_head);
-            tvUserName = view.findViewById(R.id.tv_user_name);
+            View view = View.inflate(mContext, R.layout.item_message, null);
+            tvTitle = view.findViewById(R.id.tv_title);
+            tvContent = view.findViewById(R.id.tv_content);
+            tvTime = view.findViewById(R.id.tv_time);
             return view;
         }
 
         @Override
         public void bindData(final int position) {
-            UserBean bean = mLists.get(position);
-            tvUserName.setText(bean.getUserName());
-            ImgUtil.loadImg2Account(mContext,bean.getNameHead().startsWith("http")?bean.getNameHead(): ServiceAPI.IMAGE_URL + bean.getNameHead(),ivHead);
+            MessageBean bean = mLists.get(position);
+            tvTitle.setText(bean.getTitle());
+            tvContent.setText(bean.getContent());
+            tvTime.setText(bean.getTime());
         }
     }
 }

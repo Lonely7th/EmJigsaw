@@ -14,6 +14,19 @@ import android.widget.ListView;
 
 import com.em.jigsaw.R;
 import com.em.jigsaw.adapter.SelectDialogAdapter;
+import com.em.jigsaw.adapter.ShopDialogAdapter;
+import com.em.jigsaw.base.ServiceAPI;
+import com.em.jigsaw.bean.MessageBean;
+import com.em.jigsaw.bean.PayEventBean;
+import com.em.jigsaw.utils.LoginUtil;
+import com.em.jigsaw.utils.SignUtil;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,21 +39,13 @@ import java.util.List;
 public class ShopDialog extends Dialog {
     private Context context;
     private ListView listView;
-    private Display display;
-    private SelectDialog.OnSelectListener onSelectListener = null;
 
-    private List<String> mlist = new ArrayList<>();
+    private ShopDialogAdapter shopDialogAdapter;
+    private List<PayEventBean> mlist = new ArrayList<>();
 
     public ShopDialog(Context context) {
-        super(context);
-        this.context = context;
-    }
-
-    public ShopDialog(Context context, List<String> mlist, final SelectDialog.OnSelectListener onSelectListener) {
         super(context, R.style.AlertDialogStyle);
         this.context = context;
-        this.mlist.addAll(mlist);
-        this.onSelectListener = onSelectListener;
     }
 
     @Override
@@ -48,14 +53,11 @@ public class ShopDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_shop);
         listView = findViewById(R.id.list_view);
-        SelectDialogAdapter selectDialogAdapter = new SelectDialogAdapter(mlist, context);
-        listView.setAdapter(selectDialogAdapter);
+        shopDialogAdapter = new ShopDialogAdapter(mlist, context);
+        listView.setAdapter(shopDialogAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(onSelectListener != null){
-                    onSelectListener.onItemSelect(view,position,id);
-                }
                 dismiss();
             }
         });
@@ -74,10 +76,43 @@ public class ShopDialog extends Dialog {
         wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
         window.setAttributes(wlp);
         window.setWindowAnimations(R.style.ActionSheetDialogAnimation);
+
+        loadData();
     }
 
-    public interface OnSelectListener{
-        void onItemSelect(View view, int position, long id);
+    private void loadData(){
+        OkGo.<String>get(ServiceAPI.GetFollowList).tag(this)
+                .params("user_no", LoginUtil.getUserInfo().getUserNo())
+                .params(SignUtil.getParams(true))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            JSONObject body = new JSONObject(response.body());
+                            if (body.getInt("ResultCode") == ServiceAPI.HttpSuccess) {
+                                JSONArray array = body.getJSONArray("ResultData");
+                                for (int i = 0; i < array.length(); i++) {
+                                    JSONObject obj = array.getJSONObject(i).getJSONObject("Follower");
+                                    PayEventBean payEventBean = new PayEventBean();
+                                    payEventBean.setContent(obj.getString("NameCity"));
+                                    payEventBean.setId(obj.getString("NameCity"));
+                                    payEventBean.setOriginalPrice(obj.getString("NameCity"));
+                                    payEventBean.setPresentPrice(obj.getString("NameCity"));
+                                    mlist.add(payEventBean);
+                                }
+                                shopDialogAdapter.notifyDataSetChanged();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        dismiss();
+                    }
+                });
     }
 
     @Override

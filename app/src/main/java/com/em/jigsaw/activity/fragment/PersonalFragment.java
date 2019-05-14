@@ -28,6 +28,7 @@ import com.em.jigsaw.utils.LoginUtil;
 import com.em.jigsaw.utils.ToastUtil;
 import com.em.jigsaw.view.RoundImageView;
 import com.em.jigsaw.view.dialog.SelectDialog;
+import com.em.jigsaw.view.dialog.ShopDialog;
 import com.em.jigsaw.wxapi.OnResponseListener;
 import com.em.jigsaw.wxapi.WXShare;
 
@@ -84,6 +85,7 @@ public class PersonalFragment extends Fragment {
     private List<String> shareTypeList = new ArrayList<>();
     private WXShare wxShare;
     private SelectDialog selectDialog;
+    private ShopDialog shopDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -158,6 +160,8 @@ public class PersonalFragment extends Fragment {
                 startActivity(new Intent(getActivity(), MessageActivity.class));
                 break;
             case R.id.btn_shop:
+                shopDialog = new ShopDialog(getActivity());
+                shopDialog.show();
                 break;
             case R.id.btn_release:
                 if (LoginUtil.isLogin()) {
@@ -196,5 +200,11 @@ public class PersonalFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if(selectDialog != null){
+            selectDialog.dismiss();
+        }
+        if(shopDialog != null){
+            shopDialog.dismiss();
+        }
     }
 }

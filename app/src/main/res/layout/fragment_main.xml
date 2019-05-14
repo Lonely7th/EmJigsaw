@@ -26,7 +26,7 @@
                 android:textColor="@color/colorBlack"
                 android:textStyle="bold"
                 android:layout_marginLeft="4dp"
-                android:textSize="16sp"/>
+                android:textSize="15sp"/>
 
             <RelativeLayout
                 android:id="@+id/right_btn"
