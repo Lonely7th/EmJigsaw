@@ -88,7 +88,7 @@ public class JFinishDialog extends Dialog {
             ivScore.setImageDrawable(context.getResources().getDrawable(R.mipmap.score_sss));
         }
 
-        tvBest.setText("本次成绩：" + currentScore + "  当前最佳：" + JNoteBean.getBestResults());
+        tvBest.setText("·  本次成绩：" + currentScore + "  当前最佳：" + JNoteBean.getBestResults());
         StringBuilder stringBuilderLabel = new StringBuilder("标签：");
         if(!TextUtils.isEmpty(JNoteBean.getLabelTitle1())){
             stringBuilderLabel.append("#").append(JNoteBean.getLabelTitle1());
@@ -101,14 +101,6 @@ public class JFinishDialog extends Dialog {
         }
         tvLabel.setText(stringBuilderLabel.toString());
         tvContent.setText("简介：" + JNoteBean.getContent());
-
-        findViewById(R.id.btn_neg).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                onFinishDialogListener.onClosePager();
-            }
-        });
         findViewById(R.id.btn_pos).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

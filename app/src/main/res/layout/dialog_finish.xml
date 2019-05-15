@@ -1,60 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="280dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
     android:background="@mipmap/dialog_bg_white">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/view_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp">
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:layout_marginTop="24dp">
 
-        <TextView
-            android:id="@+id/tv_score"
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="4dp"
+                android:paddingTop="8dp"
+                android:gravity="center"
+                android:textColor="@color/scoreS"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="·  评分：" />
+
+            <ImageView
+                android:id="@+id/iv_score"
+                android:layout_width="32dp"
+                android:layout_height="24dp"
+                android:layout_toRightOf="@+id/tv_score"
+                android:scaleType="centerInside"
+                android:layout_marginTop="8dp"
+                android:src="@mipmap/score_sss"/>
+
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/iv_score"
+                android:paddingBottom="4dp"
+                android:layout_marginLeft="8dp"
+                android:paddingTop="4dp"
+                android:gravity="center"
+                android:textColor="#FF8800"
+                android:textStyle="italic"
+                android:textSize="12sp"
+                android:layout_marginTop="6dp"
+                android:text="(完成)" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="4dp"
-            android:paddingTop="8dp"
-            android:gravity="center"
-            android:textColor="@color/scoreS"
-            android:textStyle="bold|italic"
-            android:textSize="24sp"
-            android:text="评分：" />
-
-        <ImageView
-            android:id="@+id/iv_score"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_toRightOf="@+id/tv_score"
-            android:scaleType="centerInside"
-            android:layout_marginTop="10dp"
-            android:src="@mipmap/score_sss"/>
-
-        <TextView
-            android:id="@+id/tv_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/iv_score"
-            android:paddingBottom="4dp"
-            android:layout_marginLeft="8dp"
-            android:paddingTop="8dp"
-            android:gravity="center"
-            android:textColor="#FF8800"
-            android:textStyle="bold|italic"
-            android:textSize="13sp"
-            android:layout_marginTop="6dp"
-            android:text="(完成)" />
+            android:layout_marginTop="8dp">
+            <TextView
+                android:id="@+id/tv_reward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="4dp"
+                android:gravity="center"
+                android:textColor="@color/scoreB"
+                android:textStyle="bold|italic"
+                android:textSize="16sp"
+                android:text="·  获得  8  个贝壳" />
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/view_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_score"
-            android:orientation="vertical"
-            android:layout_centerHorizontal="true">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_best"
@@ -62,11 +81,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/view_score"
                 android:gravity="center"
-                android:textColor="@color/colorBlack"
+                android:textColor="@color/colorGary"
                 android:textStyle="bold"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
-                android:textSize="13sp"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:textSize="14sp"
                 android:text="本次成绩：120s  当前最佳：56秒" />
 
             <TextView
@@ -79,6 +98,7 @@
                 android:paddingBottom="4dp"
                 android:paddingTop="4dp"
                 android:textSize="12sp"
+                android:visibility="gone"
                 android:text="标签：#风景#游戏" />
 
             <TextView
@@ -92,48 +112,18 @@
                 android:paddingBottom="4dp"
                 android:paddingTop="4dp"
                 android:textSize="12sp"
+                android:visibility="gone"
                 android:text="简介：暂无内容" />
         </LinearLayout>
 
-    </RelativeLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorBg" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btn_neg"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@drawable/alert_dialog_left_shape"
-            android:gravity="center"
-            android:textColor="@color/colorBlack"
-            android:text="保存图片"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:background="@color/colorBg" />
-
-        <Button
-            android:id="@+id/btn_pos"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@drawable/alert_dialog_right_shape"
-            android:gravity="center"
-            android:textColor="@color/colorBlue"
-            android:textSize="14sp"
-            android:text="关闭弹窗"
-            android:textStyle="bold" />
     </LinearLayout>
-</LinearLayout>
+
+    <Button
+        android:id="@+id/btn_pos"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:padding="4dp"
+        android:layout_margin="12dp"
+        android:background="@mipmap/icon_clear"
+        android:layout_alignParentRight="true"/>
+</RelativeLayout>
