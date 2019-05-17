@@ -24,6 +24,44 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginBottom="8dp"
                 android:layout_centerVertical="true"
+                android:text="难度系数"/>
+
+            <!--匿名发布-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/colorWhite"
+                android:padding="8dp"
+                android:layout_marginTop="1dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="8dp"
+                    android:textStyle="bold"
+                    android:layout_centerVertical="true"
+                    android:text="1.2*"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorGary"
+                    android:textSize="12sp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="8dp"
+                    android:text="当其他用户挑战失败时你将得到2个贝壳"/>
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorGary"
+                android:textSize="14sp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="8dp"
+                android:layout_centerVertical="true"
                 android:text="裁剪格式"/>
 
             <!--裁剪格式-->
@@ -49,7 +87,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginBottom="8dp"
                 android:layout_centerVertical="true"
-                android:text="高级选项"/>
+                android:text="玩法选项"/>
 
             <!--匿名发布-->
             <RelativeLayout
@@ -58,6 +96,7 @@
                 android:layout_height="48dp"
                 android:background="@color/colorWhite"
                 android:padding="8dp"
+                android:visibility="gone"
                 android:layout_marginTop="1dp">
                 <TextView
                     android:layout_width="wrap_content"
@@ -243,7 +282,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginBottom="8dp"
                 android:layout_centerVertical="true"
-                android:text="内容描述"/>
+                android:text="内容描述（选填）"/>
 
             <EditText
                 android:id="@+id/edt_content"
