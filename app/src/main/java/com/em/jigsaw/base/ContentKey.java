@@ -38,8 +38,8 @@ public class ContentKey {
      * 高级选项相关
      */
     public static final String[] Limit_Type_Array = {"时间限制","次数限制"};
-    public static final String[] Limit_Time_Array = {"60","90","120","180","300","500"};
-    public static final String[] Limit_Count_Array = {"60","100","150","200","300","500"};
+    public static final String[] Limit_Time_Array = {"60","90","120","180","300","360"};
+    public static final String[] Limit_Count_Array = {"60","100","120","150","200","300"};
 
     /**
      * 页面限制模式

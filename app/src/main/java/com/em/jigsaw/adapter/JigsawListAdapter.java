@@ -82,17 +82,14 @@ public class JigsawListAdapter extends YBaseAdapter<JNoteBean> {
             switch (baen.getJType()){
                 case "0":
                     tvContent.setText(baen.getContent());
-//                    tvContent.setTextColor(mContext.getResources().getColor(R.color.colorGary_S));
                     break;
                 case "1":
-                    tvContent.setText("当前最佳：" + baen.getBestResults() + " 秒");
-//                    tvContent.setTextColor(mContext.getResources().getColor(R.color.scoreS));
-                    sbLimit.append("成功率：").append(baen.getSuccessRate()).append("%");
+                    tvContent.setText("使用10个贝壳开始挑战，挑战成功可获得20个贝壳");
+                    sbLimit.append("时间限制：").append(baen.getLimitNum()).append("秒");
                     break;
                 case "2":
-                    tvContent.setText("当前最佳： " + baen.getBestResults() + " 次");
-//                    tvContent.setTextColor(mContext.getResources().getColor(R.color.scoreS));
-                    sbLimit.append("成功率：").append(baen.getSuccessRate()).append("%");
+                    tvContent.setText("使用5个贝壳开始挑战，挑战成功可获得5个贝壳");
+                    sbLimit.append("次数限制：").append(baen.getLimitNum()).append("次");
                     break;
             }
             tvCropFormat.setText("格式：" + baen.getCropFormat() + "    " + sbLimit.toString());

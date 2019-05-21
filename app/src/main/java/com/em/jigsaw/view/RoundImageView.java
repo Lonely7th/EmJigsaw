@@ -74,7 +74,7 @@ public class RoundImageView extends ImageView {
         paint.setColor(color);
         int x = bitmap.getWidth();
 
-        canvas.drawRoundRect(rectF, 12, 12, paint);
+        canvas.drawRoundRect(rectF, 8, 8, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(bitmap, rect, rect, paint);
         return output;

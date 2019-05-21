@@ -1,7 +1,7 @@
 package com.em.jigsaw.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -16,31 +16,21 @@ import android.widget.TextView;
 import com.em.jigsaw.R;
 import com.em.jigsaw.adapter.SelectCropFormatAdapter;
 import com.em.jigsaw.base.ContentKey;
-import com.em.jigsaw.base.ServiceAPI;
 import com.em.jigsaw.bean.JNoteBean;
+import com.em.jigsaw.bean.OddsBean;
 import com.em.jigsaw.bean.SelectCropFormatBean;
 import com.em.jigsaw.bean.event.ReleaseEvent;
-import com.em.jigsaw.utils.LoginUtil;
-import com.em.jigsaw.utils.SignUtil;
+import com.em.jigsaw.utils.OddsUtil;
 import com.em.jigsaw.utils.ToastUtil;
-import com.em.jigsaw.view.dialog.LoadingDialog;
 import com.em.jigsaw.view.dialog.SelectDialog;
 import com.google.gson.Gson;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,6 +83,10 @@ public class SelectJStatusActivity extends AppCompatActivity {
     ImageView ivTabClose3;
     @BindView(R.id.gv_crop_format)
     GridView gvCropFormat;
+    @BindView(R.id.tv_difficulty)
+    TextView tvDifficulty;
+    @BindView(R.id.tv_difficulty_content)
+    TextView tvDifficultyContent;
 
     String cropFormat = ContentKey.Format_Array[2];
     boolean isHideName = false;
@@ -102,9 +96,9 @@ public class SelectJStatusActivity extends AppCompatActivity {
     String tabTitle1, tabTitle2, tabTitle3;
 
     SelectDialog selectDialog;
-    int curSelectType = 0;
+    int curSelectType = 0;//默认时间限制
     ArrayList<String> selectTypeList = new ArrayList<>();
-    int curSelectCount = 0;
+    int curSelectCount = 120;//默认120秒
     ArrayList<String> selectCountList = new ArrayList<>();
 
     SelectCropFormatAdapter selectCropFormatAdapter;
@@ -124,15 +118,15 @@ public class SelectJStatusActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        tvBarCenter.setText("高级选项");
+        tvBarCenter.setText("基本设置");
         tvBarRight.setText("下一步");
         tvBarRight.setVisibility(View.VISIBLE);
         tvLimitType.setText(ContentKey.Limit_Type_Array[curSelectType]);
 
-        for(int i = 0;i < ContentKey.Format_Array.length;i++){
+        for (int i = 0; i < ContentKey.Format_Array.length; i++) {
             SelectCropFormatBean bean = new SelectCropFormatBean();
             bean.setContent(ContentKey.Format_Array[i]);
-            if(i == 2){
+            if (i == 2) {
                 bean.setSelect(true);
             }
             selectCropFormatList.add(bean);
@@ -152,16 +146,46 @@ public class SelectJStatusActivity extends AppCompatActivity {
                     }
                 }
                 selectCropFormatAdapter.notifyDataSetChanged();
+                updateOddsDegree();
             }
         });
+        updateLimitCount();
+        updateOddsDegree();
     }
 
     private void initData() {
         selectTypeList.addAll(Arrays.asList(ContentKey.Limit_Type_Array));
     }
 
+    /**
+     * 刷新难度系数
+     */
+    @SuppressLint("SetTextI18n")
+    private void updateOddsDegree() {
+        OddsBean oddsBean = OddsUtil.getCurOdds(cropFormat, (curSelectType + 1), curSelectCount);
+        if(oddsBean != null){
+            tvDifficulty.setText(oddsBean.getDegree() + " *");
+            tvDifficultyContent.setText("当其他用户挑战失败时你将得到" + oddsBean.getReward() + "个贝壳");
+        }else{
+            tvDifficulty.setText("*");
+            tvDifficultyContent.setText("");
+        }
+    }
+
+    /**
+     * 刷新限制数值
+     */
+    @SuppressLint("SetTextI18n")
+    private void updateLimitCount() {
+        if (curSelectType == 1) {
+            tvLimitCount.setText(curSelectCount + "次");
+        } else if (curSelectType == 0) {
+            tvLimitCount.setText(curSelectCount + "秒");
+        }
+    }
+
     private void release() {
-        String content = TextUtils.isEmpty(edtContent.getText().toString()) ? "我发布了一条新动态，快来点击看看吧~" : edtContent.getText().toString();
+        String content = edtContent.getText().toString();
 
         //将标签前移，确保已经填写的标签处于最前端
         if (TextUtils.isEmpty(tabId1)) {
@@ -189,9 +213,9 @@ public class SelectJStatusActivity extends AppCompatActivity {
         JNoteBean jNoteBean = new JNoteBean();
         jNoteBean.setContent(content);
         jNoteBean.setCropFormat(cropFormat);
-        jNoteBean.setJType(""+(curSelectType+1));//这里+1是为了匹配服务端对于Note类型的定义，服务端type0表示无限制
+        jNoteBean.setJType("" + (curSelectType + 1));//这里+1是为了匹配服务端对于Note类型的定义，服务端type=0表示无限制
         jNoteBean.setHideUser(isHideName);
-        jNoteBean.setLimitNum(""+curSelectCount);
+        jNoteBean.setLimitNum("" + curSelectCount);
         jNoteBean.setResPath(FilePath);
         jNoteBean.setLabel1(tabId1);
         jNoteBean.setLabelTitle1(tabTitle1);
@@ -212,7 +236,7 @@ public class SelectJStatusActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.right_btn:
-                if(curSelectCount == 0){
+                if (curSelectCount == 0) {
                     ToastUtil.show(SelectJStatusActivity.this, "请选择限制数值");
                     return;
                 }
@@ -240,6 +264,7 @@ public class SelectJStatusActivity extends AppCompatActivity {
                         curSelectCount = 0;
                         tvLimitType.setText(selectTypeList.get(position));
                         tvLimitCount.setText("选择数值");
+                        updateOddsDegree();
                     }
                 });
                 selectDialog.show();
@@ -255,11 +280,8 @@ public class SelectJStatusActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelect(View view, int position, long id) {
                         curSelectCount = Integer.parseInt(selectCountList.get(position));
-                        if (curSelectType == 1) {
-                            tvLimitCount.setText(selectCountList.get(position) + "次");
-                        } else if (curSelectType == 0) {
-                            tvLimitCount.setText(selectCountList.get(position) + "秒");
-                        }
+                        updateLimitCount();
+                        updateOddsDegree();
                     }
                 });
                 selectDialog.show();
@@ -338,7 +360,7 @@ public class SelectJStatusActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ReleaseEvent event) {
-        if(event.getEvent() == 0){
+        if (event.getEvent() == 0) {
             finish();
         }
     }

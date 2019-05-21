@@ -26,7 +26,6 @@
                 android:layout_centerVertical="true"
                 android:text="难度系数"/>
 
-            <!--匿名发布-->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
@@ -34,6 +33,7 @@
                 android:padding="8dp"
                 android:layout_marginTop="1dp">
                 <TextView
+                    android:id="@+id/tv_difficulty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorBlack"
@@ -41,8 +41,10 @@
                     android:layout_marginLeft="8dp"
                     android:textStyle="bold"
                     android:layout_centerVertical="true"
-                    android:text="1.2*"/>
+                    android:text="1.2 *"
+                    android:layout_marginStart="8dp" />
                 <TextView
+                    android:id="@+id/tv_difficulty_content"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorGary"
@@ -50,7 +52,9 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="8dp"
-                    android:text="当其他用户挑战失败时你将得到2个贝壳"/>
+                    android:text="当其他用户挑战失败时你将得到2个贝壳"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="8dp" />
             </RelativeLayout>
 
             <TextView
@@ -87,7 +91,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginBottom="8dp"
                 android:layout_centerVertical="true"
-                android:text="玩法选项"/>
+                android:text="玩法设置"/>
 
             <!--匿名发布-->
             <RelativeLayout
@@ -142,7 +146,7 @@
                         android:id="@+id/tv_limit_type"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorBlack"
+                        android:textColor="@color/colorBlue"
                         android:textSize="14sp"
                         android:layout_marginLeft="8dp"
                         android:layout_centerVertical="true"/>
@@ -163,7 +167,7 @@
                         android:id="@+id/tv_limit_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorBlack"
+                        android:textColor="@color/colorBlue"
                         android:textSize="14sp"
                         android:layout_toLeftOf="@+id/iv_rigth_2"
                         android:layout_centerVertical="true"
@@ -190,7 +194,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="52dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:background="@color/colorWhite"
@@ -295,7 +299,7 @@
                 android:paddingRight="16dp"
                 android:paddingLeft="16dp"
                 android:hint="我发布了一条新状态，快来点击看看吧~"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:gravity="start"/>
 
         </LinearLayout>

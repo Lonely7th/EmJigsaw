@@ -77,7 +77,7 @@
         <!--裁剪页面标题文字颜色-->
         <item name="picture.crop.title.color">@color/white</item>
         <!--相册文件夹列表选中图标-->
-        <item name="picture.folder_checked_dot">@drawable/orange_oval</item>
+        <item name="picture.folder_checked_dot">@drawable/bg_pic_select</item>
     </style>
 
 </resources>
