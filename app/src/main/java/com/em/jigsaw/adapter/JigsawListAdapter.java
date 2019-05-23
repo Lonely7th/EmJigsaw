@@ -15,6 +15,7 @@ import com.em.jigsaw.base.YBaseAdapter;
 import com.em.jigsaw.base.YBaseHolder;
 import com.em.jigsaw.bean.JNoteBean;
 import com.em.jigsaw.callback.OnJListHeadClickListener;
+import com.em.jigsaw.utils.FontUtil;
 import com.em.jigsaw.utils.ImgUtil;
 import com.em.jigsaw.utils.TimerUtil;
 
@@ -42,7 +43,7 @@ public class JigsawListAdapter extends YBaseAdapter<JNoteBean> {
     private class MyHolder extends YBaseHolder<JNoteBean> {
 
         ImageView ivJigsaw,ivHead;
-        TextView tvUserName,tvCreatTime,tvContent,tvCropFormat;
+        TextView tvUserName,tvCreatTime,tvContent,tvCropFormat,tvContent2,tvContent3;
         TextView tvLabel1,tvLabel2,tvLabel3;
 
         public MyHolder(Context mContext, List<JNoteBean> mLists) {
@@ -57,6 +58,8 @@ public class JigsawListAdapter extends YBaseAdapter<JNoteBean> {
             tvUserName = view.findViewById(R.id.tv_user_name);
             tvCreatTime = view.findViewById(R.id.tv_creat_time);
             tvContent = view.findViewById(R.id.tv_content);
+            tvContent2 = view.findViewById(R.id.tv_content_2);
+            tvContent3 = view.findViewById(R.id.tv_content_3);
             tvCropFormat = view.findViewById(R.id.tv_crop_format);
 
             tvLabel1 = view.findViewById(R.id.tv_label_1);
@@ -76,7 +79,7 @@ public class JigsawListAdapter extends YBaseAdapter<JNoteBean> {
                 ImgUtil.loadImg2Account(mContext,baen.getUserHead().startsWith("http")?baen.getUserHead(): ServiceAPI.IMAGE_URL + baen.getUserHead(),ivHead);
             }
 
-            tvCreatTime.setText(TimerUtil.timeStamp2Date(baen.getCreatTime()));
+            tvCreatTime.setText(TimerUtil.timeStamp2Date2(baen.getCreatTime()));
 
             StringBuilder sbLimit = new StringBuilder();
             switch (baen.getJType()){
@@ -84,15 +87,18 @@ public class JigsawListAdapter extends YBaseAdapter<JNoteBean> {
                     tvContent.setText(baen.getContent());
                     break;
                 case "1":
-                    tvContent.setText("使用10个贝壳开始挑战，挑战成功可获得20个贝壳");
+                    FontUtil.setHighlightTextView("使用10个贝壳开始挑战", "10", tvContent, mContext.getResources().getColor(R.color.scoreA));
+                    FontUtil.setHighlightTextView("挑战成功可获得20个贝壳", "20", tvContent2, mContext.getResources().getColor(R.color.scoreA));
                     sbLimit.append("时间限制：").append(baen.getLimitNum()).append("秒");
                     break;
                 case "2":
-                    tvContent.setText("使用5个贝壳开始挑战，挑战成功可获得5个贝壳");
+                    FontUtil.setHighlightTextView("使用10个贝壳开始挑战", "10", tvContent, mContext.getResources().getColor(R.color.scoreA));
+                    FontUtil.setHighlightTextView("挑战成功可获得20个贝壳", "20", tvContent2, mContext.getResources().getColor(R.color.scoreA));
                     sbLimit.append("次数限制：").append(baen.getLimitNum()).append("次");
                     break;
             }
             tvCropFormat.setText("格式：" + baen.getCropFormat() + "    " + sbLimit.toString());
+            tvContent3.setText(baen.getContent());
 
             Glide.with(mContext).load(baen.getGsResPath().startsWith("http")?baen.getGsResPath(): ServiceAPI.IMAGE_URL + baen.getGsResPath()).into(ivJigsaw);
 
